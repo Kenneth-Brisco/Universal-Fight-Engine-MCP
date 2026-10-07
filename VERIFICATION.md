@@ -28,7 +28,7 @@ The first live sync on this Mac failed with `CERTIFICATE_VERIFY_FAILED`: the pyt
 | --- | --- | --- | --- |
 | Claude Code | Live call (earlier `claude-opus-5-5` acceptance run; registration still connects) | Installed from the repository marketplace: 1 skill, 1 MCP server. Loaded with `--plugin-dir`: `plugin:ufe-docs:ufe_docs` connected with five tools; live `ufe_docs_status` call returned 223 documents, `current_to_catalog` | Live `ufe_search_docs` call; token from an environment variable |
 | Codex | Live `ufe_search_docs` call; read-only tool ran without prompting under `default_tools_approval_mode = "writes"` | Installed from the repository marketplace; live `ufe_docs_status` call through the plugin's server | Live `ufe_get_doc` call with `bearer_token_env_var` |
-| Cursor | Live `ufe_search_docs` call (Cursor Agent CLI, signed in, workspace trusted, headless allow rule `Mcp(ufe_docs:ufe_search_docs)` in the folder's `.cursor/cli.json`) | Not tested: the Cursor app is not installed, and the Cursor Agent CLI does not load plugins | Live `ufe_search_docs` call with `Bearer ${env:UFE_DOCS_TOKEN}` |
+| Cursor | Live `ufe_search_docs` call (Cursor Agent CLI, signed in, workspace trusted, headless allow rule `Mcp(ufe_docs:ufe_search_docs)` in the folder's `.cursor/cli.json`) | Exported to `~/.cursor/plugins/local/ufe-docs`; the Cursor app loaded it without a manual step (`loadUserLocalPlugin ufe-docs`), connected `plugin-ufe-docs-ufe_docs`, and registered all five tools and the server instructions. The Cursor Agent CLI does not load local plugins | Live `ufe_search_docs` call with `Bearer ${env:UFE_DOCS_TOKEN}` |
 | Antigravity | — | Exported package installed; the agent loaded `ufe-docs_ufe_docs` and attempted `ufe_docs_status`. **Headless mode denied the call** because MCP tools require a permission it cannot prompt for; an interactive session asks. Not overridden | Not tested |
 | Grok Build | Picked up from Claude Code settings automatically; doctor: handshake and five tools; live `ufe_docs_status` call returned 223 documents | Installed from the repository: skill only; the server comes from MCP settings | `${UFE_DOCS_TOKEN}` header expanded by Grok; doctor: four tools; live `ufe_list_topics` call |
 
@@ -42,7 +42,7 @@ Test installations in Codex, Antigravity, Claude Code, and Grok were removed aft
 
 ### Remaining
 
-- The Cursor app's plugin install, and a live call in an interactive Antigravity session.
+- A live tool call inside the Cursor app through the plugin, and in an interactive Antigravity session.
 - A deployment, once hosting is approved.
 - Claude Desktop and claude.ai custom connectors against a hosted HTTPS URL.
 

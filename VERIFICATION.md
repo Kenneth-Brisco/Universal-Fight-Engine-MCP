@@ -1,12 +1,64 @@
-# Verification — UFE Docs MCP 0.1.0
+# Verification — UFE Docs MCP 0.1.0 preview
 
-Verified October 7, 2026 UTC in the development environment.
+## Current freshness release
 
-## Result
+Verified **October 7, 2026 at 16:31:39 UTC** in the development environment, after the freshness implementation and review fixes.
+
+| Check | Result |
+| --- | --- |
+| Complete automated suite | **44 tests passed**, with **48 parameterized subtest checks**, zero failures, and zero errors. |
+| Runtime | The unittest runner reported 3.077 seconds; test discovery and setup brought the recorded total to 3.720 seconds. |
+| Official SDK protocol | Three subprocess tests passed: document operations; empty offline cache; successful explicit raw refresh against original controlled fixtures. All five tools were exercised. |
+| Background freshness | Recent caches avoid fetching; due and idle-server updates run without blocking cached reads. |
+| Failures and recovery | Source/build failure preserves previous DB bytes; retry delay persists; another client's success clears an old error; interrupted updates recover. |
+| Multiple clients | Two spawned processes share one synchronization lock while cached reads remain usable. An accepted refresh owns its lock before acknowledgment. |
+| Source modes | Raw mode persists across updates and corrupt-index recovery. Failed raw upgrades do not replace the last successful mode. |
+| Provenance and metadata | Concurrent publication keeps each response attached to its actual snapshot; changed warning flags count as changed documentation. |
+| Auxiliary state failure | Failure to save history after publication reports a persistence warning while retaining the successful updated index. |
+| Network guards | Offline operations and the controlled online-refresh fixture made no socket/DNS attempts. The explicit online protocol fixture recorded exactly one synthetic raw-source request. |
+
+The tests use original synthetic documentation for changes, failures, and concurrency. The controlled online protocol test replaces only the source adapter in its child process; it exercises the real SDK, stdio server, refresh tool, index publication, and follow-up reads without contacting a live site.
+
+Reproduce the suite from this checkout:
+
+```bash
+uv sync --frozen
+uv run --frozen python -m unittest discover -s tests -v
+```
+
+The final result was also captured with a file-backed unittest runner that counts subtests. An earlier attempt to run that recorder through standard input could not start the multiprocessing test's child; using a real file entry point resolved that runner limitation without changing the coordination test.
+
+### Current live-source synchronization
+
+A foreground sync using the new shared coordinator completed at **2026-10-07T16:26:13.259957+00:00**. It fetched the official crawl rules, public application, catalog, and supplemental public Move Links page. It returned `sync_outcome: unchanged`, updating the source-check time without inventing a documentation-change event.
+
+- Documents/sections: **223** (146 pages, 77 groups).
+- Searchable chunks: **1,010**.
+- Source flags: 23 `needs_verification`, nine `legacy_docs_differ`.
+- Content mode: `published_catalog`; one supplemental raw page was fetched.
+- Catalog generation date remains `2026-07-31`, distinct from the latest fetch time.
+- Catalog and public-application hashes match the original provenance recorded below.
+- Current index revision: `857f56a2d337083619174a80be1b94a44255a2f0a8ada5c5a67ade9c44a775e4`.
+
+A full live raw-page refresh was not run. Its selection, persistence, update behavior, and protocol path were tested with controlled fixtures; the 37-minute-or-longer estimate comes from the observed source count and ten-second crawl delay.
+
+### Remaining presenter-specific rehearsal
+
+This verifies the connector in Linux with Python 3.12.14 and MCP SDK 2.3.0. It does not establish installation in the user's actual Claude Code, Claude Desktop, or Codex client, nor native macOS/Windows behavior.
+
+Before the livestream, connect the intended client, confirm all five tools appear, ask a real UFE question, inspect actual search and page-retrieval calls, and confirm that the answer cites those sources and surfaces freshness information. The connector does not validate a Unity project or prove that generated code works in the installed UFE release. No measured speed, token-saving, or model-quality claim is made.
+
+See [SPECIFICATION.md](docs/SPECIFICATION.md) for the implemented behavior and acceptance contract.
+
+## Original implementation verification
+
+The following records the initial implementation checks earlier on October 7, 2026, before automatic freshness and the fifth tool were added. The original archive-install check applies to that earlier source package.
+
+### Result
 
 The local stdio MCP was installed from its project and exercised through the official Python MCP client. The generated configuration launched successfully from a directory outside the project.
 
-## Checks
+### Checks
 
 - 21 focused automated tests passed, including 32 parameterized subtests.
 - Real MCP initialization and all four tool schemas passed.
@@ -19,14 +71,14 @@ The local stdio MCP was installed from its project and exercised through the off
 - Plugin and MCP manifests passed their Agent Plugins 1.0 JSON schemas.
 - A clean extraction of the distributable installed successfully with locked production dependencies; version, generated interpreter configuration, and empty-cache status checks passed.
 
-## Live indexed coverage
+### Live indexed coverage
 
 - Public documents/sections: **223** (146 pages, 77 groups).
 - Searchable chunks: **1010**.
 - Source flags preserved: 23 `needs_verification`, 9 `legacy_docs_differ`.
 - Unreleased material excluded according to the public application’s visibility rules.
 
-## Source provenance
+### Source provenance
 
 - Catalog: https://www.ufe3d.com/ufe2/docs/assets/site-data.json
 - Catalog schema: `1.1.0`.
@@ -37,7 +89,7 @@ The local stdio MCP was installed from its project and exercised through the off
 - Public application SHA-256: `431b68db0fdb06fae223282680f658fbfa43f09afc6ad26643deedcb4f65ebe0`.
 - Mode: published bulk catalog plus the public group absent from that catalog. A full raw-page refresh is available but was not run.
 
-## Actual MCP query checks
+### Actual MCP query checks
 
 | Query | First returned document |
 | --- | --- |
@@ -49,7 +101,7 @@ The local stdio MCP was installed from its project and exercised through the off
 
 Searches, follow-up page retrieval, and complete topic pagination were executed through the SDK client with offline serving enabled.
 
-## Environment and scope
+### Environment and scope
 
 - Python `3.12.14`, platform `linux`, SDK `mcp 2.3.0`.
 - Negotiated MCP protocol: `2025-11-25`.

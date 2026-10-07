@@ -28,10 +28,25 @@ The assistant can search for relevant passages, follow a result to its document,
 - **Read in context:** retrieve longer pages and sections with line pagination.
 - **Keep the evidence:** results carry official source URLs, document IDs, and the publisher's verification warnings.
 - **Inspect the snapshot:** see which documentation is indexed and when it was retrieved.
+- **Maintain the reference:** automatically refresh while the MCP is running, request an immediate refresh, and see update failures or overdue checks in tool results.
 
 **This release focuses on documentation.** It runs independently of Unity and a UFE installation. Reading your project's configurations, editing moves or characters, and running checks inside Unity are outside its current scope.
 
 The connector uses local keyword search. It makes no model or embedding calls and needs no model API key of its own. Retrieved text still consumes context tokens in the assistant that uses it.
+
+## Why use this with Claude Code or Codex?
+
+Your assistant does the reasoning and coding. **UFE Docs MCP gives it dedicated access to the UFE manual:** reusable search, section retrieval, official source links, line ranges, and documentation warnings. Once connected, those tools are available across your UFE questions without repeatedly supplying the documentation URL and asking for a new crawl.
+
+Providing links manually or using the assistant's other research tools also works. This connector makes the UFE reference workflow convenient and repeatable. It does not increase the model's intelligence or guarantee correct code, faster answers, or lower token costs. The assistant must still interpret the retrieved text and check behavior against your installed UFE version.
+
+That division matches [MCP's host/client/server architecture](https://modelcontextprotocol.io/docs/learn/architecture): the assistant uses the tools; the documentation server supplies context.
+
+### Does Unity charge extra? Which model does it use?
+
+**This connector requires no additional Unity service or AI model.** It is an independent local Python program and runs without Unity or UFE installed. The connector code is MIT licensed and has no paid service subscription in this implementation.
+
+It searches a local database, with no LLM, embeddings service, or model-provider API calls. Use the model you already run through a client with local stdio MCP support. Your assistant's normal subscription, API charges, usage limits, and context-token consumption still apply. Any Unity or UFE licensing needed to build your game is separate.
 
 ## Quick start
 
@@ -86,8 +101,11 @@ Client references: [Claude Code](https://code.claude.com/docs/en/mcp), [Claude D
 | `ufe_get_doc` | Read a document or continue through a longer page. | Page content, source details, warnings, and pagination. |
 | `ufe_list_topics` | Browse the indexed manual, optionally by category. | Titles, document IDs, and topic pagination. |
 | `ufe_docs_status` | Check readiness, coverage, and source dates. | Index status, snapshot metadata, and documentation warnings. |
+| `ufe_refresh_docs` | Request a background update without leaving your assistant. | Whether the request was accepted, current status, and freshness information. |
 
 Search defaults to five results and a 12,000-character passage budget. Use returned pagination fields when more page or topic context is needed.
+
+Search, read, and topic results include `snapshot` metadata captured with the returned content and a `freshness` envelope. Status includes the same information. `freshness.last_update` summarizes detected additions, removals, and changes, including changed documentation warnings. The server instructs assistants to surface relevant update and freshness notices; presentation depends on the host and model.
 
 Other useful prompts:
 
@@ -101,14 +119,23 @@ version notes or verification warnings before recommending settings.
 
 ## Documentation freshness
 
-**This MCP serves a local snapshot. An existing index stays in use until you explicitly sync it.** Reconnecting or asking a question does not automatically fetch updates.
+**The MCP checks for a due update at startup and keeps its local snapshot refreshed while running. The default interval is 24 hours after a successful sync.** Cached queries stay usable during background updates. A missing, invalid, or overdue snapshot triggers a check; a recent snapshot does not cause another download on each question.
+
+Every successful documentation result identifies its snapshot and reports freshness. An overdue check means the content **may** have changed; it does not prove that UFE published an update. A failed check is visible and automatically retried after 15 minutes. The previous validated index stays available when source retrieval or index construction fails.
 
 | Operation | What it does |
 | --- | --- |
-| Search, read, or browse | Reads the current local index. |
-| `sync` | Downloads the current published bulk catalog and any additional public page needed for its visible navigation. |
-| `sync --refresh-pages` | Fetches every known public raw Markdown page during that synchronization. |
-| First online connection without an index | Starts an initial download in the background; check `ufe_docs_status` while it warms up. |
+| Search, read, or browse through MCP | Reads the local index immediately; schedules an update if due and includes freshness information. |
+| Running online MCP server | Checks its local due time every 30 seconds; downloads on the configured interval, not every 30 seconds. |
+| `ufe_refresh_docs()` | Requests an immediate background sync. Check `ufe_docs_status` for completion. |
+| `ufe_refresh_docs(refresh_pages=true)` | Requests all known public raw pages. This can take about 37 minutes or longer. |
+| `sync` | Runs a foreground synchronization using the same cache lock and state as the MCP. |
+| `sync --refresh-pages` | Runs a foreground full raw-page refresh. |
+| Offline mode | Performs no source checks or downloads, even when a refresh is requested. |
+
+An already-running refresh is not queued or upgraded by another request. Wait for it to finish before requesting a different mode. Claude, Codex, and a CLI sync sharing the same cache are coordinated so only one synchronization runs at a time.
+
+Automatic refresh runs only while the local MCP process is running. It cannot check the site or notify you after the client stops it. On the next connection it checks whether an update is due. CLI `search`, `get`, `topics`, and `status` are local reads and do not start a background updater; their policy fields describe that CLI process.
 
 For a routine update:
 
@@ -116,13 +143,23 @@ For a routine update:
 uv run --frozen ufe-docs-mcp sync
 ```
 
-The bulk catalog may lag edits to individual raw pages. When you need a full raw-page refresh:
+**Scope matters:** ordinary new installations use UFE's published bulk catalog plus public pages needed to complete its visible navigation. The catalog may lag edits to individual raw pages. A `current_to_catalog` status means the check is recent within that scope; it does not certify that every raw page is current.
+
+When you need a full raw-page refresh:
 
 ```bash
 uv run --frozen ufe-docs-mcp sync --refresh-pages
 ```
 
-At the observed 223-page/section coverage and the site's crawl delay, a full raw-page refresh can take **about 37 minutes or longer**. Both modes produce a snapshot; inspect its retrieval date and content mode with `ufe_docs_status` or the CLI `status` command.
+At the observed 223-page/section coverage and the site's crawl delay, a full raw-page refresh can take **about 37 minutes or longer**. Once a cache has been fully refreshed from raw pages, later automatic and manual updates retain raw-page mode so an older catalog cannot silently replace it. Those later updates can take the same amount of time. Use a separate cache folder if you want a new catalog-mode index.
+
+Both modes produce snapshots. Raw pages can change during or after a full sync, so there is no continuously-latest guarantee. Inspect source dates, content mode, `freshness.warnings`, and `freshness.last_update` in the returned context. This release delivers notices through tool results; it does not send desktop notifications or messages to people.
+
+### Documentation updates and connector updates are separate
+
+The automatic updater downloads documentation. It does not update the MCP's Python code, dependencies, Unity, or your installed UFE package. If UFE changes the catalog format or public visibility rules, the current connector reports the failure and keeps the usable snapshot. A compatible connector release is then needed.
+
+For a Git checkout, install a connector update with `git pull --ff-only`, then `uv sync --frozen`, and restart the MCP client. Regenerate the configuration if the installation path changes. ZIP recipients need a new code archive. The [specification](docs/SPECIFICATION.md) records the freshness contract and the [verification report](VERIFICATION.md) records what was actually exercised.
 
 ## Verification and coverage
 
@@ -132,11 +169,13 @@ Recorded verification on **October 7, 2026 UTC**:
 | --- | --- |
 | Public manual coverage | 223 pages/sections: 146 pages and 77 groups. |
 | Search index | 1,010 searchable chunks. |
-| Automated verification | 21 tests with 32 parameterized subtests passed. |
-| MCP protocol | Initialization, all four tools, search/read flow, pagination, and actionable errors exercised with the official SDK client. |
+| Automated verification | 44 tests with 48 parameterized subtest checks passed after the freshness update. |
+| MCP protocol | Initialization, all five tools, successful explicit raw refresh, search/read flow, pagination, and actionable errors exercised with the official SDK client. |
 | Offline behavior | Socket/DNS guards observed no network attempts during offline tests. |
+| Freshness behavior | Background updates, persisted retries, multiple clients, failed updates, corrupt-index recovery, metadata changes, and snapshot provenance exercised with controlled fixtures. |
+| Latest live-source sync | October 7, 2026 at 16:26 UTC: unchanged content, with a renewed source-check time. |
 
-The later naming cleanup also passed frozen installation, configuration generation, platform cache-path selection, and both existing MCP protocol tests. Full provenance, sample query results, and environment details are in [VERIFICATION.md](VERIFICATION.md).
+The naming cleanup also passed frozen installation, configuration generation, and platform cache-path selection. Current verification covers the server through the official SDK in Linux; a connection in the presenter's actual Claude or Codex client still needs a live rehearsal. Full provenance, sample query results, and environment details are in [VERIFICATION.md](VERIFICATION.md).
 
 This coverage follows the public navigation of the indexed manual. It is not a complete generated reference for every UFE C# API or every page elsewhere on the publisher's websites. An absent search result does not establish that an API does not exist.
 
@@ -152,9 +191,26 @@ Publisher warnings stay attached to the results. The verified snapshot included 
 | The index is not ready | Finish `sync`, then check `ufe_docs_status` or run `uv run --frozen ufe-docs-mcp status`. |
 | A moved checkout no longer starts | Regenerate the configuration; its Python and cache paths are absolute. |
 | The CLI and assistant show different snapshots | Use the same cache location for both, then regenerate the client entry if needed. |
+| Freshness says `check_failed` or `check_due` | Read the warning and source-check date. Retry with `ufe_refresh_docs` or `sync`; automatic retries wait 15 minutes after a failed attempt. |
+| A refresh says another sync is running | Keep using cached docs and check status. Request a full raw-page refresh after the current operation finishes. |
 | An earlier installation uses a previous cache location | Run `uv sync --frozen`, synchronize once, and regenerate the client configuration. |
 
 ## Advanced setup
+
+<details>
+<summary>Change or disable automatic updates</summary>
+
+The default is one automatic sync every 24 hours while the MCP runs. To use a six-hour interval:
+
+```bash
+uv run --frozen ufe-docs-mcp serve --refresh-hours 6
+```
+
+For a client connection, append `"--refresh-hours", "6"` after `"serve"` in the generated arguments. Intervals must be finite and at least one hour.
+
+Append `"--no-auto-refresh"` to disable automatic downloading, including initial bootstrap. Explicit `ufe_refresh_docs` remains available online. Use `"--offline"` when all documentation network access must be disabled.
+
+</details>
 
 <details>
 <summary>Offline use</summary>

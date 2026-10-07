@@ -9,8 +9,8 @@ from pathlib import Path
 import sys
 
 from . import __version__
-from .index import build_index, get_doc, index_status, list_topics, search_docs
-from .source import fetch_official_documents
+from .index import get_doc, list_topics, search_docs
+from .runtime import DEFAULT_REFRESH_HOURS, DocumentationRuntime, sync_cache
 
 
 def default_cache_dir() -> Path:
@@ -31,8 +31,10 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     sync = commands.add_parser("sync", help="Download public docs and atomically rebuild the local index")
     sync.add_argument("--refresh-pages", action="store_true", help="Also fetch every raw page; respects the site's crawl delay")
-    serve = commands.add_parser("serve", help="Run the MCP over stdio; first use downloads the docs in the background")
+    serve = commands.add_parser("serve", help="Run the MCP over stdio with automatic background documentation updates")
     serve.add_argument("--offline", action="store_true", help="Use an existing index only; never download")
+    serve.add_argument("--refresh-hours", type=float, default=DEFAULT_REFRESH_HOURS, help="Automatic source-check interval, at least 1 hour (default: 24)")
+    serve.add_argument("--no-auto-refresh", action="store_true", help="Disable automatic downloads; explicit refresh remains available online")
     commands.add_parser("status", help="Show local index coverage and source metadata")
     search = commands.add_parser("search", help="Try a documentation search without an MCP client")
     search.add_argument("query")
@@ -56,19 +58,19 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "serve":
             from .server import create_server
             offline = args.offline or os.environ.get("UFE_DOCS_OFFLINE", "").lower() in ("1", "true", "yes")
-            create_server(cache_dir, offline=offline).run(transport="stdio")
+            create_server(cache_dir, offline=offline, refresh_hours=args.refresh_hours,
+                          auto_refresh=not args.no_auto_refresh).run(transport="stdio")
             return 0
         if args.command == "sync":
-            docs, metadata = fetch_official_documents(refresh_pages=args.refresh_pages, report=logging.info)
-            result = build_index(docs, path, metadata)
+            result = sync_cache(cache_dir, refresh_pages=args.refresh_pages)
         elif args.command == "status":
-            result = index_status(path)
+            result = DocumentationRuntime(cache_dir, auto_refresh=False).status()
         elif args.command == "search":
-            result = search_docs(path, args.query, args.limit, args.max_chars)
+            result = DocumentationRuntime(cache_dir, auto_refresh=False).decorate(search_docs(path, args.query, args.limit, args.max_chars))
         elif args.command == "get":
-            result = get_doc(path, args.doc_id, args.start_line, args.max_lines)
+            result = DocumentationRuntime(cache_dir, auto_refresh=False).decorate(get_doc(path, args.doc_id, args.start_line, args.max_lines))
         elif args.command == "topics":
-            result = list_topics(path, args.category, args.offset, args.limit)
+            result = DocumentationRuntime(cache_dir, auto_refresh=False).decorate(list_topics(path, args.category, args.offset, args.limit))
         else:
             # Resolving a venv's Python symlink would bypass its installed packages.
             command = os.path.abspath(sys.executable)

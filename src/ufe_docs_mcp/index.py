@@ -250,6 +250,7 @@ def build_index(documents: list[Document], path: Path, metadata: dict) -> dict:
                 "document_count": len(validated),
                 "chunk_count": chunk_count,
                 "content_hash": hashlib.sha256(combined.encode("utf-8")).hexdigest(),
+                "index_revision": _revision_hash({document.doc_id: _document_revision(document) for document, _, _ in validated}),
                 "source_versions": sorted({document.source_version for document, _, _ in validated if document.source_version is not None}),
                 "metadata": clean_metadata,
             }
@@ -297,6 +298,48 @@ def _document_fields(row: sqlite3.Row) -> dict:
     }
 
 
+def _revision_hash(value: object) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
+def _document_revision(document: Document) -> str:
+    return _revision_hash({
+        "doc_id": document.doc_id, "title": document.title, "url": document.url,
+        "category": document.category, "source_version": document.source_version,
+        "warnings": list(document.warnings),
+        "content_hash": hashlib.sha256(document.content.encode("utf-8")).hexdigest(),
+    })
+
+
+def document_revisions(path: Path) -> dict[str, str]:
+    """Fingerprint content and meaningful metadata for update summaries."""
+    with closing(_read_connection(path)) as connection:
+        return {row["doc_id"]: _revision_hash(_document_fields(row))
+                for row in connection.execute("SELECT * FROM documents")}
+
+
+def snapshot_from_status(status: dict) -> dict:
+    """Small provenance record; fetched_at is not the publisher's edit date."""
+    metadata = status.get("metadata", {})
+    result = {
+        "indexed_at": status.get("indexed_at"),
+        "fetched_at": metadata.get("fetched_at"),
+        "content_mode": metadata.get("content_mode", "unknown"),
+        "catalog_generated_at": metadata.get("catalog_generated_at"),
+        "content_hash": status.get("content_hash"),
+        "index_revision": status.get("index_revision"),
+    }
+    result["id"] = _revision_hash(result)
+    return result
+
+
+def _snapshot(connection: sqlite3.Connection) -> dict:
+    # This connection also supplies the passages, even if another process
+    # publishes a replacement database during the read.
+    status = json.loads(connection.execute("SELECT value FROM index_metadata WHERE key='status'").fetchone()[0])
+    return snapshot_from_status(status)
+
+
 def _query_terms(query: str) -> list[str]:
     if not isinstance(query, str):
         raise ValueError("query must be a string")
@@ -341,8 +384,9 @@ def search_docs(path: Path, query: str, limit: int = 5, max_chars: int = 12_000)
     results: list[dict] = []
     truncated = False
     with closing(_read_connection(path)) as connection:
+        snapshot = _snapshot(connection)
         if not terms:
-            return {"query": query, "terms": [], "results": [], "truncated": False}
+            return {"query": query, "terms": [], "results": [], "truncated": False, "snapshot": snapshot}
         # Only extracted word tokens become quoted FTS literals. The user's
         # operators, quotes, parentheses, column syntax and SQL are never run.
         expression = " OR ".join('"' + term.replace('"', '""') + '"' for term in terms)
@@ -375,7 +419,7 @@ def search_docs(path: Path, query: str, limit: int = 5, max_chars: int = 12_000)
             remaining -= len(passage)
             truncated = truncated or clipped
         truncated = truncated or len(rows) > limit
-    return {"query": query, "terms": terms, "results": results, "truncated": truncated}
+    return {"query": query, "terms": terms, "results": results, "truncated": truncated, "snapshot": snapshot}
 
 
 def get_doc(path: Path, doc_id: str, start_line: int = 1, max_lines: int = 100) -> dict:
@@ -389,6 +433,7 @@ def get_doc(path: Path, doc_id: str, start_line: int = 1, max_lines: int = 100) 
     start_line = _integer(start_line, "start_line", 1, 2_147_483_647)
     max_lines = _integer(max_lines, "max_lines", 1, MAX_PAGE_LINES)
     with closing(_read_connection(path)) as connection:
+        snapshot = _snapshot(connection)
         row = connection.execute("SELECT * FROM documents WHERE doc_id=?", (doc_id,)).fetchone()
         if row is None:
             raise KeyError(f"Unknown document: {doc_id}")
@@ -412,6 +457,7 @@ def get_doc(path: Path, doc_id: str, start_line: int = 1, max_lines: int = 100) 
             "end_line": end_line,
             "content": "\n".join(selected),
             "next_start_line": next_line,
+            "snapshot": snapshot,
         }
 
 
@@ -424,6 +470,7 @@ def list_topics(path: Path, category: str | None = None, offset: int = 0, limit:
     clause = " WHERE category=?" if category is not None else ""
     parameters: tuple = (category,) if category is not None else ()
     with closing(_read_connection(path)) as connection:
+        snapshot = _snapshot(connection)
         total = connection.execute("SELECT count(*) FROM documents" + clause, parameters).fetchone()[0]
         rows = connection.execute(
             "SELECT doc_id, title, url, category, source_version, warnings, content_hash, line_count "
@@ -432,7 +479,7 @@ def list_topics(path: Path, category: str | None = None, offset: int = 0, limit:
         ).fetchall()
         topics = [{**_document_fields(row), "total_lines": row["line_count"]} for row in rows]
     next_offset = offset + len(topics) if offset + len(topics) < total else None
-    return {"topics": topics, "category": category, "offset": offset, "limit": limit, "total": total, "next_offset": next_offset}
+    return {"topics": topics, "category": category, "offset": offset, "limit": limit, "total": total, "next_offset": next_offset, "snapshot": snapshot}
 
 
 def index_status(path: Path) -> dict:

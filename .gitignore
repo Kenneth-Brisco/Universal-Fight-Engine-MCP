@@ -9,3 +9,5 @@ dist/
 *.sqlite3
 *.sqlite3-*
 *.db
+refresh-state.json
+.refresh-state-*.tmp

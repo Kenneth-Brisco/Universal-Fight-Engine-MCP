@@ -53,11 +53,12 @@ class _SafeRedirect(urllib.request.HTTPRedirectHandler):
 class OfficialSource:
     """One sync's bounded, rate-limited access to the fixed official origin."""
 
-    def __init__(self, report: Callable[[str], None] | None = None):
+    def __init__(self, report: Callable[[str], None] | None = None, *, not_before: float | None = None):
         self.report = report or (lambda _: None)
         self.opener = urllib.request.build_opener(_SafeRedirect())
         self.delay = 10.0
         self.last_request = 0.0
+        self.not_before = not_before
         self.robots: urllib.robotparser.RobotFileParser | None = None
 
     def fetch(self, url: str) -> tuple[str, dict[str, str]]:
@@ -66,6 +67,9 @@ class OfficialSource:
         if self.robots is not None and not self.robots.can_fetch(USER_AGENT, url):
             raise SourceError("The official site's robots policy disallows this documentation URL.")
         remaining = self.delay - (time.monotonic() - self.last_request)
+        if self.not_before is not None:
+            remaining = max(remaining, self.not_before - time.time())
+            self.not_before = None
         if remaining > 0:
             time.sleep(remaining)
         self.report("Fetching " + url)
@@ -324,9 +328,10 @@ def documents_from_catalog(
 
 
 def fetch_official_documents(
-    *, refresh_pages: bool = False, report: Callable[[str], None] | None = None
+    *, refresh_pages: bool = False, report: Callable[[str], None] | None = None,
+    not_before: float | None = None,
 ) -> tuple[list[Document], dict]:
-    source = OfficialSource(report)
+    source = OfficialSource(report, not_before=not_before)
     source.load_robots()
     app, app_headers = source.fetch(BASE_URL + "assets/app.js")
     text, catalog_headers = source.fetch(BASE_URL + "assets/site-data.json")

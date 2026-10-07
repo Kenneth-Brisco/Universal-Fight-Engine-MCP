@@ -21,7 +21,7 @@ from .index import Document
 
 BASE_URL = "https://www.ufe3d.com/ufe2/docs/"
 ORIGIN = "https://www.ufe3d.com"
-USER_AGENT = "IncogLabs-UFE-Docs-MCP/0.1 (+documentation-only local cache)"
+USER_AGENT = "UFE-Docs-MCP/0.1 (+documentation-only local cache)"
 MAX_RESPONSE_BYTES = 16 * 1024 * 1024
 JS_STRING = r'''(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')'''
 

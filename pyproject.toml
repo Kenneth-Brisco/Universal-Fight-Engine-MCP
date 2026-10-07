@@ -3,13 +3,13 @@ requires = ["setuptools>=75,<82"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "incoglabs-ufe-docs-mcp"
+name = "ufe-docs-mcp"
 version = "0.1.0"
 description = "Search the official UFE manual through a local, documentation-only MCP."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-authors = [{name = "IncogLabs LLC"}]
+authors = [{name = "Kenneth Brisco"}]
 dependencies = ["mcp==2.3.0"]
 keywords = ["mcp", "ufe", "documentation", "unity"]
 

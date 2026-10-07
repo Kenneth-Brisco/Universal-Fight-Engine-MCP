@@ -3,14 +3,14 @@
   "name": "ufe-docs-mcp",
   "version": "0.1.0",
   "description": "Search and read the official UFE manual using a local documentation cache.",
-  "author": {"name": "IncogLabs LLC"},
+  "author": {"name": "Kenneth Brisco"},
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "UFE Documentation",
         "shortDescription": "Search the UFE manual",
         "longDescription": "Search cached official UFE documentation, read relevant sections with source URLs, browse topics, and inspect source freshness. Runs locally; requires Python and uv. No model API key or Unity installation needed.",
-        "developerName": "IncogLabs LLC",
+        "developerName": "Kenneth Brisco",
         "category": "Developer Tools",
         "defaultPrompt": "Use the UFE documentation tools to answer my question and cite the official source."
       }

@@ -1,4 +1,4 @@
-# IncogLabs UFE Docs MCP
+# UFE Docs MCP
 
 **Version 0.1.0 · Python 3.10+ · Local stdio MCP**
 
@@ -84,7 +84,7 @@ uv run --frozen ufe-docs-mcp serve --offline
 
 For an offline client connection, append `"--offline"` after `"serve"` in its generated arguments. An empty offline cache needs a successful online sync before queries work.
 
-On macOS, the default index is `~/Library/Caches/IncogLabs/ufe-docs-mcp/docs.sqlite3`. Set `UFE_DOCS_CACHE_DIR` or place the global `--cache-dir` option **before** the command:
+On macOS, the default index is `~/Library/Caches/ufe-docs-mcp/docs.sqlite3`. Set `UFE_DOCS_CACHE_DIR` or place the global `--cache-dir` option **before** the command:
 
 ```bash
 uv run --frozen ufe-docs-mcp --cache-dir /absolute/path/to/ufe-docs-cache sync
@@ -92,6 +92,8 @@ uv run --frozen ufe-docs-mcp --cache-dir /absolute/path/to/ufe-docs-cache client
 ```
 
 Use the same cache location for synchronization and serving.
+
+After updating an earlier installation, run `uv sync --frozen`, synchronize once, and regenerate your client configuration so it uses the current cache location.
 
 ## Coverage and source quality
 
@@ -129,4 +131,4 @@ This uses the pinned SDK dependency but does not apply `uv.lock` to transitive d
 
 Share the code ZIP with the setup instructions, or grant repository access to the intended recipients. Each recipient installs it and retrieves documentation into their own local cache. Vendor documentation, engine code, and cached databases are not bundled in the distributable.
 
-IncogLabs' original connector code is [MIT licensed](LICENSE). UFE content retains its own ownership and terms; this project's MIT license does not relicense it. This is an independent community project, unaffiliated with the UFE publisher. No public hosting or installation on a recipient's machine is performed by downloading the ZIP.
+The original connector code is [MIT licensed](LICENSE). UFE content retains its own ownership and terms; this project's MIT license does not relicense it. This is an independent community project, unaffiliated with the UFE publisher. No public hosting or installation on a recipient's machine is performed by downloading the ZIP.

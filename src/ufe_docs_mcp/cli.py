@@ -18,10 +18,10 @@ def default_cache_dir() -> Path:
     if override:
         return Path(override).expanduser()
     if sys.platform == "win32":
-        return Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))) / "IncogLabs" / "ufe-docs-mcp"
+        return Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))) / "ufe-docs-mcp"
     if sys.platform == "darwin":
-        return Path.home() / "Library" / "Caches" / "IncogLabs" / "ufe-docs-mcp"
-    return Path(os.environ.get("XDG_CACHE_HOME", str(Path.home() / ".cache"))) / "incoglabs" / "ufe-docs-mcp"
+        return Path.home() / "Library" / "Caches" / "ufe-docs-mcp"
+    return Path(os.environ.get("XDG_CACHE_HOME", str(Path.home() / ".cache"))) / "ufe-docs-mcp"
 
 
 def main(argv: list[str] | None = None) -> int:

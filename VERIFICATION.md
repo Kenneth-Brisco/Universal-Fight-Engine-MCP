@@ -8,7 +8,7 @@ Verified **October 7, 2026 UTC** on macOS 26.5.1 (arm64), Python 3.13.9 from the
 
 | Check | Result |
 | --- | --- |
-| Unit and protocol suite | **61 tests passed** (44 existing, 17 new). |
+| Unit and protocol suite | **61 tests passed** (44 existing, 17 new), on macOS and in GitHub Actions on Python 3.10 and 3.13. |
 | Streamable HTTP over a real loopback socket | Discovery shows the four read tools with titles; search, read, and an actionable unknown-ID error work; `ufe_refresh_docs` appears only with `--remote-refresh`. |
 | HTTP access control | No header, a wrong token, and a non-Bearer scheme each return `401` with `WWW-Authenticate`; the correct token works; `/healthz` stays open. Binding beyond loopback without tokens or `--allow-anonymous` fails at startup. |
 | Rate limiting | Window, recovery after 60 seconds, per-client separation, health exemption, and resistance to a forged left-most `X-Forwarded-For`. |
@@ -28,20 +28,22 @@ The first live sync on this Mac failed with `CERTIFICATE_VERIFY_FAILED`: the pyt
 | --- | --- | --- | --- |
 | Claude Code | Live call (earlier `claude-opus-5-5` acceptance run; registration still connects) | Installed from the repository marketplace: 1 skill, 1 MCP server. Loaded with `--plugin-dir`: `plugin:ufe-docs:ufe_docs` connected with five tools; live `ufe_docs_status` call returned 223 documents, `current_to_catalog` | Live `ufe_search_docs` call; token from an environment variable |
 | Codex | Live `ufe_search_docs` call; read-only tool ran without prompting under `default_tools_approval_mode = "writes"` | Installed from the repository marketplace; live `ufe_docs_status` call through the plugin's server | Live `ufe_get_doc` call with `bearer_token_env_var` |
-| Cursor | Server approved; five tools listed | Not tested: the Cursor app is not installed, and the Cursor Agent CLI does not load plugins | Server approved; four tools listed. **Live calls blocked:** the Cursor Agent CLI is not signed in on this machine |
+| Cursor | Live `ufe_search_docs` call (Cursor Agent CLI, signed in, workspace trusted, headless allow rule `Mcp(ufe_docs:ufe_search_docs)` in the folder's `.cursor/cli.json`) | Not tested: the Cursor app is not installed, and the Cursor Agent CLI does not load plugins | Live `ufe_search_docs` call with `Bearer ${env:UFE_DOCS_TOKEN}` |
 | Antigravity | — | Exported package installed; the agent loaded `ufe-docs_ufe_docs` and attempted `ufe_docs_status`. **Headless mode denied the call** because MCP tools require a permission it cannot prompt for; an interactive session asks. Not overridden | Not tested |
 | Grok Build | Picked up from Claude Code settings automatically; doctor: handshake and five tools; live `ufe_docs_status` call returned 223 documents | Installed from the repository: skill only; the server comes from MCP settings | `${UFE_DOCS_TOKEN}` header expanded by Grok; doctor: four tools; live `ufe_list_topics` call |
 
 The remote server ran exactly as the `Dockerfile` would: a clean copy of the image's files, `uv sync --frozen --no-dev`, `PORT=7860`, `--trust-proxy`, and an empty cache. It refused to start on `0.0.0.0` without an access policy, then with a token it bootstrapped the documentation itself (four requests, crawl delay respected) and served every remote check above. The token never appeared in server logs or client transcripts.
 
-**Not run:** `docker build`. Docker Desktop's data is archived on an external drive on this machine, and starting it would create a new empty store. No hosting deployment was made.
+**Container build:** not run on this machine, because Docker Desktop's data is archived on an external drive. GitHub Actions builds it instead (`.github/workflows/ci.yml`): the image built, refused to start without an access policy, and passed the authenticated MCP smoke test (`scripts/smoke_http.py`, offline). Tests also passed on Python 3.10 and 3.13 there. No hosting deployment was made.
+
+Without an allow rule, headless Cursor and Antigravity runs reject MCP calls they cannot prompt for. Cursor reported the read tools as not read-only when rejecting them, so headless runs need an explicit `Mcp(server:tool)` rule; interactive sessions ask.
 
 Test installations in Codex, Antigravity, Claude Code, and Grok were removed afterwards, and their configuration files were compared with pre-test backups.
 
 ### Remaining
 
-- Live calls in Cursor and an interactive Antigravity session.
-- A container build and a deployment, once hosting is approved.
+- The Cursor app's plugin install, and a live call in an interactive Antigravity session.
+- A deployment, once hosting is approved.
 - Claude Desktop and claude.ai custom connectors against a hosted HTTPS URL.
 
 

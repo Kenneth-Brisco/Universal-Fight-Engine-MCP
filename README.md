@@ -100,6 +100,8 @@ How the plugins launch the server:
 
 Restart or reconnect the assistant after changing its MCP settings or installing a plugin. Clients may ask you to approve the server or its tools the first time. The four read tools are annotated read-only, so clients that auto-approve read-only tools (for example Codex with `default_tools_approval_mode = "writes"`) run them without prompting; `ufe_refresh_docs` still asks.
 
+Headless runs (`cursor-agent -p`, `agy -p`) cannot ask for approval, so they reject MCP calls unless you allow them: in Cursor, add `"permissions": {"allow": ["Mcp(ufe_docs:*)"]}` to `.cursor/cli.json`. Interactive sessions ask instead.
+
 [Example JSON](examples/client-config.json) shows the generic format with placeholder paths.
 
 **Compatibility depends on the host application.** A model name alone does not establish MCP support; the host app must launch local stdio servers or connect to a remote URL. See [Verification](#verification-and-coverage) for what was actually tested.
@@ -202,7 +204,7 @@ Recorded verification on **October 7, 2026 UTC**:
 | Freshness behavior | Background updates, persisted retries, multiple clients, failed updates, corrupt-index recovery, metadata changes, and snapshot provenance exercised with controlled fixtures. |
 | Latest live-source sync | October 7, 2026 at 16:26 UTC: unchanged content, with a renewed source-check time. |
 
-Version 0.2.0 was also exercised on macOS through Claude Code, Codex, Cursor's agent CLI, Antigravity, and Grok Build, locally and against the HTTP server; live tool calls succeeded in Claude Code, Codex, and Grok, and the Cursor and Antigravity gaps are recorded. Full provenance, sample query results, and environment details are in [VERIFICATION.md](VERIFICATION.md).
+Version 0.2.0 was also exercised on macOS through Claude Code, Codex, Cursor's agent CLI, Antigravity, and Grok Build, locally and against the HTTP server; live tool calls succeeded in Claude Code, Codex, Cursor, and Grok, and the remaining Antigravity and Cursor-plugin gaps are recorded. CI builds the Docker image and smoke-tests it on every push. Full provenance, sample query results, and environment details are in [VERIFICATION.md](VERIFICATION.md).
 
 This coverage follows the public navigation of the indexed manual. It is not a complete generated reference for every UFE C# API or every page elsewhere on the publisher's websites. An absent search result does not establish that an API does not exist.
 

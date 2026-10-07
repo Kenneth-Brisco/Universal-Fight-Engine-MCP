@@ -18,6 +18,25 @@ Verified **October 7, 2026 UTC** on macOS 26.5.1 (arm64), Python 3.13.9 from the
 | Client configuration | Every `client-config` format renders local and remote entries; JSON and TOML parse; exported Antigravity manifests contain only `name` and `description`. |
 | Validators | `claude plugin validate --strict` passes for the marketplace and plugin manifests. `grok plugin validate` accepts the repository. `agy plugin validate` accepts the exported Antigravity package. |
 
+### Plugin eval (claude plugin eval)
+
+Run on **October 7, 2026 UTC** with Claude Code 2.1.293, the default model (`opus` alias, `xhigh` effort, per the operator's settings; the report does not record the resolved model), 9 cases × 3 runs × 2 arms, judge `haiku`. Duration 8 minutes; reported cost **$5.45**. The plugin's real `UFE3D` server answered from a copy of the local index in every run; the shared index was not refreshed during the eval.
+
+| Case | With plugin | Without | Docs tool used | Skill fired |
+| --- | --- | --- | --- | --- |
+| air-recovery-type-flagged | 1.00 | 0.00 | 3/3 | 3/3 |
+| hitbox-collision-types | 1.00 | 0.13 | 3/3 | 3/3 |
+| input-buffer-and-frame-links | 1.00 | 0.11 | 3/3 | 3/3 |
+| plinking-delay | 1.00 | 0.17 | 3/3 | 3/3 |
+| rollback-balancing | 1.00 | 0.40 | 3/3 | 3/3 |
+| teleport-flagged | 0.94 | 0.06 | 3/3 | 3/3 |
+| tested-unity-versions | 1.00 | 0.00 | 3/3 | 3/3 |
+| throw-collider-requirement | 1.00 | 0.75 | 3/3 | 3/3 |
+| undocumented-feature | 1.00 | 1.00 | 3/3 | 3/3 |
+| **Overall** | **0.99** | **0.29** | | mean Δ **+0.70** |
+
+Reading the result: without the plugin, the model usually could not name UFE's exact settings, values, tested Unity versions, or official page, and never surfaced the publisher's verification flags. With the plugin it did so in 26 of 27 runs; one teleport run omitted the flag. Both arms declined to invent an undocumented "Roman Cancel" option, so that case shows no difference. The baseline had no web access, so the comparison is against the model's own knowledge, not against browsing.
+
 ### TLS fix
 
 The first live sync on this Mac failed with `CERTIFICATE_VERIFY_FAILED`: the python.org Python has no CA bundle file. Source requests now verify against the operating system trust store through `truststore`. A fetch of `robots.txt` succeeded with no `SSL_CERT_FILE` override.

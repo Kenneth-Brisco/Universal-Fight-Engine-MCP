@@ -222,6 +222,7 @@ Publisher warnings stay attached to the results. The verified snapshot included 
 | The CLI and assistant show different snapshots | Use the same cache location for both, then regenerate the client entry if needed. |
 | Freshness says `check_failed` or `check_due` | Read the warning and source-check date. Retry with `ufe_refresh_docs` or `sync`; automatic retries wait 15 minutes after a failed attempt. |
 | A refresh says another sync is running | Keep using cached docs and check status. Request a full raw-page refresh after the current operation finishes. |
+| Cursor's chat says the `ufe_docs` server does not exist | Cursor's plugin loader can time out in a window with no folder open, dropping every plugin's tools. Open a folder, run **Developer: Reload Window**, and start a new chat. |
 | An earlier installation uses a previous cache location | Run `uv sync --frozen`, synchronize once, and regenerate the client configuration. |
 
 ## Advanced setup

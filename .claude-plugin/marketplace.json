@@ -1,0 +1,16 @@
+{
+  "name": "ufe-docs",
+  "owner": {
+    "name": "Kenneth Brisco"
+  },
+  "metadata": {
+    "description": "UFE Documentation plugin: the official Universal Fighting Engine manual for coding assistants."
+  },
+  "plugins": [
+    {
+      "name": "ufe-docs",
+      "source": "./",
+      "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices."
+    }
+  ]
+}

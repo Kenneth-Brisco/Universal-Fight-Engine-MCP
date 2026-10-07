@@ -209,6 +209,8 @@ class MCPProtocolTests(unittest.IsolatedAsyncioTestCase):
                         Draft202012Validator.check_schema(tool.input_schema)
                         self.assertEqual(tool.input_schema.get("type"), "object")
                         self.assertTrue(tool.description)
+                        self.assertTrue(tool.title)
+                        self.assertEqual(tool.annotations.title, tool.title)
                         if tool.output_schema is not None:
                             Draft202012Validator.check_schema(tool.output_schema)
                 self.assertIn("query", tools["ufe_search_docs"].input_schema["properties"])

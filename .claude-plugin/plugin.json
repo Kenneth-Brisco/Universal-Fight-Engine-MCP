@@ -1,0 +1,31 @@
+{
+  "name": "ufe-docs",
+  "displayName": "UFE Documentation",
+  "version": "0.2.0",
+  "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices.",
+  "author": {
+    "name": "Kenneth Brisco"
+  },
+  "repository": "https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP",
+  "license": "MIT",
+  "keywords": [
+    "ufe",
+    "unity",
+    "fighting-game",
+    "documentation",
+    "mcp"
+  ],
+  "mcpServers": {
+    "ufe_docs": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--frozen",
+        "--directory",
+        "${CLAUDE_PLUGIN_ROOT}",
+        "ufe-docs-mcp",
+        "serve"
+      ]
+    }
+  }
+}

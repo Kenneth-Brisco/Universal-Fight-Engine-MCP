@@ -1,6 +1,6 @@
 # UFE Docs MCP specification
 
-Status: implementation contract for the private v0.1.0 preview. Updated October 7, 2026 UTC.
+Status: implementation contract for the private v0.2.0 preview. Updated October 7, 2026 UTC.
 
 ## Purpose and scope
 
@@ -8,7 +8,7 @@ Give an MCP-capable coding assistant repeatable access to the public Universal F
 
 The server searches documentation, reads pages with source links, browses topics, reports provenance and freshness, and synchronizes its local index. It does not inspect a Unity project, edit assets, change moves or characters, execute Unity checks, or verify game behavior. No LLM, embeddings service, model API key, Unity service, or Unity installation is required by this connector.
 
-There is no hosted HTTPS endpoint, account service, desktop notification service, or background process that survives the MCP client's shutdown. The host must support local stdio tools. Successful protocol tests do not establish successful installation in every host application or operating system.
+The server runs locally over stdio, or as a shared Streamable HTTP endpoint (see [Transports](#transports)). There is no account service, desktop notification service, or background process that survives the server's shutdown. Successful protocol tests do not establish successful installation in every host application or operating system.
 
 ## Tool contract
 
@@ -20,9 +20,42 @@ There is no hosted HTTPS endpoint, account service, desktop notification service
 | `ufe_docs_status` | No inputs. | Reports availability, coverage, source metadata, refresh activity, freshness warnings, update summaries, and guidance. |
 | `ufe_refresh_docs` | `refresh_pages`: boolean, default false. | Requests an immediate background synchronization. Returns `accepted`, `reason`, and current status. Does not wait for the download to finish. Offline and closed runtimes reject the request with an actionable tool error. |
 
-The first four tools are annotated as reads. The refresh tool is annotated as modifying the local cache, nondestructive, and idempotent. Online tools can interact with the public documentation source; offline tool annotations close that external interaction. Tool arguments cannot select an arbitrary source URL or execute a shell command.
+Every tool carries a human-readable `title`, both on the tool and in its annotations. The first four tools are annotated as reads. The refresh tool is annotated as modifying the local cache, nondestructive, and idempotent. Online tools can interact with the public documentation source; offline tool annotations close that external interaction. Tool arguments cannot select an arbitrary source URL or execute a shell command.
 
 `accepted: true` means the runtime acquired the cache's synchronization lock and started the worker. It does not mean synchronization has finished. If a refresh is already running, the new request is rejected with `accepted: false` and `reason: already_running`; it is not queued or upgraded. In particular, wait for a catalog sync to finish before requesting a full raw-page refresh. Check `ufe_docs_status` and the completed content mode before relying on the result.
+
+## Transports
+
+| Transport | Start | Tools | Access |
+| --- | --- | --- | --- |
+| stdio (default) | `serve` | All five | The launching client. |
+| Streamable HTTP | `serve --transport http` | The four read tools; `ufe_refresh_docs` only with `--remote-refresh` | Bearer tokens from `UFE_DOCS_HTTP_TOKENS` or `--token-file`, or an explicit `--allow-anonymous`. |
+
+HTTP requirements:
+
+1. The MCP endpoint defaults to `/mcp`. `GET /healthz` returns server name and version without authentication and is exempt from the rate limit.
+2. Binding beyond loopback without tokens fails at startup unless anonymous access is explicitly allowed (`--allow-anonymous` or `UFE_DOCS_ALLOW_ANONYMOUS=1`). Tokens must be at least 16 characters and are compared in constant time. Missing or invalid credentials receive `401` with a `WWW-Authenticate: Bearer` header.
+3. A per-client sliding one-minute window limits requests (default 120; `--rate-limit 0` disables it) and answers `429` with `Retry-After`. Rate limiting wraps authentication, so failed attempts count. With `--trust-proxy`, the client key is the right-most `X-Forwarded-For` entry, the address appended by the trusted proxy.
+4. `--allowed-host` enables DNS-rebinding protection for the listed Host values. Loopback binds enable it automatically.
+5. The documentation runtime, its scheduler, and the shared cache lock are created once per process, not per client session. Hiding the refresh tool does not stop the server's own scheduled refresh.
+
+Shared tokens gate access; they do not identify users and are not an OAuth authorization server.
+
+## Client packaging
+
+| Client | Packaging in this repository |
+| --- | --- |
+| Claude Code | `.claude-plugin/plugin.json` with the MCP server inline (`${CLAUDE_PLUGIN_ROOT}`), and `.claude-plugin/marketplace.json`. No root `.mcp.json`, because Claude Code and Grok would also load it as project configuration. |
+| Codex | Agent Plugins 1.0 `plugin.json` and `mcp.json` at the root (`${PLUGIN_ROOT}` and `cwd`). Codex also reads `.claude-plugin/marketplace.json`. |
+| Cursor, Antigravity | Generated by `export-plugin`, pointing at the installed checkout with absolute paths. |
+| Grok Build | Installs the repository as a plugin for the skill; reads Claude Code and Cursor MCP settings for the server. |
+| All | `skills/ufe-docs/SKILL.md` describes the search, read, cite, and warning workflow. The MCP server key is `ufe_docs` and the plugin name is `ufe-docs` everywhere. |
+
+`client-config --format {json,claude-code,codex,cursor,antigravity,grok}` renders a local entry, or a remote entry with `--url` and `--token-env`. Remote entries reference the token through the client's environment-variable syntax, except Antigravity, which documents none.
+
+## TLS
+
+Source requests verify certificates against the operating system's trust store through `truststore`, so Python builds without a bundled CA file (such as python.org installers on macOS) work without extra configuration. Verification is never disabled.
 
 ## Documentation source and coverage
 

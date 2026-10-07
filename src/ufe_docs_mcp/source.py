@@ -8,6 +8,7 @@ import ast
 import hashlib
 import json
 import re
+import ssl
 import time
 import urllib.error
 import urllib.parse
@@ -50,12 +51,28 @@ class _SafeRedirect(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
+def _tls_context() -> ssl.SSLContext:
+    """Verify TLS against the operating system's trust store.
+
+    Some Python builds (notably python.org installers on macOS) ship without a
+    CA bundle, so the default context fails every HTTPS request. truststore
+    uses the platform verifier instead; certificate checks stay enabled.
+    """
+    try:
+        import truststore
+    except ImportError:  # pragma: no cover - declared dependency
+        return ssl.create_default_context()
+    return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+
 class OfficialSource:
     """One sync's bounded, rate-limited access to the fixed official origin."""
 
     def __init__(self, report: Callable[[str], None] | None = None, *, not_before: float | None = None):
         self.report = report or (lambda _: None)
-        self.opener = urllib.request.build_opener(_SafeRedirect())
+        self.opener = urllib.request.build_opener(
+            urllib.request.HTTPSHandler(context=_tls_context()), _SafeRedirect(),
+        )
         self.delay = 10.0
         self.last_request = 0.0
         self.not_before = not_before

@@ -1,10 +1,17 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
-    "ufe-docs": {
+    "ufe_docs": {
       "type": "stdio",
       "command": "uv",
-      "args": ["run", "--frozen", "--directory", "${PLUGIN_ROOT}", "ufe-docs-mcp", "serve"],
+      "args": [
+        "run",
+        "--frozen",
+        "--directory",
+        "${PLUGIN_ROOT}",
+        "ufe-docs-mcp",
+        "serve"
+      ],
       "cwd": "${PLUGIN_ROOT}"
     }
   }

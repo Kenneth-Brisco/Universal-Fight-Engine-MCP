@@ -1,19 +1,29 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "ufe-docs-mcp",
-  "version": "0.1.0",
-  "description": "Search and read the official UFE manual using a local documentation cache.",
-  "author": {"name": "Kenneth Brisco"},
+  "name": "ufe-docs",
+  "version": "0.2.0",
+  "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices.",
+  "author": {
+    "name": "Kenneth Brisco"
+  },
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "UFE Documentation",
         "shortDescription": "Search the UFE manual",
-        "longDescription": "Search cached official UFE documentation, read relevant sections with source URLs, browse topics, and inspect source freshness. Runs locally; requires Python and uv. No model API key or Unity installation needed.",
+        "longDescription": "Search the official UFE manual, read relevant sections with source URLs, browse topics, and check documentation freshness. Runs locally with Python and uv; no model API key or Unity installation needed.",
         "developerName": "Kenneth Brisco",
         "category": "Developer Tools",
         "defaultPrompt": "Use the UFE documentation tools to answer my question and cite the official source."
       }
     }
-  }
+  },
+  "license": "MIT",
+  "keywords": [
+    "ufe",
+    "unity",
+    "fighting-game",
+    "documentation",
+    "mcp"
+  ]
 }

@@ -1,6 +1,53 @@
-# Verification — UFE Docs MCP 0.1.0 preview
+# Verification — UFE Docs MCP
 
-## Current freshness release
+## 0.2.0: multi-client plugins and Streamable HTTP
+
+Verified **October 7, 2026 UTC** on macOS 26.5.1 (arm64), Python 3.13.9 from the python.org installer, MCP SDK 2.3.0. Client versions: Claude Code 2.1.292, Codex CLI 0.161.0, Cursor Agent 2026.10.01, Antigravity CLI 1.2.17, Grok Build 1.0.46.
+
+### Automated checks
+
+| Check | Result |
+| --- | --- |
+| Unit and protocol suite | **61 tests passed** (44 existing, 17 new). |
+| Streamable HTTP over a real loopback socket | Discovery shows the four read tools with titles; search, read, and an actionable unknown-ID error work; `ufe_refresh_docs` appears only with `--remote-refresh`. |
+| HTTP access control | No header, a wrong token, and a non-Bearer scheme each return `401` with `WWW-Authenticate`; the correct token works; `/healthz` stays open. Binding beyond loopback without tokens or `--allow-anonymous` fails at startup. |
+| Rate limiting | Window, recovery after 60 seconds, per-client separation, health exemption, and resistance to a forged left-most `X-Forwarded-For`. |
+| Manifests | Root `plugin.json` and `mcp.json` validate against the Agent Plugins 1.0 schemas; names, versions, and the `ufe_docs` server key agree across manifests; no root `.mcp.json`. |
+| Client configuration | Every `client-config` format renders local and remote entries; JSON and TOML parse; exported Antigravity manifests contain only `name` and `description`. |
+| Validators | `claude plugin validate --strict` passes for the marketplace and plugin manifests. `grok plugin validate` accepts the repository. `agy plugin validate` accepts the exported Antigravity package. |
+
+### TLS fix
+
+The first live sync on this Mac failed with `CERTIFICATE_VERIFY_FAILED`: the python.org Python has no CA bundle file. Source requests now verify against the operating system trust store through `truststore`. A fetch of `robots.txt` succeeded with no `SSL_CERT_FILE` override.
+
+### Live client checks
+
+"Live call" means the assistant's model invoked the tool and the tool result appeared in the client's event stream.
+
+| Client | Local (stdio) | Plugin | Remote (HTTP, bearer token) |
+| --- | --- | --- | --- |
+| Claude Code | Live call (earlier `claude-opus-5-5` acceptance run; registration still connects) | Installed from the repository marketplace: 1 skill, 1 MCP server. Loaded with `--plugin-dir`: `plugin:ufe-docs:ufe_docs` connected with five tools; live `ufe_docs_status` call returned 223 documents, `current_to_catalog` | Live `ufe_search_docs` call; token from an environment variable |
+| Codex | Live `ufe_search_docs` call; read-only tool ran without prompting under `default_tools_approval_mode = "writes"` | Installed from the repository marketplace; live `ufe_docs_status` call through the plugin's server | Live `ufe_get_doc` call with `bearer_token_env_var` |
+| Cursor | Server approved; five tools listed | Not tested: the Cursor app is not installed, and the Cursor Agent CLI does not load plugins | Server approved; four tools listed. **Live calls blocked:** the Cursor Agent CLI is not signed in on this machine |
+| Antigravity | — | Exported package installed; the agent loaded `ufe-docs_ufe_docs` and attempted `ufe_docs_status`. **Headless mode denied the call** because MCP tools require a permission it cannot prompt for; an interactive session asks. Not overridden | Not tested |
+| Grok Build | Picked up from Claude Code settings automatically; doctor: handshake and five tools; live `ufe_docs_status` call returned 223 documents | Installed from the repository: skill only; the server comes from MCP settings | `${UFE_DOCS_TOKEN}` header expanded by Grok; doctor: four tools; live `ufe_list_topics` call |
+
+The remote server ran exactly as the `Dockerfile` would: a clean copy of the image's files, `uv sync --frozen --no-dev`, `PORT=7860`, `--trust-proxy`, and an empty cache. It refused to start on `0.0.0.0` without an access policy, then with a token it bootstrapped the documentation itself (four requests, crawl delay respected) and served every remote check above. The token never appeared in server logs or client transcripts.
+
+**Not run:** `docker build`. Docker Desktop's data is archived on an external drive on this machine, and starting it would create a new empty store. No hosting deployment was made.
+
+Test installations in Codex, Antigravity, Claude Code, and Grok were removed afterwards, and their configuration files were compared with pre-test backups.
+
+### Remaining
+
+- Live calls in Cursor and an interactive Antigravity session.
+- A container build and a deployment, once hosting is approved.
+- Claude Desktop and claude.ai custom connectors against a hosted HTTPS URL.
+
+
+## 0.1.0 preview
+
+### Current freshness release
 
 Verified **October 7, 2026 at 16:31:39 UTC** in the development environment, after the freshness implementation and review fixes.
 
@@ -28,7 +75,7 @@ uv run --frozen python -m unittest discover -s tests -v
 
 The final result was also captured with a file-backed unittest runner that counts subtests. An earlier attempt to run that recorder through standard input could not start the multiprocessing test's child; using a real file entry point resolved that runner limitation without changing the coordination test.
 
-### Current live-source synchronization
+#### Current live-source synchronization
 
 A foreground sync using the new shared coordinator completed at **2026-10-07T16:26:13.259957+00:00**. It fetched the official crawl rules, public application, catalog, and supplemental public Move Links page. It returned `sync_outcome: unchanged`, updating the source-check time without inventing a documentation-change event.
 
@@ -42,7 +89,7 @@ A foreground sync using the new shared coordinator completed at **2026-10-07T16:
 
 A full live raw-page refresh was not run. Its selection, persistence, update behavior, and protocol path were tested with controlled fixtures; the 37-minute-or-longer estimate comes from the observed source count and ten-second crawl delay.
 
-### Remaining presenter-specific rehearsal
+#### Remaining presenter-specific rehearsal
 
 This verifies the connector in Linux with Python 3.12.14 and MCP SDK 2.3.0. It does not establish installation in the user's actual Claude Code, Claude Desktop, or Codex client, nor native macOS/Windows behavior.
 
@@ -50,15 +97,15 @@ Before the livestream, connect the intended client, confirm all five tools appea
 
 See [SPECIFICATION.md](docs/SPECIFICATION.md) for the implemented behavior and acceptance contract.
 
-## Original implementation verification
+### Original implementation verification
 
 The following records the initial implementation checks earlier on October 7, 2026, before automatic freshness and the fifth tool were added. The original archive-install check applies to that earlier source package.
 
-### Result
+#### Result
 
 The local stdio MCP was installed from its project and exercised through the official Python MCP client. The generated configuration launched successfully from a directory outside the project.
 
-### Checks
+#### Checks
 
 - 21 focused automated tests passed, including 32 parameterized subtests.
 - Real MCP initialization and all four tool schemas passed.
@@ -71,14 +118,14 @@ The local stdio MCP was installed from its project and exercised through the off
 - Plugin and MCP manifests passed their Agent Plugins 1.0 JSON schemas.
 - A clean extraction of the distributable installed successfully with locked production dependencies; version, generated interpreter configuration, and empty-cache status checks passed.
 
-### Live indexed coverage
+#### Live indexed coverage
 
 - Public documents/sections: **223** (146 pages, 77 groups).
 - Searchable chunks: **1010**.
 - Source flags preserved: 23 `needs_verification`, 9 `legacy_docs_differ`.
 - Unreleased material excluded according to the public application’s visibility rules.
 
-### Source provenance
+#### Source provenance
 
 - Catalog: https://www.ufe3d.com/ufe2/docs/assets/site-data.json
 - Catalog schema: `1.1.0`.
@@ -89,7 +136,7 @@ The local stdio MCP was installed from its project and exercised through the off
 - Public application SHA-256: `431b68db0fdb06fae223282680f658fbfa43f09afc6ad26643deedcb4f65ebe0`.
 - Mode: published bulk catalog plus the public group absent from that catalog. A full raw-page refresh is available but was not run.
 
-### Actual MCP query checks
+#### Actual MCP query checks
 
 | Query | First returned document |
 | --- | --- |
@@ -101,7 +148,7 @@ The local stdio MCP was installed from its project and exercised through the off
 
 Searches, follow-up page retrieval, and complete topic pagination were executed through the SDK client with offline serving enabled.
 
-### Environment and scope
+#### Environment and scope
 
 - Python `3.12.14`, platform `linux`, SDK `mcp 2.3.0`.
 - Negotiated MCP protocol: `2025-11-25`.

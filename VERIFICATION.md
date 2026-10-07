@@ -20,6 +20,8 @@ Verified **October 7, 2026 UTC** on macOS 26.5.1 (arm64), Python 3.13.9 from the
 
 ### Plugin eval (claude plugin eval)
 
+Full report: [docs/eval-reports/2026-10-07-ufe3d-plugin-eval.html](docs/eval-reports/2026-10-07-ufe3d-plugin-eval.html). Download it or open it locally; GitHub shows HTML files as source.
+
 Run on **October 7, 2026 UTC** with Claude Code 2.1.293, the default model (`opus` alias, `xhigh` effort, per the operator's settings; the report does not record the resolved model), 9 cases × 3 runs × 2 arms, judge `haiku`. Duration 8 minutes; reported cost **$5.45**. The plugin's real `UFE3D` server answered from a copy of the local index in every run; the shared index was not refreshed during the eval.
 
 | Case | With plugin | Without | Docs tool used | Skill fired |

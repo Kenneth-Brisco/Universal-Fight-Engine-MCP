@@ -23,3 +23,7 @@ claude plugin eval . --scaffold --allow-real-servers --allow-tools "mcp__plugin_
 - `--scaffold` runs each case's `scaffold.sh` (it only copies the local index).
 - `--allow-real-servers` starts the plugin's real `UFE3D` server; the grants cover the four read tools only, so evals never trigger a documentation refresh.
 - Add `--model <model>`, `--runs <n>`, or `--case <glob>` to change what runs. Results and an HTML report are written to `evals/results/`, which is ignored by Git.
+
+## Published results
+
+Saved reports live in [docs/eval-reports/](../docs/eval-reports/). The October 7, 2026 run scored 0.99 with the plugin and 0.29 without (mean Δ +0.70); see [VERIFICATION.md](../VERIFICATION.md#plugin-eval-claude-plugin-eval).

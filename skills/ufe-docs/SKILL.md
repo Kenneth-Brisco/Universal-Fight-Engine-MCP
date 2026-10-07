@@ -5,7 +5,7 @@ description: Answer questions about the Universal Fighting Engine (UFE) for Unit
 
 # UFE documentation
 
-Use the `ufe_docs` MCP tools to ground UFE answers in the official manual.
+Use the `UFE3D` MCP tools to ground UFE answers in the official manual.
 
 1. Search first with `ufe_search_docs`. Keep `limit` small (3 to 5) and raise `max_chars` only when passages are cut off.
 2. Read the most relevant results with `ufe_get_doc`, using the returned `doc_id`. Follow `next_start_line` for long pages instead of requesting everything at once.

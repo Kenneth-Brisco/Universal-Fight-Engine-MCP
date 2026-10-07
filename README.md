@@ -71,7 +71,7 @@ Once installed, connect the same server to your preferred assistant.
 
 There are two ways to connect, and both run the same server:
 
-- **MCP connection:** add the `ufe_docs` server to your assistant's MCP settings. You get the five tools.
+- **MCP connection:** add the `UFE3D` server to your assistant's MCP settings. You get the five tools.
 - **Plugin:** install the UFE Docs plugin. It adds the same server **plus a skill** that teaches the assistant the search → read → cite → flag-warnings workflow.
 
 Generate configuration **after placing the checkout in its permanent location**. Generated entries point at this checkout's Python environment and the shared documentation cache with absolute paths, so every assistant on the machine shares one index.
@@ -80,9 +80,9 @@ Generate configuration **after placing the checkout in its permanent location**.
 
 | Assistant | MCP connection | Plugin |
 | --- | --- | --- |
-| **Claude Code** (and Claude Desktop through plugins) | `client-config --format claude-code` prints a ready `claude mcp add-json --scope user …` command | `claude plugin marketplace add <checkout>` then `claude plugin install ufe-docs@ufe-docs` |
-| **Codex** (CLI and the ChatGPT desktop app; the IDE extension has no plugin support) | `client-config --format codex` prints a `[mcp_servers.ufe_docs]` table for `~/.codex/config.toml` | `codex plugin marketplace add <checkout>` then `codex plugin add ufe-docs@ufe-docs` |
-| **Cursor** | `client-config --format cursor` prints an entry for `~/.cursor/mcp.json` or `.cursor/mcp.json` | `ufe-docs-mcp export-plugin cursor --out ~/.cursor/plugins/local/ufe-docs`, then reload Cursor |
+| **Claude Code** (and Claude Desktop through plugins) | `client-config --format claude-code` prints a ready `claude mcp add-json --scope user …` command | `claude plugin marketplace add <checkout>` then `claude plugin install ufe3d@ufe3d` |
+| **Codex** (CLI and the ChatGPT desktop app; the IDE extension has no plugin support) | `client-config --format codex` prints a `[mcp_servers.UFE3D]` table for `~/.codex/config.toml` | `codex plugin marketplace add <checkout>` then `codex plugin add ufe3d@ufe3d` |
+| **Cursor** | `client-config --format cursor` prints an entry for `~/.cursor/mcp.json` or `.cursor/mcp.json` | `ufe-docs-mcp export-plugin cursor --out ~/.cursor/plugins/local/ufe3d`, then reload Cursor |
 | **Antigravity** (CLI, IDE, 2.0) | `client-config --format antigravity` prints an entry for `~/.gemini/config/mcp_config.json` | `ufe-docs-mcp export-plugin antigravity --out <dir>` then `agy plugin install <dir>` |
 | **Grok Build** | Reads your Claude Code (`~/.claude.json`) and Cursor MCP settings automatically. Otherwise `client-config --format grok` prints a `grok mcp add` command | `grok plugin install <checkout>` adds the skill; the server comes from the MCP connection |
 | **Any other MCP client** | `client-config` prints a generic `mcpServers` JSON entry | — |
@@ -100,11 +100,15 @@ How the plugins launch the server:
 
 Restart or reconnect the assistant after changing its MCP settings or installing a plugin. Clients may ask you to approve the server or its tools the first time. The four read tools are annotated read-only, so clients that auto-approve read-only tools (for example Codex with `default_tools_approval_mode = "writes"`) run them without prompting; `ufe_refresh_docs` still asks.
 
-Headless runs (`cursor-agent -p`, `agy -p`) cannot ask for approval, so they reject MCP calls unless you allow them: in Cursor, add `"permissions": {"allow": ["Mcp(ufe_docs:*)"]}` to `.cursor/cli.json`. Interactive sessions ask instead.
+Headless runs (`cursor-agent -p`, `agy -p`) cannot ask for approval, so they reject MCP calls unless you allow them: in Cursor, add `"permissions": {"allow": ["Mcp(UFE3D:*)"]}` to `.cursor/cli.json`. Interactive sessions ask instead.
 
 [Example JSON](examples/client-config.json) shows the generic format with placeholder paths.
 
 **Compatibility depends on the host application.** A model name alone does not establish MCP support; the host app must launch local stdio servers or connect to a remote URL. See [Verification](#verification-and-coverage) for what was actually tested.
+
+## Measure what it adds
+
+`evals/` holds nine UFE questions with checkable answers for `claude plugin eval`. Each runs with the plugin and with no plugin, so the report shows how much the documentation tools improve accuracy, citations, and warning handling over the model alone. See [evals/README.md](evals/README.md) for the command.
 
 ## Hosted endpoint
 
@@ -222,7 +226,7 @@ Publisher warnings stay attached to the results. The verified snapshot included 
 | The CLI and assistant show different snapshots | Use the same cache location for both, then regenerate the client entry if needed. |
 | Freshness says `check_failed` or `check_due` | Read the warning and source-check date. Retry with `ufe_refresh_docs` or `sync`; automatic retries wait 15 minutes after a failed attempt. |
 | A refresh says another sync is running | Keep using cached docs and check status. Request a full raw-page refresh after the current operation finishes. |
-| Cursor's chat says the `ufe_docs` server does not exist | Cursor's plugin loader can time out in a window with no folder open, dropping every plugin's tools. Open a folder, run **Developer: Reload Window**, and start a new chat. |
+| Cursor's chat says the `UFE3D` server does not exist | Cursor's plugin loader can time out in a window with no folder open, dropping every plugin's tools. Open a folder, run **Developer: Reload Window**, and start a new chat. |
 | An earlier installation uses a previous cache location | Run `uv sync --frozen`, synchronize once, and regenerate the client configuration. |
 
 ## Advanced setup

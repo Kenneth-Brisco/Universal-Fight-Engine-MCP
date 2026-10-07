@@ -11,6 +11,7 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import threading
+import time
 import unittest
 from unittest import mock
 
@@ -728,6 +729,35 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual(current["snapshot"]["fetched_at"], _iso(self.clock()))
                 self.assertFalse(runtime.status()["freshness"]["check_overdue"])
                 runtime.close()
+
+
+class RefreshProbeTests(unittest.TestCase):
+    def _hold_lock(self, cache_dir: Path, seconds: float, held: threading.Event) -> None:
+        with runtime_module._refresh_lock(cache_dir):
+            held.set()
+            time.sleep(seconds)
+
+    def test_brief_probe_collision_is_not_reported_as_refreshing(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cache = Path(temp_dir)
+            held = threading.Event()
+            worker = threading.Thread(target=self._hold_lock, args=(cache, 0.05, held))
+            worker.start()
+            held.wait(2)
+            self.assertFalse(runtime_module._refresh_running(cache))
+            worker.join()
+
+    def test_long_held_lock_is_reported_as_refreshing(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cache = Path(temp_dir)
+            held = threading.Event()
+            worker = threading.Thread(target=self._hold_lock, args=(cache, 1.0, held))
+            worker.start()
+            held.wait(2)
+            self.assertTrue(runtime_module._refresh_running(cache))
+            worker.join()
+            self.assertFalse(runtime_module._refresh_running(cache))
+
 
 if __name__ == "__main__":
     unittest.main()

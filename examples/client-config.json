@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "ufe_docs": {
+    "UFE3D": {
       "command": "/absolute/path/to/ufe-docs-mcp/.venv/bin/python",
       "args": [
         "-m",

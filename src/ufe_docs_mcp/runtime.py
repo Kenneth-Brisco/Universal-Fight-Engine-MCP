@@ -92,7 +92,7 @@ def _write_state(cache_dir: Path, state: dict) -> None:
 
 
 @contextmanager
-def _refresh_lock(cache_dir: Path):
+def _refresh_lock(cache_dir: Path, wait_seconds: float = 0.0):
     """OS-backed SQLite lock, separate from the atomically replaced index.
 
     The transaction is only a mutex. Closing it or exiting the process releases
@@ -102,7 +102,7 @@ def _refresh_lock(cache_dir: Path):
     cache_dir.mkdir(parents=True, exist_ok=True)
     # A runtime may acquire the lock before acknowledging a tool request, then
     # transfer its exclusive ownership to the worker that eventually closes it.
-    connection = sqlite3.connect(cache_dir / "refresh-lock.sqlite3", timeout=0, check_same_thread=False)
+    connection = sqlite3.connect(cache_dir / "refresh-lock.sqlite3", timeout=wait_seconds, check_same_thread=False)
     try:
         try:
             connection.execute("BEGIN IMMEDIATE")
@@ -115,11 +115,20 @@ def _refresh_lock(cache_dir: Path):
         connection.close()
 
 
+PROBE_WAIT_SECONDS = 0.2
+
+
 def _refresh_running(cache_dir: Path) -> bool:
+    """Whether a synchronization holds the lock.
+
+    Every server sharing the cache probes by taking the lock briefly, so two
+    simultaneous probes can collide. Waiting a moment lets another probe release
+    it, while a real synchronization holds it for many seconds.
+    """
     if not (cache_dir / "refresh-lock.sqlite3").exists():
         return False
     try:
-        with _refresh_lock(cache_dir):
+        with _refresh_lock(cache_dir, wait_seconds=PROBE_WAIT_SECONDS):
             return False
     except RefreshBusy:
         return True

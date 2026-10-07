@@ -1,5 +1,5 @@
 {
-  "name": "ufe-docs",
+  "name": "ufe3d",
   "owner": {
     "name": "Kenneth Brisco"
   },
@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "ufe-docs",
+      "name": "ufe3d",
       "source": "./",
       "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices."
     }

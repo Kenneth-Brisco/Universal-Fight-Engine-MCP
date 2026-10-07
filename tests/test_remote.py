@@ -96,7 +96,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
                 async with httpx2.AsyncClient() as probe:
                     health = (await probe.get(base + "/healthz")).json()
                 self.assertEqual(health["status"], "ok")
-                self.assertEqual(health["server"], "ufe_docs")
+                self.assertEqual(health["server"], "UFE3D")
                 async with self._session(base) as session:
                     tools = {tool.name: tool for tool in (await session.list_tools()).tools}
                     self.assertEqual(set(tools), READ_TOOLS)

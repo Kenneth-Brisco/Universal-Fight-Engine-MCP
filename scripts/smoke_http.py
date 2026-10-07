@@ -29,7 +29,7 @@ async def main() -> int:
 
     async with httpx2.AsyncClient(timeout=15.0) as probe:
         health = await probe.get(base + "/healthz")
-        assert health.status_code == 200 and health.json()["server"] == "ufe_docs", health.text
+        assert health.status_code == 200 and health.json()["server"] == "UFE3D", health.text
         denied = await probe.post(base + "/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
         assert denied.status_code == 401, denied.status_code
     print("health ok; unauthenticated request rejected")

@@ -12,7 +12,7 @@ from . import __version__
 from .index import get_doc, list_topics, search_docs
 from .runtime import DEFAULT_REFRESH_HOURS, DocumentationRuntime, sync_cache
 
-SERVER_KEY = "ufe_docs"
+SERVER_KEY = "UFE3D"
 CLIENT_FORMATS = ("json", "claude-code", "codex", "cursor", "antigravity", "grok")
 
 
@@ -42,7 +42,7 @@ def local_launch(cache_dir: Path) -> tuple[str, list[str]]:
 
 
 def client_config(fmt: str, cache_dir: Path, *, url: str | None = None, token_env: str | None = None) -> str:
-    """Render the ufe_docs entry in one client's native configuration format."""
+    """Render the UFE3D entry in one client's native configuration format."""
     command, args = local_launch(cache_dir)
     if fmt == "codex":
         lines = [f"[mcp_servers.{SERVER_KEY}]"]
@@ -118,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
     topics.add_argument("--category")
     topics.add_argument("--offset", type=int, default=0)
     topics.add_argument("--limit", type=int, default=50)
-    config = commands.add_parser("client-config", help="Print the ufe_docs entry for a client's MCP configuration")
+    config = commands.add_parser("client-config", help="Print the UFE3D entry for a client's MCP configuration")
     config.add_argument("--format", choices=CLIENT_FORMATS, default="json")
     config.add_argument("--url", help="Configure a remote HTTP endpoint instead of this local installation")
     config.add_argument("--token-env", help="Environment variable holding the bearer token for --url")

@@ -4,6 +4,8 @@
 
 Verified **October 7, 2026 UTC** on macOS 26.5.1 (arm64), Python 3.13.9 from the python.org installer, MCP SDK 2.3.0. Client versions: Claude Code 2.1.292, Codex CLI 0.161.0, Cursor Agent 2026.10.01, Antigravity CLI 1.2.17, Grok Build 1.0.46.
 
+> **Rename:** after these checks the MCP server key changed from `ufe_docs` to `UFE3D` and the plugin name from `ufe-docs` to `ufe3d`. Tool IDs therefore read `mcp__UFE3D__…` (Claude Code) and `mcp__plugin_ufe3d_UFE3D__…` (Claude Code plugin). Records below use the names at the time.
+
 ### Automated checks
 
 | Check | Result |

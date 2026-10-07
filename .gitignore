@@ -11,3 +11,4 @@ dist/
 *.db
 refresh-state.json
 .refresh-state-*.tmp
+.DS_Store

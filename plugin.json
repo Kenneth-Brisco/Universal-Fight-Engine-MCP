@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "ufe-docs",
+  "name": "ufe3d",
   "version": "0.2.0",
   "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices.",
   "author": {

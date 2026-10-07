@@ -94,7 +94,7 @@ class BearerTokenMiddleware:
         await _send_json(send, 401, {
             "error": "unauthorized",
             "message": "Send 'Authorization: Bearer <token>' with an access token for this UFE Docs server.",
-        }, [(b"www-authenticate", b'Bearer realm="ufe-docs"')])
+        }, [(b"www-authenticate", b'Bearer realm="ufe3d"')])
 
 
 class RateLimitMiddleware:
@@ -187,7 +187,7 @@ def build_http_app(
 
     @mcp.custom_route(HEALTH_PATH, methods=["GET"], include_in_schema=False)
     async def health(_request: Request) -> JSONResponse:
-        return JSONResponse({"status": "ok", "server": "ufe_docs", "version": __version__})
+        return JSONResponse({"status": "ok", "server": "UFE3D", "version": __version__})
 
     security = None
     if allowed_hosts:

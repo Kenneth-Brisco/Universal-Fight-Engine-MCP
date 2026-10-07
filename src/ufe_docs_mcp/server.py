@@ -15,7 +15,7 @@ from .index import get_doc, list_topics, search_docs
 from .runtime import DEFAULT_REFRESH_HOURS, DocumentationRuntime
 
 
-SERVER_NAME = "ufe_docs"
+SERVER_NAME = "UFE3D"
 
 INSTRUCTIONS = (
     "Tools for the official Universal Fighting Engine (UFE) manual, served from a local snapshot. "

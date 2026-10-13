@@ -51,14 +51,14 @@
       "path": "CHANGELOG.md",
       "mode": "100644",
       "baseline_blob": "e38f5d8a06e5f286620cb0aaaeb69154aa54d231",
-      "current_blob": "2dea26e13763a115b88c93455a55aeffb74bff5b",
+      "current_blob": "4bf7f9040d215867af2d875700f62efb8f0184f7",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
       "path": "CONTRIBUTING.md",
       "mode": "100644",
       "baseline_blob": "a662bc0944fda1631f6a3873f06dce8fbaa09aa0",
-      "current_blob": "0c5ded37ecf761d765676f264c6f55a030120c61",
+      "current_blob": "8809d7c7a43066123f9c7f31e51d52769d6c93e9",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
@@ -113,7 +113,7 @@
       "path": "docs/RELEASE-EXPORT.md",
       "mode": "100644",
       "baseline_blob": "27a2d1a84a15918ac8cab04109fa8c189440bc50",
-      "current_blob": "6d2e858c6231c6c4186b31a338ab8814117e8436",
+      "current_blob": "65cb660879eea1e4025af1dae8ed42999a17de6a",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
@@ -676,5 +676,8 @@
       "mode": "100644",
       "baseline_blob": "2b154f5a8e220f613983b74377216765d10cdbfb"
     }
-  ]
+  ],
+  "normalized_tested_implementation_commit": "c57a0fb7ba0bbd2c0d97fca9b3712dd89387b7b9",
+  "normalized_candidate_before_audit_record": "2ea9b158f8aafdacc91adcd9067e3a13b07e8e95",
+  "normalized_pr_base": "99a42414411bcb95ac0724acf147ebacdf731e24"
 }

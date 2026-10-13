@@ -49,7 +49,7 @@ jobs:
 
           manifest_path = Path('release-export.json')
           manifest = json.loads(manifest_path.read_text())
-          assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == 'da4f9780fb43ce8944594c82df9f483784d4b6865f06e7d7e92ecd0e38306064'
+          assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == '8dae64b9866469ba40b604352203133fbc523f5a4c9b8bb41e6f2a58db7faa42'
           assert manifest['schema_version'] == 2
           assert manifest['repository'] == 'Kenneth-Brisco/Universal-Fight-Engine-MCP'
           assert manifest['baseline_repository'] == 'Kenneth-Brisco/UFE3D-MCP'
@@ -91,7 +91,6 @@ jobs:
               values = [identity(commit, role) for role in ('author', 'committer')]
               if any(not m or m[2] != '+0000' or not (m[1].endswith('@users.noreply.github.com') or m[1] == 'noreply@github.com') for m in values):
                   historical_metadata_concerns += 1
-          if historical_metadata_concerns:
-              print('::warning::Historical commit metadata requires privacy review before publication. Values are omitted. Parity/current-commit success is not publication approval.')
+          assert historical_metadata_concerns == 0, 'Reachable commit metadata must use UTC and noreply addresses; private values omitted'
           print(json.dumps({'parity_passed': True, 'current_commit_metadata_passed': True, 'head': git('rev-parse', 'HEAD'), 'baseline_commit': manifest['baseline_commit'], 'accounted_baseline_files': len(files), 'identical_files': len(files)-len(allowed_changes)-len(controls), 'adapted_files': len(allowed_changes), 'audit_control_files': len(controls), 'reachable_commits': len(commits), 'historical_metadata_concerns': historical_metadata_concerns, 'publication_privacy_verified': False, 'retained_github_data_audited': False}))
           PY

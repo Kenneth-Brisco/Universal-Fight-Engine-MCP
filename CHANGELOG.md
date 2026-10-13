@@ -27,6 +27,7 @@ Entries follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Add an 
 
 ### Security
 
+- Normalized historical author/committer timestamps to UTC without changing their actual instants, and replaced confirmed maintainer email aliases with his verified GitHub noreply address. Commit IDs changed while file trees and branch relationships were preserved. Use a fresh clone; preserve local work and do not merge old history back. The release audit now rejects non-UTC or non-noreply reachable commit metadata.
 - Preserved the response-privacy fixes in this PR: cache filesystem paths and raw operational exceptions are not returned over stdio or HTTP, including older persisted failures after restart.
 - Preserved sanitized evaluation metadata without relabeling historical results as new evaluations. Local diagnostics and generated configuration still need redaction before sharing. Release preparation also checks source-archive ownership headers; locally built archives need metadata normalization or a controlled build identity before distribution.
 

@@ -93,14 +93,38 @@ in file content. Generic container paths and explicitly synthetic privacy-test
 fixtures remained. Official passages, URLs, warnings, and historical evaluation
 names were preserved. That result does not clear this repository's history.
 
-At source head `0b9809867d48d8eb9910a78f2f42013d2cb62c3c`, the reachable-history
-metadata check found 16 older commits with non-UTC offsets; 13 also used
-non-noreply email metadata. Values are intentionally not reproduced here.
-The audit workflow verifies the current commit's noreply/UTC metadata
-and reports historical metadata concerns separately. **A green parity/current-
-commit audit is not publication privacy approval.** The workflow does not audit
-all historical file contents, private PR references, logs, or retained artifacts.
-An unsigned commit must not be described as cryptographically signed.
+The UTC/noreply cleanup normalizes all 18 commits in the four branch histories
+at the pre-cleanup head. Sixteen had non-UTC offsets; thirteen used non-noreply
+email metadata. Kenneth confirmed ownership of the eight commits whose former
+email GitHub did not associate with his account. Both author and committer now
+use his verified noreply identity and `+0000`. Author names, absolute timestamp
+seconds, commit messages, parent relationships, and every commit's file tree
+were verified unchanged. The subsequent audit-record commit also uses UTC and
+noreply metadata. No branches were merged and no product files were rewritten.
+
+The rewritten equivalent of the pre-cleanup PR #3 head is
+`2ea9b158f8aafdacc91adcd9067e3a13b07e8e95`;
+its corresponding base is `99a42414411bcb95ac0724acf147ebacdf731e24`.
+Historical test/run identifiers above retain their original meanings. The
+rewritten equivalent of tested implementation `0b98098` is
+`c57a0fb7ba0bbd2c0d97fca9b3712dd89387b7b9` with the same tree.
+The metadata rewrite removed eight old commit signatures; none had been shown
+verified by GitHub. Rewritten commits are unsigned. Profile attribution is not
+cryptographic signature verification.
+
+The release audit now **fails on any reachable non-UTC or non-noreply commit**,
+in addition to checking parity and current metadata. It cannot audit every
+GitHub-retained object. Old SHA-addressed objects, PR references, and historical
+logs can remain after a branch rewrite; their disappearance has not been
+confirmed. **Passing the branch-history audit is not publication privacy
+approval.** GitHub's [sensitive-data removal guidance](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+explains the separate retained-data and collaborator cleanup steps.
+
+Use a fresh clone after this rewrite. Preserve uncommitted work separately;
+do not merge or push an old local branch back into the normalized history.
+A private local rollback bundle and complete old-to-new mapping were retained
+outside all repositories; neither was uploaded as a branch, tag, or artifact.
+Existing user checkouts and client settings were left untouched.
 
 The other repository's retained `private-release-history-backup` artifact
 (ID `11782643238`, run `38331617316`) and addressable older objects are findings
@@ -113,8 +137,9 @@ privacy. No history, artifact, log, or backup was deleted during consolidation.
 
 1. Review and validate the exact PR #3 head, including file parity, setup, tests,
    and commit identity. Keep the repository private during preparation.
-2. Audit this repository's historical content, commit metadata, branches/tags,
-   PR references, Actions logs, and artifacts. Address sensitive findings through
+2. Verify the normalized branch metadata and finish the retained-data audit of
+   historical content, PR references, Actions logs, and artifacts. Address any
+   remaining sensitive findings through
    an explicitly authorized plan that preserves attribution. Changing new commit
    settings does not sanitize old commits, and a clean branch log cannot confirm
    that older GitHub objects were removed. Involve GitHub support if necessary.

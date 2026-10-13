@@ -70,6 +70,14 @@ Use [GitHub's commit-email guidance](https://docs.github.com/en/account-and-prof
 to locate your account's actual private address. Preserve other contributors'
 authorship when incorporating their work.
 
+## After the UTC history cleanup
+
+The repository history has been normalized to UTC/noreply metadata. Use a fresh
+clone before further work. Preserve local edits separately, and do not merge or
+push an old checkout back into the new history. The cleanup kept every existing
+commit's file tree and actual timestamp unchanged; commit IDs changed. See
+[the release record](docs/RELEASE-EXPORT.md) for scope and retained-data limits.
+
 ## Release artifacts
 
 Build from the reviewed source revision in a clean checkout. Include only tracked

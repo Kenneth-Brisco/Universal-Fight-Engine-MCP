@@ -2,7 +2,7 @@
 
 Hosted mode serves the same UFE reference tools over Streamable HTTP for a client that supports a server URL and the configured authentication method. Local installation remains the primary distribution: each user runs the connector without a required hosting subscription. Your coding agent uses retrieved context while implementing and verifying requested changes with its own project tools.
 
-The repository includes a Dockerfile and a Hugging Face Space template. It does not provision an endpoint automatically. A successful local HTTP check does not establish compatibility with every web connector, and shared bearer tokens are not an OAuth authorization server. This PR updates the private development branch; a previous release copy is not automatically synchronized. See [README](../README.md) for preview instructions and [CHANGELOG](../CHANGELOG.md) for naming migration.
+The repository includes a Dockerfile and a Hugging Face Space template. It does not provision an endpoint automatically. A successful local HTTP check does not establish compatibility with every web connector, and shared bearer tokens are not an OAuth authorization server. The intended source and public home is `Kenneth-Brisco/Universal-Fight-Engine-MCP`, currently PR #3's `fix/public-release-readiness` branch. This candidate does not deploy a service. See [release parity and evidence](RELEASE-EXPORT.md) for provenance and remaining publication checks. See [README](../README.md) for preview instructions and [CHANGELOG](../CHANGELOG.md) for naming migration.
 
 ## What a host must provide
 

@@ -1,0 +1,680 @@
+{
+  "schema_version": 2,
+  "repository": "Kenneth-Brisco/Universal-Fight-Engine-MCP",
+  "candidate_branch": "fix/public-release-readiness",
+  "baseline_repository": "Kenneth-Brisco/UFE3D-MCP",
+  "baseline_commit": "60d8d798f86fe93609509e98d4f94b7315a34841",
+  "baseline_tree": "9ffb19d13079db451f1a2aad0f247638f85f564d",
+  "tested_implementation_commit": "0b9809867d48d8eb9910a78f2f42013d2cb62c3c",
+  "files": [
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "mode": "100644",
+      "baseline_blob": "2e2c52df767ab15f853dc1f3ce3a40d15d8ae0ca"
+    },
+    {
+      "path": ".claude-plugin/plugin.json",
+      "mode": "100644",
+      "baseline_blob": "d0fab8f0b7d7b75de9c77dfab53cda34338a9f14",
+      "current_blob": "a4dbff819ff24d385d93ee14e9cf66ee1693c909",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": ".dockerignore",
+      "mode": "100644",
+      "baseline_blob": "9784c0cc8bbfb22a070f5d24c515459bb1e466fe"
+    },
+    {
+      "path": ".github/workflows/audit-release-metadata.yml",
+      "mode": "100644",
+      "baseline_blob": "fcaf520004fd3c114002253ed56006a542d2c8aa",
+      "audit_control": true
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "mode": "100644",
+      "baseline_blob": "52d380fac9e9aadb573948949bc62d0f30ef566b"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "baseline_blob": "c1ce8cf7636020413eccb0e1bb8ed82050593971"
+    },
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "baseline_blob": "f26e6a6ddb9120ce5ecb70b5baf21bb00ba10f1c",
+      "current_blob": "96f52cdac43b901f8741e40de95c1d1fa061725a",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "CHANGELOG.md",
+      "mode": "100644",
+      "baseline_blob": "e38f5d8a06e5f286620cb0aaaeb69154aa54d231",
+      "current_blob": "2dea26e13763a115b88c93455a55aeffb74bff5b",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "mode": "100644",
+      "baseline_blob": "a662bc0944fda1631f6a3873f06dce8fbaa09aa0",
+      "current_blob": "0c5ded37ecf761d765676f264c6f55a030120c61",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "Dockerfile",
+      "mode": "100644",
+      "baseline_blob": "dc238094b1720b338ee2b55396e5aeb68074ddab"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "baseline_blob": "cefe6c331600156d710afb7ca262d59a6ae7cc92"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "baseline_blob": "e29f745db06e0f7aeadea36d149c84f512b2ecd0",
+      "current_blob": "670b6d63fea16480b67a562d776610042d5ff1cc",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "VERIFICATION.md",
+      "mode": "100644",
+      "baseline_blob": "80a76a481e11773e43fc5f9907e6018887341c92"
+    },
+    {
+      "path": "assets/ufe-docs-mcp-banner.svg",
+      "mode": "100644",
+      "baseline_blob": "685ab3214b2271426fb7f81e5aa18f5a36483699"
+    },
+    {
+      "path": "deploy/huggingface/README.md",
+      "mode": "100644",
+      "baseline_blob": "85da853d6bf050362371e19ad9b2a0ed8a169ec3",
+      "current_blob": "28c4da58e3a7b38b1e0471d81b7da9324d7691ad",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "docs/HOSTING.md",
+      "mode": "100644",
+      "baseline_blob": "7fd516fd3214c824d4288ab212e6f88aacbda7d6",
+      "current_blob": "3eeb11746c70b295205b05f22f4dbdae322c4368",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "docs/ONBOARDING-VERIFICATION.md",
+      "mode": "100644",
+      "baseline_blob": "7ff6aa3dd536da6f2c4ccbad85dfeb556ac7682b",
+      "current_blob": "42dc3fc4f973b9516629caa0d243cf92b8f0d11f",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "docs/RELEASE-EXPORT.md",
+      "mode": "100644",
+      "baseline_blob": "27a2d1a84a15918ac8cab04109fa8c189440bc50",
+      "current_blob": "6d2e858c6231c6c4186b31a338ab8814117e8436",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "docs/SETUP.md",
+      "mode": "100644",
+      "baseline_blob": "53a03c9ccaaa0d58ff8fda89ba4683073e8dfd58",
+      "current_blob": "bd06bb5f5bf1be853f3e3d5dd2339458c0def1a5",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "docs/SPECIFICATION.md",
+      "mode": "100644",
+      "baseline_blob": "1c832f725ab7c179dc0187151b8ae9f8c4cce3ca",
+      "current_blob": "b3093a545fde928ca96b02e12d24850b5903ede6",
+      "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
+    },
+    {
+      "path": "docs/eval-reports/2026-10-07-ufe3d-plugin-eval.html",
+      "mode": "100644",
+      "baseline_blob": "7551e6c8285376a12d43d1b49cad535171cd88e8"
+    },
+    {
+      "path": "evals/.gitignore",
+      "mode": "100644",
+      "baseline_blob": "fbca22537997fac50f623ee6eb31f9bb2bb30799"
+    },
+    {
+      "path": "evals/README.md",
+      "mode": "100644",
+      "baseline_blob": "9ad27234fa6eda10bb41a93f81a33b0cc4c34788"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "2c5a40859aae5d1410a4a093adc4b3e6fbabc257"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "209cbf7399e011895972faea2861bb6462c4fec3"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/graders/flag.md",
+      "mode": "100644",
+      "baseline_blob": "1a58cba43b3a4e1bef20ea9b2ace23d105bee3ff"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "0dedcf785d7158efd28c280cd8d99b872d162e44"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/graders/values.md",
+      "mode": "100644",
+      "baseline_blob": "dc2a0e9ff2bf46b799bbaf920c51d2f0ba2da70c"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "7d4e9c9dac30e9ce5bda49498d9cb72b3d4b7d75"
+    },
+    {
+      "path": "evals/air-recovery-type-flagged/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/hitbox-collision-types/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "ebc463b7494ee513599264b747183b09e56bdd21"
+    },
+    {
+      "path": "evals/hitbox-collision-types/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "80eee32bdbbb4dd891a1c351cd6edf711cb8e997"
+    },
+    {
+      "path": "evals/hitbox-collision-types/graders/no-collider.md",
+      "mode": "100644",
+      "baseline_blob": "b4f049fd5365772e888da8f505d73ef0cc5f701b"
+    },
+    {
+      "path": "evals/hitbox-collision-types/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/hitbox-collision-types/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "3033a50011dff7b423fbe2f7ea05837b3f276c76"
+    },
+    {
+      "path": "evals/hitbox-collision-types/graders/throw-collider.md",
+      "mode": "100644",
+      "baseline_blob": "aa855a7eca5f9501ad971c6daf19332ef514f149"
+    },
+    {
+      "path": "evals/hitbox-collision-types/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/hitbox-collision-types/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "ba543f426c01126f004f674b4b469eae546438bf"
+    },
+    {
+      "path": "evals/hitbox-collision-types/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "1b578a16c50c2dbf84fd6eb034bc61906f784129"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "1528a0f0583a69318487cda33ec19e3e912b8b95"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/frame-links.md",
+      "mode": "100644",
+      "baseline_blob": "4499b750aba7ee6a33a5c25c580dabd4de767df4"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/global-values.md",
+      "mode": "100644",
+      "baseline_blob": "aa8510d4fa665ebd69326a3023c0831f1b0b5ffa"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/settings.md",
+      "mode": "100644",
+      "baseline_blob": "8366344333ff1f12a487f43ad480d9adf0f0c5fa"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "7d230df4ca689e5109a40500837e4e59f4520638"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "cd9c14d26391cecd85f7c53aa71841e73e72b2d7"
+    },
+    {
+      "path": "evals/input-buffer-and-frame-links/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/plinking-delay/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "c8a6ab2bbabdfc0ca4a1f890d7fd0fc26003b78d"
+    },
+    {
+      "path": "evals/plinking-delay/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "6a2e9d9c3d3601f2b7491f76d40127efc794713d"
+    },
+    {
+      "path": "evals/plinking-delay/graders/setting.md",
+      "mode": "100644",
+      "baseline_blob": "3072d5db0e621a07bd7c883544ec74d285c5e880"
+    },
+    {
+      "path": "evals/plinking-delay/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/plinking-delay/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "03292a1a3c46d8fcbbb9787f4fd41b5f8fbfe9cf"
+    },
+    {
+      "path": "evals/plinking-delay/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/plinking-delay/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "5d709b4a845a3a988380f6e0f031610306535c9c"
+    },
+    {
+      "path": "evals/plinking-delay/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/rollback-balancing/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "bdd2f5186c41170e77357cf8b769bb32cf0d5c7f"
+    },
+    {
+      "path": "evals/rollback-balancing/graders/aggressive.md",
+      "mode": "100644",
+      "baseline_blob": "589673ee503b24b9d034721c01a408b7d81d9979"
+    },
+    {
+      "path": "evals/rollback-balancing/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "264972d91488f6d084b96a8a7b9feffeedc12d39"
+    },
+    {
+      "path": "evals/rollback-balancing/graders/setting.md",
+      "mode": "100644",
+      "baseline_blob": "9115dfd6d3876dcc75592e587af03b586af18f95"
+    },
+    {
+      "path": "evals/rollback-balancing/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/rollback-balancing/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "87c35fd640359874d8c482a32e2f71380495fe1f"
+    },
+    {
+      "path": "evals/rollback-balancing/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/rollback-balancing/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "c7e8409ccfe7e53954990edbf041ad5ec5eb60a2"
+    },
+    {
+      "path": "evals/rollback-balancing/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/teleport-flagged/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "83a21f3324faa0d3ee7fc2b7b57acfe639a68663"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/casting-frame.md",
+      "mode": "100644",
+      "baseline_blob": "97712616744fe2249f6e75e21cb47dc991b77d31"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "05b22d5f7a6b56e3aeb583af3e415d99c3744510"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/flag.md",
+      "mode": "100644",
+      "baseline_blob": "1a58cba43b3a4e1bef20ea9b2ace23d105bee3ff"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/reference.md",
+      "mode": "100644",
+      "baseline_blob": "d9fc5f2cd9b765d6038bf1da1d3be1bb0bc7c79e"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "ded2e5b39f1b1f6432e60033034914c9caf295c7"
+    },
+    {
+      "path": "evals/teleport-flagged/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/teleport-flagged/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "546bb806d4d067a8ca0a83bca073202fefcd9370"
+    },
+    {
+      "path": "evals/teleport-flagged/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/tested-unity-versions/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "0f964ccf1e171254e0bd257d84419d05ab71ee2c"
+    },
+    {
+      "path": "evals/tested-unity-versions/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "4f62cf77177930a238197e7a2f892c2ffd075f9d"
+    },
+    {
+      "path": "evals/tested-unity-versions/graders/lts-2021.md",
+      "mode": "100644",
+      "baseline_blob": "1e58b326613262c60bd1e1346a01a95e28b60c95"
+    },
+    {
+      "path": "evals/tested-unity-versions/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/tested-unity-versions/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "1102c39787db57fd3934d241fc05fec1feef246e"
+    },
+    {
+      "path": "evals/tested-unity-versions/graders/unity-6.md",
+      "mode": "100644",
+      "baseline_blob": "005309085ee72bf29cc76467d127f0615e9328d9"
+    },
+    {
+      "path": "evals/tested-unity-versions/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/tested-unity-versions/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "d594382be43257c52dc5ab63bb40cd7befa130aa"
+    },
+    {
+      "path": "evals/tested-unity-versions/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/throw-collider-requirement/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "bdeb429b7878988b3119b0056a1f603896dc499c"
+    },
+    {
+      "path": "evals/throw-collider-requirement/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "723f73d36c144d4d6211c5c78595be64f2a71209"
+    },
+    {
+      "path": "evals/throw-collider-requirement/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/throw-collider-requirement/graders/source-url.md",
+      "mode": "100644",
+      "baseline_blob": "ff715a345379076a2b5ebcf46bfe44901a4fc1e4"
+    },
+    {
+      "path": "evals/throw-collider-requirement/graders/throw-collider.md",
+      "mode": "100644",
+      "baseline_blob": "aa855a7eca5f9501ad971c6daf19332ef514f149"
+    },
+    {
+      "path": "evals/throw-collider-requirement/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/throw-collider-requirement/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "71485628cadd086b0113aff60f515a2ce3c00fc7"
+    },
+    {
+      "path": "evals/throw-collider-requirement/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "evals/undocumented-feature/case.yaml",
+      "mode": "100644",
+      "baseline_blob": "9036032033d2c772f79f471d0ba8f6638a4eaa25"
+    },
+    {
+      "path": "evals/undocumented-feature/graders/correct.md",
+      "mode": "100644",
+      "baseline_blob": "ac3be3e20b1e7653ef1e1795da65951e1127764c"
+    },
+    {
+      "path": "evals/undocumented-feature/graders/skill-fired.md",
+      "mode": "100644",
+      "baseline_blob": "c9d4317e34a8df21876b5db406d1afdae6d274ab"
+    },
+    {
+      "path": "evals/undocumented-feature/graders/used-docs-tool.md",
+      "mode": "100644",
+      "baseline_blob": "5307ac0ebdc406366df23b3d8b737f895ef4d20b"
+    },
+    {
+      "path": "evals/undocumented-feature/prompt.md",
+      "mode": "100644",
+      "baseline_blob": "32b23e9a47ca42c353ef848a6c430189202cfa67"
+    },
+    {
+      "path": "evals/undocumented-feature/scaffold.sh",
+      "mode": "100755",
+      "baseline_blob": "425905fbef21d36d17bede9b59b95746855c8ef5"
+    },
+    {
+      "path": "examples/client-config.json",
+      "mode": "100644",
+      "baseline_blob": "9bdbfbc669fb5db12abffcf6901f472134f54b69"
+    },
+    {
+      "path": "mcp.json",
+      "mode": "100644",
+      "baseline_blob": "882c0e82668abdb62d8976ab6a13e054ef0313e8"
+    },
+    {
+      "path": "plugin.json",
+      "mode": "100644",
+      "baseline_blob": "9bc7b108fe2b148ed4f153f02c45b2de56e604fe"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "baseline_blob": "daeda30d4ccc81938e892b0bd425044ad2ba51d4"
+    },
+    {
+      "path": "release-export.json",
+      "mode": "100644",
+      "baseline_blob": "674b8b4dbccce72c6aef3cd48c54842c1db97c11",
+      "audit_control": true
+    },
+    {
+      "path": "scripts/smoke_http.py",
+      "mode": "100644",
+      "baseline_blob": "e3c3ac8f32b02193c585a385526bb68af02f143e"
+    },
+    {
+      "path": "skills/ufe-docs/SKILL.md",
+      "mode": "100644",
+      "baseline_blob": "8a16148fd4ec34b303cc193c972607a85421201c"
+    },
+    {
+      "path": "src/ufe_docs_mcp/__init__.py",
+      "mode": "100644",
+      "baseline_blob": "252e32c7b14765836b263f8c87fd654c949ad8a6"
+    },
+    {
+      "path": "src/ufe_docs_mcp/__main__.py",
+      "mode": "100644",
+      "baseline_blob": "eb53e2f31b2f703ad32ef64b8a41faa3e7d18e08"
+    },
+    {
+      "path": "src/ufe_docs_mcp/cli.py",
+      "mode": "100644",
+      "baseline_blob": "6d632fb275b07b94b317a15e5dd322437b1f8a3b"
+    },
+    {
+      "path": "src/ufe_docs_mcp/index.py",
+      "mode": "100644",
+      "baseline_blob": "75f79b723131c22fdf34042ce3730345658cc017"
+    },
+    {
+      "path": "src/ufe_docs_mcp/packaging.py",
+      "mode": "100644",
+      "baseline_blob": "bc3e575a39b19b749a6803f01adf3271144248ee"
+    },
+    {
+      "path": "src/ufe_docs_mcp/remote.py",
+      "mode": "100644",
+      "baseline_blob": "1fd2f4af4f791e6d60a6fececad7af8ccf4f84f6"
+    },
+    {
+      "path": "src/ufe_docs_mcp/runtime.py",
+      "mode": "100644",
+      "baseline_blob": "6f79760d2007e7029ad3c87adc849f5179fcb17c"
+    },
+    {
+      "path": "src/ufe_docs_mcp/server.py",
+      "mode": "100644",
+      "baseline_blob": "4695d1f17d3c03272f42a3e38cc75379306b2e80"
+    },
+    {
+      "path": "src/ufe_docs_mcp/source.py",
+      "mode": "100644",
+      "baseline_blob": "b4e404f5420c38489d0d195a4101792ab2d8e7e3"
+    },
+    {
+      "path": "tests/schemas/agent-plugins-1.0.0-mcp.schema.json",
+      "mode": "100644",
+      "baseline_blob": "a9139a4259b932c60b5351c8d9da6a5c60c97646"
+    },
+    {
+      "path": "tests/schemas/agent-plugins-1.0.0-plugin.schema.json",
+      "mode": "100644",
+      "baseline_blob": "8fed0e1fe45d0464aee880d3fbab228b71ecfc1e"
+    },
+    {
+      "path": "tests/test_eval_naming.py",
+      "mode": "100644",
+      "baseline_blob": "d81b5c5b9bb26c104348ccfcd6ba1118a119c9c0"
+    },
+    {
+      "path": "tests/test_index.py",
+      "mode": "100644",
+      "baseline_blob": "0deae52b2854eadf6bbf6652b7b65528245f168d"
+    },
+    {
+      "path": "tests/test_mcp_protocol.py",
+      "mode": "100644",
+      "baseline_blob": "0a0c7b9e84775a5fd9d050b4f95faea17fbe6e64"
+    },
+    {
+      "path": "tests/test_onboarding.py",
+      "mode": "100644",
+      "baseline_blob": "09d008d2990ede1ca619571b2c8f0a7acca6ca11"
+    },
+    {
+      "path": "tests/test_packaging.py",
+      "mode": "100644",
+      "baseline_blob": "ba58bbaceea537808526d5899b6828f4d91fd447"
+    },
+    {
+      "path": "tests/test_privacy.py",
+      "mode": "100644",
+      "baseline_blob": "2a2ac37174881f52776eb4daeeee6a0737d5f0fe"
+    },
+    {
+      "path": "tests/test_remote.py",
+      "mode": "100644",
+      "baseline_blob": "62224d7ed7d351f4a73a134501c3aa131b2c7a91"
+    },
+    {
+      "path": "tests/test_runtime.py",
+      "mode": "100644",
+      "baseline_blob": "5e48c91ef682e1ffd5015f95ce3079377fce959e"
+    },
+    {
+      "path": "tests/test_source.py",
+      "mode": "100644",
+      "baseline_blob": "984e51dda723d923d99f8050e0d1c67136cefa81"
+    },
+    {
+      "path": "uv.lock",
+      "mode": "100644",
+      "baseline_blob": "2b154f5a8e220f613983b74377216765d10cdbfb"
+    }
+  ]
+}

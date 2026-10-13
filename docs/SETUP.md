@@ -18,7 +18,7 @@ Inspect existing UFE registrations and plugin-provided servers without printing 
 
 Use the user's provided checkout/ref and read its applicable repository instructions. Record `git rev-parse HEAD`, branch, remote, and dirty/clean state without copying private data into a public report. Preserve existing edits and unrelated worktrees.
 
-For this pre-release PR, the README's preview clone selects `fix/public-release-readiness` in `Kenneth-Brisco/Universal-Fight-Engine-MCP`. Do not silently switch to the older release copy or placeholder `main`. Private access remains necessary until publication; a 404 can mean insufficient access, not a missing repository.
+The intended open-source repository is `Kenneth-Brisco/Universal-Fight-Engine-MCP`. Until authorized promotion, use PR #3's complete `fix/public-release-readiness` branch as shown in the README. Record its exact commit and inspect [release parity and evidence](RELEASE-EXPORT.md). Do not substitute the original `main`, the earlier `UFE3D-MCP` export, or the staging backup. Private access remains necessary until publication; a 404 can mean insufficient access, not a missing repository.
 
 Place a new checkout or extracted source ZIP in a durable user-selected development location. Reuse an appropriate existing one. Never hard-code the maintainer's home directory, hostname, or timezone. Keep generated configuration and caches private.
 

@@ -1,0 +1,97 @@
+name: Audit release parity and metadata
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - release-export.json
+      - .github/workflows/audit-release-metadata.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.repository == 'Kenneth-Brisco/Universal-Fight-Engine-MCP'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify candidate parity and report metadata scope
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, re, subprocess
+          from pathlib import Path
+
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+
+          def object_id(kind, data):
+              return hashlib.sha1(kind + b' ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+
+          def tree_id(entries):
+              children = {}
+              for path, mode, oid in entries:
+                  name, slash, rest = path.partition('/')
+                  if slash:
+                      children.setdefault(name, []).append((rest, mode, oid))
+                  else:
+                      assert name not in children
+                      children[name] = (mode, oid)
+              rows = []
+              for name, value in children.items():
+                  is_tree = isinstance(value, list)
+                  mode, oid = ('40000', tree_id(value)) if is_tree else value
+                  rows.append((name.encode() + (b'/' if is_tree else b''), mode.encode() + b' ' + name.encode() + b'\0' + bytes.fromhex(oid)))
+              return object_id(b'tree', b''.join(row for _, row in sorted(rows)))
+
+          manifest_path = Path('release-export.json')
+          manifest = json.loads(manifest_path.read_text())
+          assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == 'da4f9780fb43ce8944594c82df9f483784d4b6865f06e7d7e92ecd0e38306064'
+          assert manifest['schema_version'] == 2
+          assert manifest['repository'] == 'Kenneth-Brisco/Universal-Fight-Engine-MCP'
+          assert manifest['baseline_repository'] == 'Kenneth-Brisco/UFE3D-MCP'
+          assert manifest['baseline_commit'] == '60d8d798f86fe93609509e98d4f94b7315a34841'
+          assert manifest['baseline_tree'] == '9ffb19d13079db451f1a2aad0f247638f85f564d'
+          files = manifest['files']
+          assert len(files) == len({f['path'] for f in files}) == 129
+          assert tree_id([(f['path'], f['mode'], f['baseline_blob']) for f in files]) == manifest['baseline_tree']
+          controls = {'release-export.json', '.github/workflows/audit-release-metadata.yml'}
+          assert {f['path'] for f in files if f.get('audit_control')} == controls
+          allowed_changes = {'AGENTS.md', '.claude-plugin/plugin.json', 'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'docs/SETUP.md', 'docs/HOSTING.md', 'docs/SPECIFICATION.md', 'docs/ONBOARDING-VERIFICATION.md', 'deploy/huggingface/README.md', 'docs/RELEASE-EXPORT.md'}
+          assert {f['path'] for f in files if 'current_blob' in f} == allowed_changes
+          tracked = {}
+          for row in git('ls-tree', '-r', 'HEAD').splitlines():
+              meta, path = row.split('\t')
+              mode, kind, oid = meta.split()
+              assert kind == 'blob'
+              tracked[path] = (mode, oid)
+          assert set(tracked) == {f['path'] for f in files}
+          for f in files:
+              assert tracked[f['path']][0] == f['mode'], f['path']
+              if f['path'] in controls:
+                  continue
+              expected = f.get('current_blob', f['baseline_blob'])
+              assert tracked[f['path']][1] == expected, f['path']
+              assert object_id(b'blob', Path(f['path']).read_bytes()) == expected, f['path']
+
+          # Current-commit validation is separate from the historical publication audit.
+          def identity(commit, role):
+              header = git('cat-file', '-p', commit).split('\n\n', 1)[0]
+              return re.search(r'^' + role + r' .* <([^<>]+)> [0-9]+ ([+-][0-9]{4})$', header, re.M)
+          for role in ('author', 'committer'):
+              match = identity('HEAD', role)
+              assert match and match[2] == '+0000', role
+              assert match[1].endswith('@users.noreply.github.com') or (role == 'committer' and match[1] == 'noreply@github.com'), role
+          commits = git('rev-list', '--all').splitlines()
+          historical_metadata_concerns = 0
+          for commit in commits:
+              values = [identity(commit, role) for role in ('author', 'committer')]
+              if any(not m or m[2] != '+0000' or not (m[1].endswith('@users.noreply.github.com') or m[1] == 'noreply@github.com') for m in values):
+                  historical_metadata_concerns += 1
+          if historical_metadata_concerns:
+              print('::warning::Historical commit metadata requires privacy review before publication. Values are omitted. Parity/current-commit success is not publication approval.')
+          print(json.dumps({'parity_passed': True, 'current_commit_metadata_passed': True, 'head': git('rev-parse', 'HEAD'), 'baseline_commit': manifest['baseline_commit'], 'accounted_baseline_files': len(files), 'identical_files': len(files)-len(allowed_changes)-len(controls), 'adapted_files': len(allowed_changes), 'audit_control_files': len(controls), 'reachable_commits': len(commits), 'historical_metadata_concerns': historical_metadata_concerns, 'publication_privacy_verified': False, 'retained_github_data_audited': False}))
+          PY

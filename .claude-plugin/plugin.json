@@ -6,7 +6,7 @@
   "author": {
     "name": "Kenneth Brisco"
   },
-  "repository": "https://github.com/Kenneth-Brisco/UFE3D-MCP",
+  "repository": "https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP",
   "license": "MIT",
   "keywords": ["ufe", "unity", "fighting-game", "documentation", "mcp"],
   "mcpServers": {

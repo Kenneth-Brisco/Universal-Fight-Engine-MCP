@@ -16,7 +16,7 @@ Entries follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Add an 
 
 - Product and MCP registration are now **`UFE3D-MCP`**; plugin and marketplace identifiers are **`ufe3d-mcp`**. The executable/package remains `ufe-docs-mcp`, the module remains `ufe_docs_mcp`, and individual tool names are unchanged.
 - README and optional `ufe-docs` development skill lead with building, debugging, and planning UFE features using retrieved reference context. Project changes and verification still require the agent's own tools and the user's authorization.
-- Preview instructions select the current PR branch rather than an older release copy. New publication/export and client verification are separate release steps.
+- `Kenneth-Brisco/Universal-Fight-Engine-MCP` is now the intended open-source home. Setup and plugin repository links select this repository, with PR #3's complete branch used until promotion. Earlier private-export setup improvements, archive-metadata privacy guidance, and parity/audit records are incorporated here; publication and this repository's history audit remain separate steps.
 
 ### Fixed
 
@@ -28,7 +28,7 @@ Entries follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Add an 
 ### Security
 
 - Preserved the response-privacy fixes in this PR: cache filesystem paths and raw operational exceptions are not returned over stdio or HTTP, including older persisted failures after restart.
-- Preserved sanitized evaluation metadata without relabeling historical results as new evaluations. Local diagnostics and generated configuration still need redaction before sharing.
+- Preserved sanitized evaluation metadata without relabeling historical results as new evaluations. Local diagnostics and generated configuration still need redaction before sharing. Release preparation also checks source-archive ownership headers; locally built archives need metadata normalization or a controlled build identity before distribution.
 
 ### Migration
 

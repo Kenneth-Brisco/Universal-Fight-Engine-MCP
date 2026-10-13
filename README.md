@@ -12,7 +12,7 @@ Tell your agent what you want to change in your game. UFE3D-MCP gives it on-dema
 
 [Agent-assisted setup](#agent-assisted-setup) · [Manual quick start](#quick-start) · [Connect your assistant](#connect-your-assistant) · [Freshness](#documentation-freshness) · [Changelog](CHANGELOG.md)
 
-> **Pre-release:** these changes are on PR #3's `fix/public-release-readiness` branch in the private development repository. The separate `Kenneth-Brisco/UFE3D-MCP` release copy has not been updated by this revision. Use the preview checkout below to review these changes; a public release must be exported and verified separately. No public endpoint, PyPI release, or release tag is implied.
+> **Intended open-source repository:** `Kenneth-Brisco/Universal-Fight-Engine-MCP` is the canonical home for UFE3D-MCP. Until PR #3 is merged with authorization, use `fix/public-release-readiness`; the original `main` is not the complete candidate. [Release parity and evidence](docs/RELEASE-EXPORT.md) account for the earlier private export. The repository remains private; no public endpoint, PyPI release, release tag, or publication approval is implied.
 
 ## Start with something you want to build
 
@@ -72,7 +72,7 @@ The bundled [development skill](skills/ufe-docs/SKILL.md) is optional. It makes 
 
 You need **Python 3.10+**, [uv](https://docs.astral.sh/uv/getting-started/installation/), Git or an extracted source ZIP, and a client that can launch local MCP servers. Keep the checkout in a permanent folder. Private GitHub access is required while this preview remains private.
 
-**Review the current PR version:**
+**Install the complete private candidate:**
 
 ```bash
 git clone --branch fix/public-release-readiness --single-branch https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP.git
@@ -85,7 +85,7 @@ uv run --frozen ufe-docs-mcp search "input buffer frame links"
 
 If you already have a reviewed checkout, use that checkout rather than cloning another copy. Record its commit with `git rev-parse HEAD` before reporting verification. `uv sync --frozen` installs locked dependencies; the documentation `sync` builds the local index. The source adapter respects the publisher's crawl delay (10 seconds in the recorded verification).
 
-The source ZIP must come from the same reviewed branch or commit. The older release copy is not a substitute for this PR. At publication, replace the preview instructions with the verified public release location.
+The source ZIP must come from this candidate branch or its verified commit, not the original `main`. Record `git rev-parse HEAD`; [the parity manifest](release-export.json) accounts for all files in the earlier `UFE3D-MCP` export. No checkout of that other repository is needed. At an authorized publication, replace the candidate branch with the approved release ref in this repository and verify access without private credentials.
 
 ## Connect your assistant
 
@@ -110,6 +110,8 @@ For example:
 uv run --frozen ufe-docs-mcp client-config --format codex
 uv run --frozen ufe-docs-mcp client-config --format claude-code
 ```
+
+The table describes generated configuration and plugin support, not a fresh installation in every app. See [current rehearsal evidence and limits](docs/RELEASE-EXPORT.md).
 
 The generator **prints** configuration; it does not install it. Shell command output targets a POSIX shell. For another shell, use the JSON output or the client's own registration interface. Keep required local environment overrides when migrating. Never overwrite an entire client configuration with one generated entry.
 
@@ -334,7 +336,7 @@ This does not apply the transitive dependency resolution in `uv.lock`. Plugins c
 
 Created by **Kenneth Brisco** while building a fighting game with UFE. Contributions can improve setup, documentation retrieval, client compatibility, and useful development examples. Read [CONTRIBUTING.md](CONTRIBUTING.md) and keep [CHANGELOG.md](CHANGELOG.md) updated for meaningful user-facing changes.
 
-Share redacted reproductions rather than personal configuration, caches, or full local logs. The intended public release destination is [Kenneth-Brisco/UFE3D-MCP](https://github.com/Kenneth-Brisco/UFE3D-MCP); this development history is not the public-release artifact.
+Share redacted reproductions rather than personal configuration, caches, or full local logs. The intended public repository is [Kenneth-Brisco/Universal-Fight-Engine-MCP](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP). The earlier `UFE3D-MCP` export is a comparison record, not the installation destination. This repository's history, refs, logs, and artifacts require their own privacy check before publication.
 
 Official sources: [manual](https://www.ufe3d.com/ufe2/docs/#/docs:home) · [catalog](https://www.ufe3d.com/ufe2/docs/assets/site-data.json) · [release notes](https://www.ufe3d.com/ufe2/changelog.html) · [crawl rules](https://www.ufe3d.com/robots.txt).
 

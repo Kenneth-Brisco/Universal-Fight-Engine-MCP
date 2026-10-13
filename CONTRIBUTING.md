@@ -74,19 +74,28 @@ authorship when incorporating their work.
 
 Build from the reviewed source revision in a clean checkout. Include only tracked
 project files in a source archive, and inspect wheel/source-distribution contents
-before publishing. Do not reuse an archive from an earlier preview or copy a
-working directory with its local cache and environment.
+before publishing, including archive headers as well as file contents. A local
+setuptools source distribution can embed the build account in tar owner/group
+fields. Use a controlled build identity or normalize uid/gid, owner/group names,
+and archive timestamps before distribution, then confirm every member byte is
+unchanged and rescan the archive. Do not reuse an archive from an earlier preview
+or copy a working directory with its local cache and environment.
 
 The complete GitHub source checkout includes the plugins and `uv.lock`.
 Python wheels and source distributions currently package the core server;
 do not advertise them as complete plugin installations.
 
-This PR's private development branch and the separate release repository are
-different destinations. Changes here do not update a previous release export or
-its pinned source-fingerprint audit. Before publication, export the reviewed
-source, verify that destination's files and commit identity, update its audit
-fingerprint, and replace preview installation links with the actual public
-release location. Do not expose the original development history as a shortcut.
+`Kenneth-Brisco/Universal-Fight-Engine-MCP` is the intended open-source home.
+The complete candidate remains on PR #3's `fix/public-release-readiness` branch
+until an authorized merge or promotion; original `main` is not a substitute.
+[Release parity and evidence](docs/RELEASE-EXPORT.md) and the
+[manifest](release-export.json) account for the earlier private export and the
+repository-specific documentation, URL, and audit changes brought back here.
+Refresh the manifest and audit fingerprint when the candidate changes. Before
+publication, audit this repository's complete history, refs, logs, artifacts,
+and commit identities, then update installation links to the approved release
+ref. The other repository's privacy audit does not clear this one. Preserve
+contributor attribution; a clean reachable log does not prove old data was removed.
 
 Keep documentation provenance and evaluation limitations visible. A passing
 protocol test is evidence for that transport and source revision; it is not a

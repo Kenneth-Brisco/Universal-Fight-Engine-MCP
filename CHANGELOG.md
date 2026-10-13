@@ -1,0 +1,42 @@
+# Changelog
+
+Meaningful user-facing changes to **UFE3D-MCP** are recorded here. This changelog starts with the unreleased work; existing package version strings do not establish a published release date. No retrospective release dates are invented.
+
+Entries follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Add an entry under **Unreleased** in the same PR as a meaningful change, grouped by its effect on users rather than by commit or file. At publication, move the entries under the actual version and release date and open a new Unreleased section. Routine documentation-cache refreshes are tracked by MCP freshness/update metadata, not this file.
+
+## Unreleased
+
+### Added
+
+- Copy-paste agent-assisted setup and feature-development prompts, with a standalone setup guide and manual client instructions as the fallback. No separate setup skill is required.
+- Contributor and repository-agent requirements to maintain this changelog with meaningful user-facing changes and explicit migration notes.
+- Automated naming, manifest, onboarding, and real MCP identity regression coverage.
+
+### Changed
+
+- Product and MCP registration are now **`UFE3D-MCP`**; plugin and marketplace identifiers are **`ufe3d-mcp`**. The executable/package remains `ufe-docs-mcp`, the module remains `ufe_docs_mcp`, and individual tool names are unchanged.
+- README and optional `ufe-docs` development skill lead with building, debugging, and planning UFE features using retrieved reference context. Project changes and verification still require the agent's own tools and the user's authorization.
+- `Kenneth-Brisco/Universal-Fight-Engine-MCP` is now the intended open-source home. Setup and plugin repository links select this repository, with PR #3's complete branch used until promotion. Earlier private-export setup improvements, archive-metadata privacy guidance, and parity/audit records are incorporated here; publication and this repository's history audit remain separate steps.
+
+### Fixed
+
+- Generated Claude Code and Grok POSIX registration commands preserve literal paths, URLs, and token references, including quotes and shell metacharacters. Codex TOML configuration supports Unicode paths such as emoji while retaining required escaping. Regenerate any affected entry and reconnect; existing client settings are not changed automatically.
+- Clarified included connector source versus separately downloaded documentation/cache files, complete plugin checkout requirements, local versus hosted refresh, and evidence limits.
+- Recorded an isolated installation of the renamed Claude plugin and its first-connection timeout/reconnect behavior, with bounded troubleshooting and explicit separation from paid conversational verification.
+- Identified the historical 72-test/120-file verification revision and distinguished its old tool namespaces from current setup without changing recorded results. Removed a release-document pointer to pre-rewrite personal-email metadata; retained GitHub objects are not claimed to be erased.
+- Scoped the fixed export-parity gate to the preparation branch or an explicit manual audit, so future contributor changes need not rewrite an obsolete snapshot. Commit-metadata checks also run on `main` pushes, and the publication checklist documents the transition.
+- Kept unrelated client settings and permissions explicitly outside setup/migration scope; setup success requires actual status, search, and retrieval calls rather than configuration alone.
+- Updated all nine future evaluation tool-use observers to the renamed plugin/server namespace and added regression checks. Saved historical answers, judgments, tool records, and scores remain unchanged; a fresh client evaluation is still separate.
+
+### Security
+
+- Normalized historical author/committer timestamps to UTC without changing their actual instants, and replaced confirmed maintainer email aliases with his verified GitHub noreply address. Commit IDs changed while file trees and branch relationships were preserved. Use a fresh clone; preserve local work and do not merge old history back. The release audit rejects non-noreply reachable commit metadata; timezone offsets are advisory and do not block merging or publication.
+- Clarified the retained-object privacy assessment and the steps for publishing this repository. Old timezone offsets alone require neither a support request nor another history rewrite. Metadata checks run for every PR update; preparation-branch updates also receive parity checks. Neither check claims to erase retained GitHub objects or authorize publication.
+- Preserved the response-privacy fixes in this PR: cache filesystem paths and raw operational exceptions are not returned over stdio or HTTP, including older persisted failures after restart.
+- Preserved sanitized evaluation metadata without relabeling historical results as new evaluations. Local diagnostics and generated configuration still need redaction before sharing. Release preparation also checks source-archive ownership headers; locally built archives need metadata normalization or a controlled build identity before distribution.
+
+### Migration
+
+Existing users should inspect older `UFE3D`, `ufe_docs`, or `ufe-docs` entries and confirm they launch this connector. Generate the new `UFE3D-MCP` entry, preserve intended cache/environment/transport/token references and explicit options, and remove or disable only the superseded UFE connection. Check scopes and plugin-provided duplicates. Keep a private rollback copy and leave unrelated settings intact.
+
+For plugins, reinstall or re-export **`ufe3d-mcp`** instead of `ufe3d`. The Claude plugin invocation becomes `/ufe3d-mcp:ufe-docs`. Review UFE-specific permission references for the new namespace without granting broader access. Reconnect and verify through actual MCP calls. No automatic rename or client configuration mutation is performed by the server itself.

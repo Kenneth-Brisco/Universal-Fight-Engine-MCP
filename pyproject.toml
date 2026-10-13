@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=75,<82"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ufe-docs-mcp"
+version = "0.2.0"
+description = "Official UFE reference context for AI-assisted game development through UFE3D-MCP."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "Kenneth Brisco"}]
+dependencies = ["mcp==2.3.0", "truststore>=0.10,<1"]
+keywords = ["mcp", "ufe", "documentation", "unity"]
+
+[project.scripts]
+ufe-docs-mcp = "ufe_docs_mcp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "build>=1,<2"]

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "UFE3D-MCP": {
+      "command": "/absolute/path/to/ufe-docs-mcp/.venv/bin/python",
+      "args": ["-m", "ufe_docs_mcp", "--cache-dir", "/absolute/path/to/ufe-docs-cache", "serve"]
+    }
+  }
+}

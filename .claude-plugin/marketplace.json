@@ -1,0 +1,14 @@
+{
+  "name": "ufe3d-mcp",
+  "owner": {"name": "Kenneth Brisco"},
+  "metadata": {
+    "description": "UFE3D-MCP: official UFE reference context for AI-assisted game development."
+  },
+  "plugins": [
+    {
+      "name": "ufe3d-mcp",
+      "source": "./",
+      "description": "Build, debug, and plan UFE features with a coding agent using the official manual."
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.8"
+          python-version: ${{ matrix.python }}
+      - run: uv sync --frozen
+      - run: uv run --frozen python -m unittest discover -s tests -v
+
+  container:
+    name: Container build and HTTP smoke test
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.8"
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - name: Build image
+        run: docker build -t ufe-docs-mcp:ci .
+      - name: Refuses a public bind without an access policy
+        run: |
+          if docker run --rm ufe-docs-mcp:ci; then
+            echo "The container started without tokens or UFE_DOCS_ALLOW_ANONYMOUS" >&2
+            exit 1
+          fi
+      - name: Serve with a token (offline, so CI never contacts the publisher)
+        run: |
+          echo "UFE_DOCS_TOKEN=$(openssl rand -hex 24)" >> "$GITHUB_ENV"
+      - run: |
+          docker run -d --name ufe -p 7860:7860 -e UFE_DOCS_HTTP_TOKENS="$UFE_DOCS_TOKEN" \
+            ufe-docs-mcp:ci ufe-docs-mcp serve --transport http --host 0.0.0.0 --trust-proxy --offline
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:7860/healthz && break
+            sleep 1
+          done
+          test "$(docker inspect -f '{{.State.Running}}' ufe)" = true
+      - name: MCP smoke test
+        run: uv run --frozen python scripts/smoke_http.py http://127.0.0.1:7860
+      - name: Container logs
+        if: always()
+        run: docker logs ufe 2>&1 | tail -50 || true

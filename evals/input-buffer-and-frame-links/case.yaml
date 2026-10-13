@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: input-buffer-and-frame-links
+context:
+  scaffold_script: scaffold.sh

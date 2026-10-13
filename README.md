@@ -157,3 +157,5 @@ The complete source checkout includes the server, tests, plugins, optional skill
 - [Changelog](CHANGELOG.md): connector changes; documentation-cache refreshes are separate.
 
 The [MIT license](LICENSE) covers the original connector code. UFE documentation and engine assets retain their publisher's terms. This is an independent community project.
+
+[VIBE CODERS UNIVERSITY](https://vibecodersuniversity.ai/)

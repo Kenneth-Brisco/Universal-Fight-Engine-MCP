@@ -8,7 +8,7 @@ Use `UFE3D-MCP` as the product/server name and `ufe3d-mcp` as the plugin/marketp
 
 ## Changelog requirement
 
-For every meaningful user-facing change, update `CHANGELOG.md` under **Unreleased** in the same pull request. Include functionality, installation, compatibility, privacy, important documentation, and compatibility changes. Group related commits into one useful entry; do not dump Git history. Explain omitted changelog entries for purely internal changes in the PR.
+For every meaningful user-facing change, update `CHANGELOG.md` under **Unreleased** in the same pull request. Cover functionality, installation, compatibility, privacy, and important documentation. Group related commits into one useful entry; do not dump Git history. Explain omitted changelog entries for purely internal changes in the PR.
 
 At an authorized release, use the actual version and release date. Do not invent dates or present unfinished work as shipped. Documentation-cache refreshes belong in freshness/update state, not the connector changelog.
 

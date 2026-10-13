@@ -89,3 +89,95 @@ checks. Cite the sources and identify anything still requiring Unity testing.
 ```
 
 A plugin skill is optional. For manual setup or a host without skill support, the direct MCP connection and prompt are sufficient. See [README](../README.md) and [CHANGELOG](../CHANGELOG.md) for compatibility information and connector changes.
+
+## Optional plugins
+
+Use the optional `ufe3d-mcp` plugin instead of a direct registration when your
+client supports plugins. Follow the same status → search → get-document checks
+in section 5. Avoid loading both registrations for the same installation.
+Run local generator commands from the permanent checkout.
+
+| Client | Install the optional plugin |
+| --- | --- |
+| Claude Code | `claude plugin marketplace add <checkout>` then `claude plugin install ufe3d-mcp@ufe3d-mcp` |
+| Codex | `codex plugin marketplace add <checkout>` then `codex plugin add ufe3d-mcp@ufe3d-mcp` |
+| Cursor | `uv run --frozen ufe-docs-mcp export-plugin cursor --out ~/.cursor/plugins/local/ufe3d-mcp`, then reload the desktop app. The Cursor Agent CLI uses direct MCP configuration. |
+| Antigravity | `uv run --frozen ufe-docs-mcp export-plugin antigravity --out <new-directory>`, then `agy plugin install <new-directory>` |
+| Grok Build | `grok plugin install <checkout>` adds the skill; its MCP server comes from the client connection. |
+
+Replace `<checkout>` with the installed source directory and `<new-directory>`
+with a directory that does not already exist. Inspect the installed client's
+supported commands. This table describes packaging support, not a newly verified
+installation in every app; see [VERIFICATION.md](../VERIFICATION.md).
+
+Claude Code and Codex plugins launch with `uv run --frozen` from their plugin
+folder, so `uv` must be available to the client. Cursor and Antigravity exports
+use absolute paths to the installed interpreter; re-export after moving it.
+The exporter refuses to overwrite an existing directory. Preserve required cache
+and environment settings when selecting the launch configuration.
+
+| Component | Name |
+| --- | --- |
+| Product / MCP server | `UFE3D-MCP` |
+| Plugin / marketplace | `ufe3d-mcp` |
+| Optional skill | `ufe-docs` |
+| Python package / executable | `ufe-docs-mcp` |
+| Python module | `ufe_docs_mcp` |
+
+With the Claude Code plugin loaded, invoke the skill as `/ufe3d-mcp:ufe-docs`.
+Other clients expose skills through their own interfaces; direct MCP use needs
+no slash command or skill.
+
+## Advanced local setup
+
+Apply options on the machine that launches the server. Preserve the same cache
+location for synchronization and serving. Full raw-page refresh requires a
+separate explicit decision; it is not an installation or verification step.
+
+<details>
+<summary>Change update cadence or work offline</summary>
+
+```bash
+uv run --frozen ufe-docs-mcp serve --refresh-hours 6
+uv run --frozen ufe-docs-mcp serve --no-auto-refresh
+uv run --frozen ufe-docs-mcp serve --offline
+```
+
+For a local client, append the chosen options after `serve` in its generated arguments. Intervals must be finite and at least one hour. Disabling automatic refresh still allows explicit online refresh; offline mode never downloads. An empty offline cache cannot answer documentation queries.
+
+</details>
+
+<details>
+<summary>Cache locations and a custom folder</summary>
+
+| Platform | Default index |
+| --- | --- |
+| macOS | `~/Library/Caches/ufe-docs-mcp/docs.sqlite3` |
+| Windows | `%LOCALAPPDATA%\ufe-docs-mcp\docs.sqlite3` |
+| Linux | `${XDG_CACHE_HOME:-~/.cache}/ufe-docs-mcp/docs.sqlite3` |
+
+Set `UFE_DOCS_CACHE_DIR` or put `--cache-dir` before the subcommand:
+
+```bash
+uv run --frozen ufe-docs-mcp --cache-dir /absolute/path/to/ufe-docs-cache sync
+uv run --frozen ufe-docs-mcp --cache-dir /absolute/path/to/ufe-docs-cache client-config
+```
+
+Use the same location for serving and synchronization. Paths above are generic examples, not distributed personal configuration.
+
+</details>
+
+<details>
+<summary>Install without uv (macOS/Linux)</summary>
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install .
+ufe-docs-mcp sync
+ufe-docs-mcp client-config
+```
+
+This does not apply the transitive dependency resolution in `uv.lock`. Plugins configured to launch `uv` still require it; this fallback is for a direct MCP connection.
+
+</details>

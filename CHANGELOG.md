@@ -22,7 +22,9 @@ not connector releases.
 ### Changed
 
 - Current documentation uses `main` and the `UFE3D-MCP` server / `ufe3d-mcp`
-  plugin names. Removed obsolete setup guidance and personal origin-story copy.
+  plugin names. Removed obsolete setup guidance and the creator biography.
+- Shortened the README to one setup and development path with explicit MCP
+  verification. Advanced local options and plugin instructions are in SETUP.md.
 - Moved development-stage verification and preparation records into a labeled
   history archive, preserving their results. Current verification and maintainer
   release instructions are separate from those records.

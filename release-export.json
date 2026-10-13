@@ -44,21 +44,21 @@
       "path": "AGENTS.md",
       "mode": "100644",
       "baseline_blob": "f26e6a6ddb9120ce5ecb70b5baf21bb00ba10f1c",
-      "current_blob": "96f52cdac43b901f8741e40de95c1d1fa061725a",
+      "current_blob": "d61485a4f61a5e9fcdf981f3b7ab5a607255e812",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
       "path": "CHANGELOG.md",
       "mode": "100644",
       "baseline_blob": "e38f5d8a06e5f286620cb0aaaeb69154aa54d231",
-      "current_blob": "4bf7f9040d215867af2d875700f62efb8f0184f7",
+      "current_blob": "84eb5ec8a78ca105084ddcb03da22a2dd57a0f05",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
       "path": "CONTRIBUTING.md",
       "mode": "100644",
       "baseline_blob": "a662bc0944fda1631f6a3873f06dce8fbaa09aa0",
-      "current_blob": "8809d7c7a43066123f9c7f31e51d52769d6c93e9",
+      "current_blob": "52ced59c9d75e642bd2e9838bb26f1fc95d50b85",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
@@ -75,7 +75,7 @@
       "path": "README.md",
       "mode": "100644",
       "baseline_blob": "e29f745db06e0f7aeadea36d149c84f512b2ecd0",
-      "current_blob": "670b6d63fea16480b67a562d776610042d5ff1cc",
+      "current_blob": "57da4c0a81faa907d6935d015176252ce7171593",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
@@ -113,14 +113,14 @@
       "path": "docs/RELEASE-EXPORT.md",
       "mode": "100644",
       "baseline_blob": "27a2d1a84a15918ac8cab04109fa8c189440bc50",
-      "current_blob": "65cb660879eea1e4025af1dae8ed42999a17de6a",
+      "current_blob": "9d97813845683302e2b47e45956a4460e5815668",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
       "path": "docs/SETUP.md",
       "mode": "100644",
       "baseline_blob": "53a03c9ccaaa0d58ff8fda89ba4683073e8dfd58",
-      "current_blob": "bd06bb5f5bf1be853f3e3d5dd2339458c0def1a5",
+      "current_blob": "4dcc8ff9631adc2458337948d5da132895148667",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {

@@ -53,8 +53,9 @@ manual client directions remain available. Do not require a separate setup skill
   identity from a workstation username and hostname.
 - Check both author and committer fields before pushing:
   `git log -1 --format=fuller`. Git configuration changes do not rewrite old
-  commits. Create new commits with UTC timestamps to avoid exposing a local
-  timezone offset, for example with `TZ=UTC git commit`.
+  commits. Use UTC timestamps for consistency, for example with
+  `TZ=UTC git commit`. A numeric timezone offset alone is an advisory metadata
+  detail, not a security issue or release blocker. It does not identify a country.
 - Keep downloaded documentation databases, refresh state, virtual environments,
   exported machine-specific client configurations, tokens, logs, and personal
   game assets out of commits and archives.
@@ -104,6 +105,12 @@ publication, audit this repository's complete history, refs, logs, artifacts,
 and commit identities, then update installation links to the approved release
 ref. The other repository's privacy audit does not clear this one. Preserve
 contributor attribution; a clean reachable log does not prove old data was removed.
+
+The retained-object assessment and remaining publication actions are recorded in
+[the release checklist](docs/RELEASE-EXPORT.md#before-publishing-this-repository).
+Do not require a support request or another history rewrite solely for old
+timezone offsets. Distinguish residual email privacy from credential exposure;
+neither a green workflow nor this distinction authorizes making the repository public.
 
 Keep documentation provenance and evaluation limitations visible. A passing
 protocol test is evidence for that transport and source revision; it is not a

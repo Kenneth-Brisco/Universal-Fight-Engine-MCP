@@ -81,9 +81,22 @@ and the earlier export `60d8d798f86fe93609509e98d4f94b7315a34841` have these rec
 Current repository-selection changes are documentation, metadata, and audit
 changes. Match new CI and local validation to their exact PR head; the historical
 runs above must not be relabeled as new-head execution. The client table lists
-configuration support, not newly proven installations in every app. Renamed
-plugin installation, conversational calls in another app, a public HTTPS service,
-and a Unity feature implementation require their own relevant checks.
+configuration support, not newly proven installations in every app.
+
+A later preparation rehearsal used the same unchanged plugin/runtime files in
+an empty Claude Code 2.1.296 profile: the local marketplace validated, and
+`ufe3d-mcp@ufe3d-mcp` installed and was enabled. The first plugin connection check
+timed out at 30 seconds; one reconnect succeeded in about eight seconds. The
+reconnect log reported cached legacy-protocol fallback. The plugin manifest's
+exact launch command separately passed SDK status → search → get-document calls
+against the isolated 223-document cache with offline mode enabled. This proves
+installation/connection and the server command's retrieval path, not a paid
+conversational invocation of the optional skill. Existing client settings were
+fingerprinted unchanged. Record this limitation when repeating the rehearsal;
+do not suppress an unsuccessful first attempt or repeatedly retry a broken setup.
+
+Conversational calls in another app, a public HTTPS service, and a Unity feature
+implementation require their own relevant checks.
 
 ## Privacy scope: this repository needs its own publication audit
 
@@ -112,13 +125,51 @@ The metadata rewrite removed eight old commit signatures; none had been shown
 verified by GitHub. Rewritten commits are unsigned. Profile attribution is not
 cryptographic signature verification.
 
-The release audit now **fails on any reachable non-UTC or non-noreply commit**,
-in addition to checking parity and current metadata. It cannot audit every
-GitHub-retained object. Old SHA-addressed objects, PR references, and historical
-logs can remain after a branch rewrite; their disappearance has not been
-confirmed. **Passing the branch-history audit is not publication privacy
-approval.** GitHub's [sensitive-data removal guidance](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
-explains the separate retained-data and collaborator cleanup steps.
+The release audit checks parity and noreply identity on every PR update.
+**Non-UTC offsets are advisory, not merge or publication blockers.** UTC remains
+the convention for new commits; the owner has explicitly accepted the old
+timezone offset as non-blocking. The workflow does not inspect every retained
+GitHub object or authorize publication.
+
+### Completed repository audit and residual privacy
+
+At cleanup head `a665b309cce8e9c1cd381faee2fd4e53cef66fbb`, a fresh remote mirror
+covered four branches and all three PR head/merge refs: 22 reachable commits,
+all using UTC/noreply metadata. Targeted historical-file scans found only
+explicitly synthetic privacy-test paths and no actual operator paths or known
+personal email strings in file contents. Twenty retained pre-cleanup Actions
+logs were checked without known private-email, operator, or credential matches.
+This repository's Actions artifact inventory was empty. These are scoped checks,
+not a guarantee that every possible secret or external copy has been discovered.
+
+The next five completed post-cleanup workflow logs also had no targeted privacy
+matches. Two superseded runs were canceled within two seconds and their logs
+were unavailable; their contents were not claimed as inspected. Current source
+files were rescanned, including SVG/HTML metadata; only the deliberate synthetic
+paths in `tests/test_privacy.py` matched the operator-path pattern.
+
+The frozen local suite passed 85 tests. [CI 38349499088](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP/actions/runs/38349499088)
+passed Python 3.10/3.13 and Docker/HTTP checks, and the generated merge tree
+matched that exact head. [Parity/metadata audit 38349499135](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP/actions/runs/38349499135)
+also passed. These runs apply to `a665b309`; later preparation commits need their
+own checks and must not borrow this result as proof of execution.
+
+An authenticated request could still retrieve an old SHA-addressed commit with
+former personal email metadata. The repository was private; this did not
+demonstrate anonymous access or an authorization bypass. Old metadata includes
+ordinary email addresses, timestamps, and a numeric timezone offset. No exposed
+credential was found in the inspected material. Email retention is a residual
+privacy consideration (spam, phishing, or identity correlation), not evidence
+of account compromise. A timezone offset is shared by many places and can be
+configured independently of physical location; it does not identify a country.
+
+There is **no timezone-based release blocker and no required support request**.
+No additional rewrite is required by this finding. Before changing visibility,
+the owner should account for the possibility that retained personal email
+metadata becomes accessible; do not claim it was purged. GitHub's
+[retained-data guidance](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+explains why rewritten branch history does not establish removal of all old
+objects. A new discovery of credentials would require its own assessment.
 
 Use a fresh clone after this rewrite. Preserve uncommitted work separately;
 do not merge or push an old local branch back into the normalized history.
@@ -135,18 +186,41 @@ privacy. No history, artifact, log, or backup was deleted during consolidation.
 
 ## Before publishing this repository
 
-1. Review and validate the exact PR #3 head, including file parity, setup, tests,
-   and commit identity. Keep the repository private during preparation.
-2. Verify the normalized branch metadata and finish the retained-data audit of
-   historical content, PR references, Actions logs, and artifacts. Address any
-   remaining sensitive findings through
-   an explicitly authorized plan that preserves attribution. Changing new commit
-   settings does not sanitize old commits, and a clean branch log cannot confirm
-   that older GitHub objects were removed. Involve GitHub support if necessary.
-3. With separate authorization, promote the approved complete candidate to the
-   intended default/release ref, choose the actual release version/date, and
-   update preview links within this same repository. Do not switch repositories
-   merely to avoid completing these checks.
-4. Rehearse any additional client/plugin or hosted claims, then obtain explicit
-   publication/visibility authorization. Verify anonymous installation after
-   publication is authorized. Do not infer gameplay correctness from retrieval.
+The MIT license, complete source, locked dependencies, source provenance,
+contribution guide, Unreleased changelog, manual/agent setup, and transport tests
+are already included. The scope of the initial open-source offering is the
+source checkout with local stdio and operator-hosted HTTP support. A public
+hosted endpoint, package-registry upload, and paid model evaluation are optional
+follow-ups, not requirements for publishing this source repository.
+
+1. Validate the final PR #3 head with frozen tests, parity, and commit-identity
+   checks. Match every claimed CI/client result to the revision actually tested.
+   Keep the repository private and the PR ready for review. Any required review
+   or evidence-posting step must respect the owner's separate posting authority.
+2. With separate merge/promotion authorization, bring the **complete stacked
+   candidate** onto the intended default branch. PR #3 currently targets PR #2's
+   branch, so merging #3 alone does not update `main`. Either promote the stack
+   in the appropriate order or use an explicitly approved direct promotion of
+   the complete candidate. Verify the resulting default-branch tree against the
+   approved candidate; do not accidentally release the original incomplete `main`.
+3. In that approved promotion, replace private-preview wording and
+   `fix/public-release-readiness` setup references in README/SETUP with the chosen
+   public default/release ref, then refresh the parity manifest and its workflow
+   fingerprint. Rehearse that exact checkout. If creating a versioned release,
+   use the actual version/date, update all version-bearing manifests consistently,
+   and move the relevant Unreleased entries. A tag or PyPI upload is not required
+   just to make the MIT-licensed source public.
+4. Obtain explicit visibility authorization, with the residual personal-email
+   privacy detail above understood. The timezone detail is already accepted as
+   non-blocking; no support request is required. Recheck for any newly introduced
+   files, refs, logs, or artifacts since this audit rather than repeating history
+   rewrites. Keep the unrelated export and staging repositories private.
+5. Immediately after authorized publication, verify anonymous access to the
+   default branch, LICENSE, setup guide, clone/source ZIP, and optional marketplace.
+   Repeat status → search → get-document against the public installation. Before
+   publication, private authenticated testing cannot prove anonymous access.
+
+Client claims remain limited to the recorded evidence. Additional app-specific
+rehearsals are required before describing those apps as freshly verified, but
+are not blockers for source publication with the current qualified client table.
+Do not infer gameplay correctness from documentation retrieval tests.

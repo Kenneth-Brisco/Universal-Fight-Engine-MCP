@@ -14,6 +14,8 @@ Tell your agent what you want to change in your game. UFE3D-MCP gives it on-dema
 
 > **Intended open-source repository:** `Kenneth-Brisco/Universal-Fight-Engine-MCP` is the canonical home for UFE3D-MCP. Until PR #3 is merged with authorization, use `fix/public-release-readiness`; the original `main` is not the complete candidate. [Release parity and evidence](docs/RELEASE-EXPORT.md) account for the earlier private export. The repository remains private; no public endpoint, PyPI release, release tag, or publication approval is implied.
 
+The initial open-source offering is the complete source checkout. Local use needs no hosted service or package-registry release. Maintainers can follow the [remaining publication steps](docs/RELEASE-EXPORT.md#before-publishing-this-repository); the stacked candidate must reach the intended default branch before the repository is made public.
+
 ## Start with something you want to build
 
 After connecting, give your agent a concrete task:

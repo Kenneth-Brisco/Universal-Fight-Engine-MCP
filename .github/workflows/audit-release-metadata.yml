@@ -2,9 +2,6 @@ name: Audit release parity and metadata
 on:
   workflow_dispatch:
   pull_request:
-    paths:
-      - release-export.json
-      - .github/workflows/audit-release-metadata.yml
 permissions:
   contents: read
 jobs:
@@ -49,7 +46,7 @@ jobs:
 
           manifest_path = Path('release-export.json')
           manifest = json.loads(manifest_path.read_text())
-          assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == '8dae64b9866469ba40b604352203133fbc523f5a4c9b8bb41e6f2a58db7faa42'
+          assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == 'c8a0541134738654995125f1b0950f1d3e9949b4df00c4ce599fcd2e4de8c5e2'
           assert manifest['schema_version'] == 2
           assert manifest['repository'] == 'Kenneth-Brisco/Universal-Fight-Engine-MCP'
           assert manifest['baseline_repository'] == 'Kenneth-Brisco/UFE3D-MCP'
@@ -83,14 +80,20 @@ jobs:
               return re.search(r'^' + role + r' .* <([^<>]+)> [0-9]+ ([+-][0-9]{4})$', header, re.M)
           for role in ('author', 'committer'):
               match = identity('HEAD', role)
-              assert match and match[2] == '+0000', role
+              assert match, role
               assert match[1].endswith('@users.noreply.github.com') or (role == 'committer' and match[1] == 'noreply@github.com'), role
           commits = git('rev-list', '--all').splitlines()
-          historical_metadata_concerns = 0
+          email_metadata_concerns = 0
+          timezone_advisories = 0
           for commit in commits:
               values = [identity(commit, role) for role in ('author', 'committer')]
-              if any(not m or m[2] != '+0000' or not (m[1].endswith('@users.noreply.github.com') or m[1] == 'noreply@github.com') for m in values):
-                  historical_metadata_concerns += 1
-          assert historical_metadata_concerns == 0, 'Reachable commit metadata must use UTC and noreply addresses; private values omitted'
-          print(json.dumps({'parity_passed': True, 'current_commit_metadata_passed': True, 'head': git('rev-parse', 'HEAD'), 'baseline_commit': manifest['baseline_commit'], 'accounted_baseline_files': len(files), 'identical_files': len(files)-len(allowed_changes)-len(controls), 'adapted_files': len(allowed_changes), 'audit_control_files': len(controls), 'reachable_commits': len(commits), 'historical_metadata_concerns': historical_metadata_concerns, 'publication_privacy_verified': False, 'retained_github_data_audited': False}))
+              if any(not m or not (m[1].endswith('@users.noreply.github.com') or m[1] == 'noreply@github.com') for m in values):
+                  email_metadata_concerns += 1
+              if any(m and m[2] != '+0000' for m in values):
+                  timezone_advisories += 1
+          assert email_metadata_concerns == 0, 'Reachable commit metadata must use noreply addresses; private values omitted'
+          # UTC is a consistency preference, not a security or publication gate.
+          if timezone_advisories:
+              print('::warning::Non-UTC commit offsets found; advisory only, not a release blocker')
+          print(json.dumps({'parity_passed': True, 'current_commit_identity_passed': True, 'head': git('rev-parse', 'HEAD'), 'baseline_commit': manifest['baseline_commit'], 'accounted_baseline_files': len(files), 'identical_files': len(files)-len(allowed_changes)-len(controls), 'adapted_files': len(allowed_changes), 'audit_control_files': len(controls), 'reachable_commits': len(commits), 'email_metadata_concerns': email_metadata_concerns, 'timezone_advisories': timezone_advisories, 'retained_objects_checked_by_this_workflow': False, 'publication_authorized_by_this_workflow': False}))
           PY

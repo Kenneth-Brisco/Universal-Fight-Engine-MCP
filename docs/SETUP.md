@@ -20,6 +20,8 @@ Use the user's provided checkout/ref and read its applicable repository instruct
 
 The intended open-source repository is `Kenneth-Brisco/Universal-Fight-Engine-MCP`. Until authorized promotion, use PR #3's complete `fix/public-release-readiness` branch as shown in the README. Record its exact commit and inspect [release parity and evidence](RELEASE-EXPORT.md). Do not substitute the original `main`, the earlier `UFE3D-MCP` export, or the staging backup. Private access remains necessary until publication; a 404 can mean insufficient access, not a missing repository.
 
+Maintainers must follow the [publication checklist](RELEASE-EXPORT.md#before-publishing-this-repository) when promoting this preview. Merging the stacked PR into its feature-branch base alone does not install the complete candidate on `main`. End-user setup never performs that promotion or changes repository visibility.
+
 Place a new checkout or extracted source ZIP in a durable user-selected development location. Reuse an appropriate existing one. Never hard-code the maintainer's home directory, hostname, or timezone. Keep generated configuration and caches private.
 
 ## 3. Install and initialize locally
@@ -59,6 +61,8 @@ For a real remote endpoint supplied by its operator, generate using `--url` and,
 ## 5. Prove the connection in the intended client
 
 Reload/reconnect as documented by the installed client. Permit normal deferred-tool discovery. If this session cannot load a newly saved registration, use a supported fresh session on the same machine or provide the exact user handoff. Do not remove nesting guards, disable approvals, or start repeated paid child sessions.
+
+In the recorded Claude Code 2.1.296 plugin rehearsal, the first `claude mcp list` connection check timed out; one reconnect succeeded, with the client reporting a cached legacy-protocol fallback. After confirming the locked installation and launch paths, retry the check once. If it still fails, inspect redacted local diagnostics and leave verification pending; do not increase permissions or repeat paid sessions to obtain a pass. A successful connection check must still be followed by the tool calls below.
 
 Through the actual registered MCP:
 

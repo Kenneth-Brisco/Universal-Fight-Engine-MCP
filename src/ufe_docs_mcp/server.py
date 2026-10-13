@@ -1,7 +1,8 @@
 """The MCP surface: bounded documentation retrieval and snapshot refresh."""
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
+import logging
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -11,11 +12,38 @@ from mcp.server.mcpserver.exceptions import ToolError
 from pydantic import Field
 
 from . import __version__
-from .index import get_doc, list_topics, search_docs
+from .index import RequestValidationError, get_doc, list_topics, search_docs
 from .runtime import DEFAULT_REFRESH_HOURS, DocumentationRuntime
 
 
 SERVER_NAME = "UFE3D"
+LOG = logging.getLogger("ufe_docs_mcp")
+
+
+class _PublicToolError(ToolError):
+    """Only fixed, deliberately client-facing guidance belongs in this type."""
+
+
+@contextmanager
+def _tool_errors():
+    """Do not let the SDK render unexpected exceptions into client responses.
+
+    This boundary applies to all tools and both transports. Detailed failures
+    stay in local server logs; document text and provenance are not rewritten.
+    """
+    try:
+        yield
+    except _PublicToolError:
+        raise  # Fixed guidance created below, never an internal exception.
+    except RequestValidationError as exc:
+        raise _PublicToolError(str(exc)) from None
+    except Exception:
+        LOG.exception("UFE documentation tool failed.")
+        raise _PublicToolError(
+            "The documentation operation could not be completed. Retry the request; "
+            "if it still fails, check the server's local logs or run ufe-docs-mcp sync "
+            "locally to check and rebuild the cache."
+        ) from None
 
 INSTRUCTIONS = (
     "Tools for the official Universal Fighting Engine (UFE) manual, served from a local snapshot. "
@@ -57,7 +85,7 @@ def create_server(
         runtime.maybe_refresh()
         status = runtime.status()
         if not status["available"]:
-            raise ToolError(status["guidance"])
+            raise _PublicToolError(status["guidance"])
 
     mcp = MCPServer(
         SERVER_NAME,
@@ -85,11 +113,9 @@ def create_server(
         Returns relevant source passages, URLs, document IDs, and source line
         ranges. max_chars bounds passage text, excluding small JSON metadata.
         """
-        require_index()
-        try:
+        with _tool_errors():
+            require_index()
             return runtime.decorate(search_docs(runtime.path, query, limit, max_chars))
-        except ValueError as exc:
-            raise ToolError(str(exc)) from exc
 
     @mcp.tool(title="Read a UFE document", annotations=read_only("Read a UFE document"), structured_output=True)
     def ufe_get_doc(
@@ -102,13 +128,12 @@ def create_server(
         Follow next_start_line to read the rest. Lines refer to the cached
         Markdown snapshot; the URL opens the corresponding official manual page.
         """
-        require_index()
-        try:
-            return runtime.decorate(get_doc(runtime.path, doc_id, start_line, max_lines))
-        except KeyError as exc:
-            raise ToolError(f"Unknown UFE document ID: {doc_id}. Use ufe_search_docs or ufe_list_topics.") from exc
-        except ValueError as exc:
-            raise ToolError(str(exc)) from exc
+        with _tool_errors():
+            require_index()
+            try:
+                return runtime.decorate(get_doc(runtime.path, doc_id, start_line, max_lines))
+            except KeyError:
+                raise _PublicToolError("Unknown UFE document ID. Use ufe_search_docs or ufe_list_topics to find a valid ID.") from None
 
     @mcp.tool(title="List UFE documentation topics", annotations=read_only("List UFE documentation topics"), structured_output=True)
     def ufe_list_topics(
@@ -121,17 +146,16 @@ def create_server(
         Follow next_offset for subsequent pages. Category names are returned in
         topic records, such as Global, Character, Move, Move Set, and AI.
         """
-        require_index()
-        try:
+        with _tool_errors():
+            require_index()
             return runtime.decorate(list_topics(runtime.path, category, offset, limit))
-        except ValueError as exc:
-            raise ToolError(str(exc)) from exc
 
     @mcp.tool(title="UFE documentation status", annotations=read_only("UFE documentation status"), structured_output=True)
     def ufe_docs_status() -> dict[str, Any]:
         """Show coverage, freshness, update summaries, failures, and background refresh readiness."""
-        runtime.maybe_refresh()
-        return runtime.status()
+        with _tool_errors():
+            runtime.maybe_refresh()
+            return runtime.status()
 
     def ufe_refresh_docs(refresh_pages: bool = False) -> dict[str, Any]:
         """Request a background documentation sync and return immediately.
@@ -141,12 +165,16 @@ def create_server(
         A raw-page index retains raw mode on subsequent updates. Offline mode
         rejects downloads. An already-running refresh is not queued or upgraded.
         """
-        result = runtime.refresh(refresh_pages)
-        if result["reason"] in ("offline", "closed"):
-            raise ToolError("Documentation refresh is unavailable in offline mode or after shutdown. Reconnect online to update the cache.")
-        if result["reason"] == "failed_to_start":
-            raise ToolError("Could not start the documentation update: " + str(result["freshness"]["last_error"]))
-        return result
+        with _tool_errors():
+            result = runtime.refresh(refresh_pages)
+            if result["reason"] in ("offline", "closed"):
+                raise _PublicToolError("Documentation refresh is unavailable in offline mode or after shutdown. Reconnect online to update the cache.")
+            if result["reason"] == "failed_to_start":
+                raise _PublicToolError(
+                    "Could not start the documentation update. Check cache write permissions "
+                    "and the server's local logs, then retry."
+                )
+            return result
 
     if expose_refresh:
         # Rebuilds a regenerable local cache. The previous index stays readable

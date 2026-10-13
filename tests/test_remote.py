@@ -53,7 +53,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
         )
         base = f"http://127.0.0.1:{port}"
         try:
-            async with httpx2.AsyncClient() as probe:
+            async with httpx2.AsyncClient(trust_env=False) as probe:
                 for _ in range(200):
                     if process.poll() is not None:
                         self.fail("HTTP server exited: " + process.stderr.read().decode())
@@ -76,7 +76,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
     @asynccontextmanager
     async def _session(self, base: str, token: str | None = None):
         headers = {"Authorization": f"Bearer {token}"} if token else {}
-        async with httpx2.AsyncClient(headers=headers, timeout=15.0) as client:
+        async with httpx2.AsyncClient(headers=headers, timeout=15.0, trust_env=False) as client:
             async with streamable_http_client(base + "/mcp", http_client=client) as (read, write):
                 async with ClientSession(read, write, read_timeout_seconds=15.0) as session:
                     await session.initialize()
@@ -93,7 +93,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
             cache = Path(temp_dir)
             _seed_index(cache)
             async with self._http_server(cache) as base:
-                async with httpx2.AsyncClient() as probe:
+                async with httpx2.AsyncClient(trust_env=False) as probe:
                     health = (await probe.get(base + "/healthz")).json()
                 self.assertEqual(health["status"], "ok")
                 self.assertEqual(health["server"], "UFE3D")
@@ -121,7 +121,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
             cache = Path(temp_dir)
             _seed_index(cache)
             async with self._http_server(cache, tokens=TOKEN) as base:
-                async with httpx2.AsyncClient() as probe:
+                async with httpx2.AsyncClient(trust_env=False) as probe:
                     self.assertEqual((await probe.get(base + "/healthz")).status_code, 200)
                     body = {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
                     for headers in ({}, {"Authorization": "Bearer wrong-token-0123456789"}, {"Authorization": "Basic " + TOKEN}):

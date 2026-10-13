@@ -27,14 +27,16 @@ async def main() -> int:
     base = args.base_url.rstrip("/")
     token = os.environ["UFE_DOCS_TOKEN"]
 
-    async with httpx2.AsyncClient(timeout=15.0) as probe:
+    # Probe the explicit endpoint directly, including loopback inside CI;
+    # inherited proxy settings must not receive test requests or bearer tokens.
+    async with httpx2.AsyncClient(timeout=15.0, trust_env=False) as probe:
         health = await probe.get(base + "/healthz")
         assert health.status_code == 200 and health.json()["server"] == "UFE3D", health.text
         denied = await probe.post(base + "/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
         assert denied.status_code == 401, denied.status_code
     print("health ok; unauthenticated request rejected")
 
-    async with httpx2.AsyncClient(headers={"Authorization": f"Bearer {token}"}, timeout=30.0) as client:
+    async with httpx2.AsyncClient(headers={"Authorization": f"Bearer {token}"}, timeout=30.0, trust_env=False) as client:
         async with streamable_http_client(base + "/mcp", http_client=client) as (read, write):
             async with ClientSession(read, write, read_timeout_seconds=30.0) as session:
                 await session.initialize()

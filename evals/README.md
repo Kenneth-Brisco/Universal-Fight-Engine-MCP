@@ -21,9 +21,19 @@ claude plugin eval . --scaffold --allow-real-servers --allow-tools "mcp__plugin_
 ```
 
 - `--scaffold` runs each case's `scaffold.sh` (it only copies the local index).
-- `--allow-real-servers` starts the plugin's real `UFE3D` server; the grants cover the four read tools only, so evals never trigger a documentation refresh.
+- `--allow-real-servers` starts the plugin's real `UFE3D` server. The grants cover the four read tools and exclude explicit refresh. The scaffold's recent-index requirement avoids a normally due automatic check; read-tool permissions alone do not disable background refresh.
 - Add `--model <model>`, `--runs <n>`, or `--case <glob>` to change what runs. Results and an HTML report are written to `evals/results/`, which is ignored by Git.
 
 ## Published results
 
-Saved reports live in [docs/eval-reports/](../docs/eval-reports/). The October 7, 2026 run scored 0.99 with the plugin and 0.29 without (mean Δ +0.70); see [VERIFICATION.md](../VERIFICATION.md#plugin-eval-claude-plugin-eval).
+Sanitized publication copies live in [docs/eval-reports/](../docs/eval-reports/). The October 7, 2026 run scored 0.99 with the plugin and 0.29 without (mean Δ +0.70); see [VERIFICATION.md](../VERIFICATION.md#plugin-eval-claude-plugin-eval). This was a nine-case comparison with a baseline that had no web access, not a measurement of development speed or a comparison against browsing. The generated report does not identify the resolved answering model.
+
+## Preparing a report for publication
+
+Generated reports can include machine paths and execution metadata inside model answers as well as the report header. Keep original run artifacts out of Git and prepare a reviewed publication copy:
+
+- Remove personal emails, credentials, hostnames, absolute workspace/cache paths, exact execution times and billing details from both visible and collapsed content. Inspect the HTML source as well as the displayed report.
+- When an answer includes a private value, replace just that value with an explicit marker such as `[temporary evaluation workspace]` and disclose the substitution in the report. Retain the rest of the answer, all scores, judgments, prompts and grader definitions.
+- Retain the evaluation date, relevant client/model versions when actually recorded, model-identity limitations, case/run counts, configuration and baseline restrictions. Do not infer a resolved model from an alias.
+
+Publishing a sanitized report does not rerun the evaluation or establish compatibility with a later release. Record any new tests separately with the version and scope actually checked.

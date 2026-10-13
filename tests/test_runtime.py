@@ -196,10 +196,12 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(self.path.read_bytes(), before)
         self.assertTrue(status["available"])
         self.assertEqual(status["freshness"]["state"], "check_failed")
-        self.assertIn("Synthetic source failure", status["freshness"]["last_error"])
+        self.assertIn("local logs", status["freshness"]["last_error"])
+        self.assertNotIn("Synthetic source failure", json.dumps(status))
         self.assertIn("old revision", get_doc(self.path, DOC_ID)["content"])
         state = json.loads((self.cache / "refresh-state.json").read_text())
         self.assertEqual(state["last_outcome"], "failed")
+        self.assertIn("Synthetic source failure", state["last_error"])
         self.assertTrue(state["last_attempt_at"])
         self.assertTrue(state["last_finished_at"])
 
@@ -586,9 +588,10 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(status["freshness"]["state"], "current_to_catalog")
         self.assertIsNone(status["freshness"]["last_error"])
         self.assertTrue(any(
-            "Synthetic runtime-history write failure" in warning
+            "saving update history failed" in warning
             for warning in status["freshness"]["warnings"]
         ))
+        self.assertNotIn("Synthetic runtime-history write failure", json.dumps(status))
         self.assertIn("new revision", runtime.decorate(get_doc(self.path, DOC_ID))["content"])
 
     def test_invalid_source_build_still_raises_and_preserves_previous_bytes(self):

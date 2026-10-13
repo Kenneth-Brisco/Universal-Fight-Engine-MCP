@@ -7,7 +7,7 @@ real_home=$(eval echo "~$(id -un)")
 if [ "$(uname)" = Darwin ]; then rel="Library/Caches/ufe-docs-mcp"; else rel=".cache/ufe-docs-mcp"; fi
 src="$real_home/$rel"
 if [ ! -f "$src/docs.sqlite3" ] || [ ! -f "$src/refresh-state.json" ]; then
-  echo "No UFE documentation index at $src. Run 'uv run --frozen ufe-docs-mcp sync' first." >&2
+  echo "No usable UFE documentation index was found in the default cache. Run 'uv run --frozen ufe-docs-mcp sync' first." >&2
   exit 1
 fi
 python3 - "$src/refresh-state.json" <<'EOF'

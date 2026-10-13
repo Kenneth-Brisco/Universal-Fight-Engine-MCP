@@ -6,16 +6,16 @@
 
 Search the [official UFE documentation](https://www.ufe3d.com/ufe2/docs/#/docs:home), read relevant sections, and keep source links attached to the answer while you build your game. Connect through Claude, Codex, Cursor, Antigravity, Grok, or any assistant with MCP support, locally or through a hosted endpoint.
 
-**v0.2.0 preview · Python 3.10+ · stdio and Streamable HTTP MCP · Plugins for Claude Code, Codex, Cursor, Antigravity, and Grok · [MIT](LICENSE)**
+**v0.2.0 release candidate · Python 3.10+ · stdio and Streamable HTTP MCP · Plugins for Claude Code, Codex, Cursor, Antigravity, and Grok · [MIT](LICENSE)**
 
-[Quick start](#quick-start) · [Connect your assistant](#connect-your-assistant) · [Hosted endpoint](#hosted-endpoint) · [Tools](#tools) · [Freshness](#documentation-freshness) · [Troubleshooting](#troubleshooting)
+[What is included](#what-is-included) · [Quick start](#quick-start) · [Connect your assistant](#connect-your-assistant) · [Hosted endpoint](#hosted-endpoint) · [Tools](#tools) · [Freshness](#documentation-freshness)
 
 ## Start with a real UFE question
 
 After connecting the MCP, try this in your assistant:
 
 ```text
-Use UFE Docs to explain how input buffering and frame links affect move chaining.
+Use UFE3D to explain how input buffering and frame links affect move chaining.
 Retrieve the relevant sections, cite the official source URLs, and flag any
 documentation verification notes.
 ```
@@ -34,6 +34,21 @@ The assistant can search for relevant passages, follow a result to its document,
 
 The connector uses local keyword search. It makes no model or embedding calls and needs no model API key of its own. Retrieved text still consumes context tokens in the assistant that uses it.
 
+## What is included
+
+This repository contains the **working connector source**, not just its README:
+
+| Files | Purpose |
+| --- | --- |
+| [`src/ufe_docs_mcp/`](src/ufe_docs_mcp/) | Documentation retrieval, search, freshness, MCP tools, and stdio/HTTP serving. |
+| [`tests/`](tests/) and [`evals/`](evals/) | Automated checks and selected assistant evaluation cases. |
+| [`skills/`](skills/), plugin manifests, and [`examples/`](examples/) | Client installation and the search → read → cite workflow. |
+| [`docs/`](docs/), [`VERIFICATION.md`](VERIFICATION.md), [`Dockerfile`](Dockerfile), and [`uv.lock`](uv.lock) | Behavior and verification records, container setup, and locked dependencies. |
+
+Use the GitHub checkout or its source ZIP for the complete project, including plugins and locked dependencies. Python wheel and source-distribution builds contain the core server; they are not substitutes for the complete plugin checkout.
+
+The full downloaded manual, search database, cache, and local client settings are **not bundled**. Each installation retrieves the official public documentation into its own cache; a hosted instance maintains a shared cache. Evaluation material contains selected documentation-derived answers. No UFE engine source, paid Unity assets, or game project is included. The connector's MIT license applies to its original code; UFE documentation retains the publisher's ownership and terms.
+
 ## Why use this with Claude Code or Codex?
 
 Your assistant does the reasoning and coding. **UFE Docs MCP gives it dedicated access to the UFE manual:** reusable search, section retrieval, official source links, line ranges, and documentation warnings. Once connected, those tools are available across your UFE questions without repeatedly supplying the documentation URL and asking for a new crawl.
@@ -44,19 +59,19 @@ That division matches [MCP's host/client/server architecture](https://modelconte
 
 ### Does Unity charge extra? Which model does it use?
 
-**This connector requires no additional Unity service or AI model.** It is an independent local Python program and runs without Unity or UFE installed. The connector code is MIT licensed and has no paid service subscription in this implementation.
+**This connector requires no additional Unity service or AI model.** It is an independent Python program and runs without Unity or UFE installed. The connector code is MIT licensed and has no required paid service subscription. Optional hosting can incur provider charges.
 
-It searches a local database, with no LLM, embeddings service, or model-provider API calls. Use the model you already run through a client with local stdio MCP support. Your assistant's normal subscription, API charges, usage limits, and context-token consumption still apply. Any Unity or UFE licensing needed to build your game is separate.
+It searches a local database, with no LLM, embeddings service, or model-provider API calls. Use the model you already run through a client with the appropriate stdio or Streamable HTTP MCP support. Your assistant's normal subscription, API charges, usage limits, and context-token consumption still apply. Any Unity or UFE licensing needed to build your game is separate.
 
 ## Quick start
 
-You need **Python 3.10+**, [uv](https://docs.astral.sh/uv/getting-started/installation/), and a client that can launch local MCP servers. Use Git for the clone command, or extract a supplied code ZIP into a permanent folder.
+You need **Python 3.10+**, [uv](https://docs.astral.sh/uv/getting-started/installation/), and a client that can launch local MCP servers. Use Git for the clone command, or download the current source ZIP from the release repository and extract it into a permanent folder.
 
-**Current preview:** the implementation is on `feat/ufe-docs-mcp` while [PR #1](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP/pull/1) is open. Clone that branch explicitly. Access to a private copy of the repository requires an authorized GitHub account.
+Install from the [UFE3D-MCP release repository](https://github.com/Kenneth-Brisco/UFE3D-MCP). These instructions do not assume a published PyPI package or release tag. Authorized GitHub access is required while the repository remains private.
 
 ```bash
-git clone --branch feat/ufe-docs-mcp --single-branch https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP.git
-cd Universal-Fight-Engine-MCP
+git clone https://github.com/Kenneth-Brisco/UFE3D-MCP.git
+cd UFE3D-MCP
 
 uv sync --frozen
 uv run --frozen ufe-docs-mcp sync
@@ -80,8 +95,8 @@ Generate configuration **after placing the checkout in its permanent location**.
 
 | Assistant | MCP connection | Plugin |
 | --- | --- | --- |
-| **Claude Code** (and Claude Desktop through plugins) | `client-config --format claude-code` prints a ready `claude mcp add-json --scope user …` command | `claude plugin marketplace add <checkout>` then `claude plugin install ufe3d@ufe3d` |
-| **Codex** (CLI and the ChatGPT desktop app; the IDE extension has no plugin support) | `client-config --format codex` prints a `[mcp_servers.UFE3D]` table for `~/.codex/config.toml` | `codex plugin marketplace add <checkout>` then `codex plugin add ufe3d@ufe3d` |
+| **Claude Code** | `client-config --format claude-code` prints a ready `claude mcp add-json --scope user …` command | `claude plugin marketplace add <checkout>` then `claude plugin install ufe3d@ufe3d` |
+| **Codex** | `client-config --format codex` prints a `[mcp_servers.UFE3D]` table for `~/.codex/config.toml` | `codex plugin marketplace add <checkout>` then `codex plugin add ufe3d@ufe3d` |
 | **Cursor** | `client-config --format cursor` prints an entry for `~/.cursor/mcp.json` or `.cursor/mcp.json` | `ufe-docs-mcp export-plugin cursor --out ~/.cursor/plugins/local/ufe3d`, then reload Cursor |
 | **Antigravity** (CLI, IDE, 2.0) | `client-config --format antigravity` prints an entry for `~/.gemini/config/mcp_config.json` | `ufe-docs-mcp export-plugin antigravity --out <dir>` then `agy plugin install <dir>` |
 | **Grok Build** | Reads your Claude Code (`~/.claude.json`) and Cursor MCP settings automatically. Otherwise `client-config --format grok` prints a `grok mcp add` command | `grok plugin install <checkout>` adds the skill; the server comes from the MCP connection |
@@ -98,6 +113,14 @@ How the plugins launch the server:
 - **Claude Code and Codex plugins** live in this repository (`.claude-plugin/plugin.json`, and the Agent Plugins `plugin.json` + `mcp.json`). They start the server with `uv run --frozen` from the installed plugin folder, so `uv` must be installed. The first start builds the plugin's own environment.
 - **Cursor and Antigravity plugins** are generated by `export-plugin`. Antigravity's plugin manifest accepts only a name and description, and neither client documents a plugin-root variable for this layout, so the exported package points at this checkout with absolute paths. Re-export if you move the checkout.
 
+The **Cursor app** loads the exported plugin; the **Cursor Agent CLI** uses the MCP configuration and does not load local plugins. Claude Desktop and hosted web connectors need their own setup and remain separate from the recorded Claude Code checks.
+
+### Names and invocation
+
+The MCP server is **`UFE3D`**, the plugin is **`ufe3d`**, and the executable is **`ufe-docs-mcp`**. Ask your assistant to use UFE3D, as in the opening example. There is no universal MCP slash command. With the Claude Code plugin installed, the shared skill is named `/ufe3d:ufe-docs`; for example, `/ufe3d:ufe-docs Explain input buffering and frame links`. Other clients expose tools and skills through their own interfaces.
+
+**Upgrading an earlier preview:** replace older UFE server entries named `ufe_docs` or `ufe-docs` with the newly generated `UFE3D` entry, and reinstall or re-export the `ufe3d` plugin. Remove the superseded UFE entry to avoid loading duplicate servers. Reconnect the client after updating its configuration.
+
 Restart or reconnect the assistant after changing its MCP settings or installing a plugin. Clients may ask you to approve the server or its tools the first time. The four read tools are annotated read-only, so clients that auto-approve read-only tools (for example Codex with `default_tools_approval_mode = "writes"`) run them without prompting; `ufe_refresh_docs` still asks.
 
 Headless runs (`cursor-agent -p`, `agy -p`) cannot ask for approval, so they reject MCP calls unless you allow them: in Cursor, add `"permissions": {"allow": ["Mcp(UFE3D:*)"]}` to `.cursor/cli.json`. Interactive sessions ask instead.
@@ -106,9 +129,11 @@ Headless runs (`cursor-agent -p`, `agy -p`) cannot ask for approval, so they rej
 
 **Compatibility depends on the host application.** A model name alone does not establish MCP support; the host app must launch local stdio servers or connect to a remote URL. See [Verification](#verification-and-coverage) for what was actually tested.
 
+Generated client settings and exported local plugins include absolute paths needed on your machine. Keep those generated files private. Normal MCP status responses omit cache paths, and MCP failures return safe guidance rather than raw internal exception text. Detailed local logs, CLI diagnostics, and refresh-state files can still contain machine-specific details; review them before sharing a support report.
+
 ## Measure what it adds
 
-`evals/` holds nine UFE questions with checkable answers for `claude plugin eval`. Each runs with the plugin and with no plugin, so the report shows how much the documentation tools improve accuracy, citations, and warning handling over the model alone. See [evals/README.md](evals/README.md) for the command.
+`evals/` holds nine selected UFE questions with checkable answers for `claude plugin eval`. The recorded comparison runs each question with the plugin and with no plugin. **The baseline had no web access**, so the result compares documentation-assisted answers with the model's own knowledge; it does not measure an advantage over browsing, validate a game implementation, or establish general time or token savings. See [evals/README.md](evals/README.md) for the method and reproduction command.
 
 ## Hosted endpoint
 
@@ -122,7 +147,7 @@ UFE_DOCS_HTTP_TOKENS="<long random token>" uv run --frozen ufe-docs-mcp serve --
 - **Access:** set one or more bearer tokens (`UFE_DOCS_HTTP_TOKENS`, comma-separated, or `--token-file`) for a private endpoint. To publish an open endpoint deliberately, pass `--allow-anonymous` (or `UFE_DOCS_ALLOW_ANONYMOUS=1`). Without either, the server refuses to listen beyond loopback.
 - **Rate limit:** 120 requests per client per minute by default (`--rate-limit`). Behind a hosting proxy, add `--trust-proxy` to key on the address the proxy appended to `X-Forwarded-For`.
 - **Refresh:** the server keeps its own snapshot current with the automatic schedule. `ufe_refresh_docs` is hidden over HTTP so remote callers cannot trigger requests to the publisher's site; `--remote-refresh` exposes it.
-- **Clients:** `client-config --format <client> --url https://your-host/mcp --token-env UFE_DOCS_TOKEN` prints a remote entry that reads the token from an environment variable.
+- **Clients:** `client-config --format <client> --url https://your-host/mcp --token-env UFE_DOCS_TOKEN` prints a remote entry with the client's token-reference syntax. **Antigravity is an exception:** its output contains `Bearer <paste token>` because documented environment expansion is unavailable. Supply that value privately. Generic JSON clients must also support the printed variable syntax; verify it in the host before connecting.
 
 A `Dockerfile` is included and targets a Hugging Face Docker Space or any container host. See [docs/HOSTING.md](docs/HOSTING.md) for hosting options and the deployment checklist. Nothing in this repository deploys automatically.
 
@@ -143,10 +168,10 @@ Search, read, and topic results include `snapshot` metadata captured with the re
 Other useful prompts:
 
 ```text
-Use UFE Docs to find the hitbox and hurtbox documentation. Read the relevant
+Use UFE3D to find the hitbox and hurtbox documentation. Read the relevant
 section and show the official source links.
 
-Use UFE Docs to find the rollback networking documentation. Identify any
+Use UFE3D to find the rollback networking documentation. Identify any
 version notes or verification warnings before recommending settings.
 ```
 
@@ -168,7 +193,7 @@ Every successful documentation result identifies its snapshot and reports freshn
 
 An already-running refresh is not queued or upgraded by another request. Wait for it to finish before requesting a different mode. Claude, Codex, and a CLI sync sharing the same cache are coordinated so only one synchronization runs at a time.
 
-Automatic refresh runs only while the local MCP process is running. It cannot check the site or notify you after the client stops it. On the next connection it checks whether an update is due. CLI `search`, `get`, `topics`, and `status` are local reads and do not start a background updater; their policy fields describe that CLI process.
+Automatic refresh runs only while the MCP process is running. With **stdio**, the client normally owns that process, so stopping it stops refresh. With **HTTP**, the host owns the server process; refresh continues after a client disconnects as long as the server keeps running. On a server restart, a usable persistent cache is reused and the source is checked only when due. A missing cache requires a new download. CLI `search`, `get`, `topics`, and `status` are local reads and do not start a background updater; their policy fields describe that CLI process.
 
 For a routine update:
 
@@ -196,7 +221,7 @@ For a Git checkout, install a connector update with `git pull --ff-only`, then `
 
 ## Verification and coverage
 
-Recorded verification on **October 7, 2026 UTC**:
+Historical baseline recorded on **October 7, 2026 UTC**. Current release-preparation checks are recorded separately in [VERIFICATION.md](VERIFICATION.md).
 
 | Check | Recorded result |
 | --- | --- |
@@ -206,9 +231,11 @@ Recorded verification on **October 7, 2026 UTC**:
 | MCP protocol | Initialization, all five tools, successful explicit raw refresh, search/read flow, pagination, and actionable errors exercised with the official SDK client. |
 | Offline behavior | Socket/DNS guards observed no network attempts during offline tests. |
 | Freshness behavior | Background updates, persisted retries, multiple clients, failed updates, corrupt-index recovery, metadata changes, and snapshot provenance exercised with controlled fixtures. |
-| Latest live-source sync | October 7, 2026 at 16:26 UTC: unchanged content, with a renewed source-check time. |
+| Recorded live-source sync | October 7, 2026 at 16:26 UTC: unchanged content, with a renewed source-check time. |
 
-Version 0.2.0 was also exercised on macOS through Claude Code, Codex, Cursor's agent CLI, Antigravity, and Grok Build, locally and against the HTTP server; live tool calls succeeded in Claude Code, Codex, Cursor, and Grok, and the remaining Antigravity and Cursor-plugin gaps are recorded. CI builds the Docker image and smoke-tests it on every push. Full provenance, sample query results, and environment details are in [VERIFICATION.md](VERIFICATION.md).
+Live local and HTTP tool calls were recorded with Claude Code, Codex, Cursor, and Grok. The Cursor desktop plugin also completed search and page-retrieval calls. Antigravity installed its plugin, but a headless permission requirement blocked the attempted tool call; an interactive call remains unverified. Claude Desktop, hosted HTTPS connectors, and a public deployment are also unverified.
+
+Most client checks preceded the `UFE3D`/`ufe3d` rename. The later Claude plugin evaluation used `UFE3D`; it does not replace a fresh installation check in every client under the final names. GitHub Actions includes the Python test suite and an offline Docker/MCP smoke test. See [VERIFICATION.md](VERIFICATION.md) for the distinction between recorded client runs and current automated checks.
 
 This coverage follows the public navigation of the indexed manual. It is not a complete generated reference for every UFE C# API or every page elsewhere on the publisher's websites. An absent search result does not establish that an API does not exist.
 
@@ -298,9 +325,9 @@ This pins the MCP SDK but does not apply `uv.lock` to transitive dependencies. T
 
 ## Community, sources, and license
 
-Created by **Kenneth Brisco** while building a fighting game with UFE. Feedback about installation, missing documentation, and useful UFE questions is welcome. For a reproducible report, include your operating system, MCP client, the command or query, and the output of `ufe_docs_status`.
+Created by **Kenneth Brisco** while building a fighting game with UFE. [Report an issue](https://github.com/Kenneth-Brisco/UFE3D-MCP/issues) about installation, missing documentation, or a useful UFE question. For a reproducible report, include your operating system, MCP client, a redacted command or query, and the normal MCP output of `ufe_docs_status`. Review copied local configuration and diagnostics for private paths, tokens, and other personal details before sharing them.
 
-Share the connector code and setup instructions. Each recipient retrieves documentation into their own local cache. Vendor documentation, engine code, and cached databases are excluded from the distributable.
+Share the connector code and setup instructions from the reviewed release. Each local installation retrieves documentation into its own cache. The full downloaded documentation corpus, engine code, game assets, and cached databases are excluded from the source distribution; selected documentation-derived evaluation answers are included.
 
 Official sources: [UFE manual](https://www.ufe3d.com/ufe2/docs/#/docs:home) · [Published catalog](https://www.ufe3d.com/ufe2/docs/assets/site-data.json) · [Public application](https://www.ufe3d.com/ufe2/docs/assets/app.js?v=20260721) · [Release notes](https://www.ufe3d.com/ufe2/changelog.html) · [Crawl rules](https://www.ufe3d.com/robots.txt).
 

@@ -148,9 +148,7 @@ footer{color:var(--ink-3);font-size:12px;text-align:center;padding-top:8px}
 <div class="meta">
 <span class="mono">.</span>
 <span>Claude Code v2.1.293</span>
-<span class="num">2026-10-07 22:22 UTC</span>
-<span class="num">7m 59s</span>
-<span class="num">$5.45</span>
+<span class="num">2026-10-07 UTC</span>
 <span class="num">54 runs</span>
 <span class="num">3 in flight</span>
 
@@ -160,6 +158,10 @@ footer{color:var(--ink-3);font-size:12px;text-align:center;padding-top:8px}
 
 </div>
 </header>
+
+<section class="banner" aria-label="Publication notes">
+<div><strong>Sanitized publication copy.</strong> Exact execution times, run costs and two temporary workspace paths have been removed. Path substitutions are marked <code>[temporary evaluation workspace]</code>; questions, scores, grader definitions, judgments and all other answer text are unchanged. The baseline had no web access. These nine selected cases compare documentation access with the model's own knowledge; they do not compare the plugin with browsing. The generated report does not identify the resolved answering model. See <a href="../../VERIFICATION.md#plugin-eval-claude-plugin-eval">the verification record</a> for run notes and limitations.</div>
+</section>
 
 <section class="tiles">
 <div class="tile hero"><span class="label">Suite score · with plugin</span><span class="value">99.4%</span><span class="sub">mean of per-case scores</span></div>
@@ -206,7 +208,7 @@ footer{color:var(--ink-3);font-size:12px;text-align:center;padding-top:8px}
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.11 · 22:22:45 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -271,7 +273,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:match:combo</pre>
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.11 · 22:22:45 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -338,7 +340,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:match:combo</pre>
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.11 · 22:22:45 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -411,7 +413,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:match:combo</pre>
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">4 turns · $0.07 · 22:23:27 UTC</span>
+<span class="muted num">4 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -455,7 +457,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:match:combo</pre>
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">4 turns · $0.08 · 22:23:29 UTC</span>
+<span class="muted num">4 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -464,7 +466,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:match:combo</pre>
 <p class="explanation">judge votes: FAIL FAIL FAIL</p>
 <div class="kv"><span>Judge votes</span><span class="votes">✗ ✗ ✗</span></div><div class="kv"><span>Evidence (what the judge was shown; for an image, a description of what was sent)</span></div><pre class="evidence">I couldn&apos;t confirm this from your workspace, so I can&apos;t give you a sourced answer.
 
-- **No local sources:** the working directory (`/private/tmp/e-oT9rtp/home/cwd`) is empty. There are no UFE project files, docs or notes in it.
+- **No local sources:** the working directory (`[temporary evaluation workspace]`) is empty. There are no UFE project files, docs or notes in it.
 - **Search and memory were blocked:** searching for &quot;Air Recovery Type&quot; was denied by the current permission mode, and so was reading my memory directory. If you have notes there on whether the UFE docs can be trusted, I couldn&apos;t see them.
 
 From memory, and not checked: in Universal Fighting Engine (UFE), Air Recovery Type is an enum under Global Editor → Combo Options. I think its values are along the lines of **Cant Move**, **Allow Moves** and possibly **Dont Recover**, but I&apos;m not sure of the exact list or what each does. I also don&apos;t know of any official statement on whether that docs page is considered reliable. I won&apos;t guess at that part.
@@ -499,7 +501,7 @@ The most reliable way to check is the `AirRecoveryType` enum in UFE&apos;s sourc
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">4 turns · $0.07 · 22:23:29 UTC</span>
+<span class="muted num">4 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -604,7 +606,7 @@ If you can give me access to the UFE project folder or the relevant docs page, I
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:23:50 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -670,7 +672,7 @@ Sources:
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:23:52 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -738,7 +740,7 @@ The publisher hasn&apos;t flagged either page, and the local copy of the manual 
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:23:59 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -811,7 +813,7 @@ Sources:
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:40.0%"></span></span>
 <span class="num">40%</span>
-<span class="muted num">3 turns · $0.08 · 22:24:11 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -863,7 +865,7 @@ To get the exact colors, open `HitBoxesScript.cs` in your UFE install and find `
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">3 turns · $0.07 · 22:24:12 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -918,7 +920,7 @@ Your UFE version may differ, especially the colors and the two invincible types.
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">3 turns · $0.08 · 22:24:32 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1029,7 +1031,7 @@ I&apos;m confident about the type names but less sure of the exact colors, espec
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.15 · 22:24:57 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -1128,7 +1130,7 @@ Sources:
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.15 · 22:24:59 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -1225,7 +1227,7 @@ Sources:
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.15 · 22:25:18 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -1331,7 +1333,7 @@ None of these pages are flagged by the publisher. The manual isn&apos;t tied to 
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">1 turns · $0.08 · 22:25:39 UTC</span>
+<span class="muted num">1 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1411,7 +1413,7 @@ If buffered inputs still drop, the usual causes are that **Allow Buffer** is off
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:16.7%"></span></span>
 <span class="num">16.7%</span>
-<span class="muted num">2 turns · $0.09 · 22:25:44 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1490,7 +1492,7 @@ If your version&apos;s labels don&apos;t match these, search the UFE scripts for
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:16.7%"></span></span>
 <span class="num">16.7%</span>
-<span class="muted num">1 turns · $0.08 · 22:25:51 UTC</span>
+<span class="muted num">1 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1630,7 +1632,7 @@ If your UFE version names any of these differently, tell me which version you&ap
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.13 · 22:26:17 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -1682,7 +1684,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:advanced</pre>
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.11 · 22:26:23 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -1734,7 +1736,7 @@ Source: https://www.ufe3d.com/ufe2/docs/#/global:advanced (no publisher warnings
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.13 · 22:26:27 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -1793,7 +1795,7 @@ The manual gives only that one line about it. It doesn&apos;t give a default val
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:25.0%"></span></span>
 <span class="num">25%</span>
-<span class="muted num">2 turns · $0.07 · 22:26:43 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1831,7 +1833,7 @@ If your project includes the UFE documentation or source, search it for `plinkin
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:25.0%"></span></span>
 <span class="num">25%</span>
-<span class="muted num">3 turns · $0.07 · 22:26:47 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1872,7 +1874,7 @@ If you have the UFE docs or source in another folder, point me to it and I can c
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">2 turns · $0.06 · 22:26:53 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -1961,7 +1963,7 @@ If you can share your UFE version or the Global Config asset/script, I can find 
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:27:02 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2032,7 +2034,7 @@ Sources:
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:27:11 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2097,7 +2099,7 @@ Sources:
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:27:14 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2175,7 +2177,7 @@ Sources:
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:40.0%"></span></span>
 <span class="num">40%</span>
-<span class="muted num">2 turns · $0.07 · 22:27:17 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2223,7 +2225,7 @@ Tune this together with **Input Delay** (frame delay) and the maximum rollback f
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:40.0%"></span></span>
 <span class="num">40%</span>
-<span class="muted num">2 turns · $0.06 · 22:27:28 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2271,7 +2273,7 @@ Tune it together with the other rollback settings, such as max rollback frames a
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:40.0%"></span></span>
 <span class="num">40%</span>
-<span class="muted num">2 turns · $0.07 · 22:27:28 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2376,7 +2378,7 @@ Your other network settings, especially input delay and the maximum rollback fra
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.13 · 22:27:33 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2456,7 +2458,7 @@ Source: [Teleport Options](https://www.ufe3d.com/ufe2/docs/#/move:teleport)</pre
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:83.3%"></span></span>
 <span class="num">83.3%</span>
-<span class="muted num">5 turns · $0.11 · 22:27:44 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2531,7 +2533,7 @@ If you want to move the *opponent* to a spot relative to you (for example, in a 
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.11 · 22:27:46 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2617,7 +2619,7 @@ Sources:
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:16.7%"></span></span>
 <span class="num">16.7%</span>
-<span class="muted num">2 turns · $0.08 · 22:27:56 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2697,7 +2699,7 @@ If you tell me your UFE version, or open the project here, I can check the exact
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">2 turns · $0.09 · 22:28:04 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -2788,7 +2790,7 @@ If you tell me your UFE version or point me at the project folder, I can check t
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">3 turns · $0.10 · 22:28:05 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -2931,7 +2933,7 @@ The member names in the script (`opControlsScript`, `mirror`, `worldTransform`) 
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:28:26 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -2995,7 +2997,7 @@ The publisher hasn&apos;t flagged either page. The docs copy I searched matches 
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:28:34 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3059,7 +3061,7 @@ This comes from a local copy of the official manual, which is up to date with th
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">5 turns · $0.10 · 22:28:38 UTC</span>
+<span class="muted num">5 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3132,7 +3134,7 @@ Sources:
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">3 turns · $0.07 · 22:28:40 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -3176,7 +3178,7 @@ If UFE is in this project, tell me the path to its folder or allow file search, 
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">3 turns · $0.06 · 22:28:47 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
@@ -3221,14 +3223,14 @@ If you have the UFE package somewhere on this machine, tell me the path and I&ap
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:0.0%"></span></span>
 <span class="num">0%</span>
-<span class="muted num">3 turns · $0.06 · 22:28:51 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader" open>
 <summary><span class="chip chip-fail">✗ fail</span> <span class="grader-name">correct</span> <span class="muted">×2</span> </summary>
 <div class="grader-body">
 <p class="explanation">judge votes: FAIL FAIL FAIL</p>
-<div class="kv"><span>Judge votes</span><span class="votes">✗ ✗ ✗</span></div><div class="kv"><span>Evidence (what the judge was shown; for an image, a description of what was sent)</span></div><pre class="evidence">I couldn&apos;t find this in your workspace. The working directory (`/private/tmp/e-LwdHnx/home/cwd`) is empty, so there are no UFE release notes, readme or changelog to check.
+<div class="kv"><span>Judge votes</span><span class="votes">✗ ✗ ✗</span></div><div class="kv"><span>Evidence (what the judge was shown; for an image, a description of what was sent)</span></div><pre class="evidence">I couldn&apos;t find this in your workspace. The working directory (`[temporary evaluation workspace]`) is empty, so there are no UFE release notes, readme or changelog to check.
 
 I also don&apos;t have a reliable record of the tested Unity versions for UFE (Universal Fighting Engine) 2.7.3 specifically, so I won&apos;t guess. Here&apos;s where to look:
 
@@ -3323,7 +3325,7 @@ If you put the UFE package, or its changelog or readme, in the working directory
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.14 · 22:28:56 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3386,7 +3388,7 @@ Sources:
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.13 · 22:28:59 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3451,7 +3453,7 @@ Sources:
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">6 turns · $0.14 · 22:29:17 UTC</span>
+<span class="muted num">6 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3525,7 +3527,7 @@ The manual isn&apos;t tied to a specific engine version, so check these settings
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:75.0%"></span></span>
 <span class="num">75%</span>
-<span class="muted num">2 turns · $0.08 · 22:29:18 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3570,7 +3572,7 @@ The quickest check is to open a working character and this one side by side in t
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:75.0%"></span></span>
 <span class="num">75%</span>
-<span class="muted num">2 turns · $0.08 · 22:29:19 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3621,7 +3623,7 @@ If you share the character prefab&apos;s hitbox list, or point me to the project
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:75.0%"></span></span>
 <span class="num">75%</span>
-<span class="muted num">2 turns · $0.07 · 22:29:39 UTC</span>
+<span class="muted num">2 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3722,7 +3724,7 @@ If you open the project folder or tell me your UFE version, I can look at the ac
 <span class="run-title">Run 1</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">9 turns · $0.20 · 22:29:41 UTC</span>
+<span class="muted num">9 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3768,7 +3770,7 @@ If you saw &quot;Roman Cancel&quot; as a named option somewhere, tell me where a
 <span class="run-title">Run 2</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">10 turns · $0.21 · 22:29:45 UTC</span>
+<span class="muted num">10 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3809,7 +3811,7 @@ The manual snapshot is up to date with the published catalog from 2026-07-31, bu
 <span class="run-title">Run 3</span>
 <span class="meter m-accent" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">8 turns · $0.18 · 22:29:59 UTC</span>
+<span class="muted num">8 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3857,7 +3859,7 @@ One way to set it up is to make a cancel move that needs, say, 50% of a &quot;Te
 <span class="run-title">Run 1</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">3 turns · $0.07 · 22:30:04 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3881,7 +3883,7 @@ If your UFE version or its manual does name a specific option, you can either le
 <span class="run-title">Run 2</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">3 turns · $0.07 · 22:30:12 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader">
@@ -3909,7 +3911,7 @@ I&apos;m not going to give you an option name or page title I can&apos;t verify,
 <span class="run-title">Run 3</span>
 <span class="meter m-base" aria-hidden="true"><span style="width:100.0%"></span></span>
 <span class="num">100%</span>
-<span class="muted num">3 turns · $0.07 · 22:30:23 UTC</span>
+<span class="muted num">3 turns</span>
 </div>
 
 <div class="graders"><details class="grader">

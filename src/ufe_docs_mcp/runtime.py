@@ -24,6 +24,15 @@ LOG = logging.getLogger("ufe_docs_mcp")
 DEFAULT_REFRESH_HOURS = 24.0
 RETRY_SECONDS = 15 * 60
 SCHEDULER_SECONDS = 30.0
+UPDATE_FAILED = (
+    "Documentation update failed. Check the server's local logs or run "
+    "ufe-docs-mcp sync locally for diagnostic details, then retry."
+)
+STATE_UNREADABLE = "Saved update-check state is unreadable; a new check is required."
+HISTORY_WARNING = (
+    "Documentation updated, but saving update history failed. "
+    "Check the server's local logs and cache write permissions."
+)
 
 
 class RefreshBusy(RuntimeError):
@@ -75,7 +84,7 @@ def _read_state(cache_dir: Path) -> dict:
     except FileNotFoundError:
         return {}
     except (OSError, ValueError, UnicodeError):
-        return {"state_error": "Saved update-check state is unreadable; a new check is required."}
+        return {"state_error": STATE_UNREADABLE}
 
 
 def _write_state(cache_dir: Path, state: dict) -> None:
@@ -332,6 +341,7 @@ class DocumentationRuntime:
             self.last_error = str(exc)[:2_000]
             self._error_at = self.clock()
             self._retry_at = self.clock() + RETRY_SECONDS
+            LOG.warning("Could not start the requested documentation update: %s", exc)
             return {**self.status(), "accepted": False, "reason": "failed_to_start"}
         return {**self.status(), "accepted": accepted, "reason": "started" if accepted else "already_running"}
 
@@ -353,8 +363,14 @@ class DocumentationRuntime:
         same_snapshot = state.get("snapshot_id") == (snapshot.get("id") if available else None)
         if same_snapshot and state.get("last_outcome") in ("updated", "unchanged", "initialized"):
             self._state_warning = None
-        error = state.get("last_error") if same_snapshot else None
-        error = self.last_error or error or state.get("state_error")
+        recorded_error = state.get("last_error") if same_snapshot else None
+        # Local state may have been written by an older version and can contain
+        # raw exceptions, paths, hostnames or credentials. Never return it to an
+        # MCP client. Keep diagnostics on disk/in local logs, including across
+        # runtime restarts, and expose only these fixed actionable messages.
+        error = UPDATE_FAILED if self.last_error or recorded_error else None
+        if not error and state.get("state_error"):
+            error = STATE_UNREADABLE
         if same_snapshot and state.get("last_outcome") == "checking" and not running:
             error = error or "The previous update was interrupted; the automatic retry is delayed for 15 minutes from its start."
         mode = snapshot.get("content_mode", "unknown")
@@ -377,9 +393,9 @@ class DocumentationRuntime:
             warnings.append("The source-check time is missing or invalid." if age is None else
                             "The update check is overdue; documentation may have changed since this snapshot was fetched.")
         if error:
-            warnings.append("The latest update check could not be completed: " + str(error)[:2_000])
+            warnings.append("The latest update check could not be completed: " + error)
         if self._state_warning:
-            warnings.append(self._state_warning)
+            warnings.append(HISTORY_WARNING)
         if not self.auto_refresh and not self.offline:
             warnings.append("Automatic updates are disabled for this process; use ufe_refresh_docs or the sync command.")
         if mode != "raw_pages":
@@ -426,5 +442,14 @@ class DocumentationRuntime:
             if not result["available"] else
             "Use the snapshot dates, freshness warnings and last_update summary when answering. Request ufe_refresh_docs for an immediate check."
         )
-        return {**result, "offline": self.offline, "sync_state": sync_state,
+        # index_status/sync_cache also serve local diagnostics and deliberately
+        # retain their paths. Runtime results are sent to model clients over
+        # stdio or HTTP, so expose only the index's public source/build fields.
+        public_result = {key: result[key] for key in (
+            "available", "schema_version", "indexed_at", "document_count",
+            "chunk_count", "content_hash", "index_revision", "source_versions", "metadata",
+        ) if key in result}
+        if not result["available"]:
+            public_result["reason"] = "No readable documentation index is available; run ufe-docs-mcp sync to rebuild it."
+        return {**public_result, "offline": self.offline, "sync_state": sync_state,
                 "snapshot": snapshot, "freshness": freshness, "guidance": guidance}

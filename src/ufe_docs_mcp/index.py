@@ -44,6 +44,14 @@ _STOPWORDS = frozenset(
 )
 
 
+class RequestValidationError(ValueError):
+    """An actionable input/size error whose message is safe for MCP clients.
+
+    Construct messages only from fixed field names and numeric bounds. Internal
+    exceptions, filenames and source text must never be wrapped in this type.
+    """
+
+
 @dataclass(frozen=True)
 class Document:
     """One source page. ``source_version`` must be explicit, never inferred."""
@@ -59,19 +67,19 @@ class Document:
 
 def _text(value: object, name: str, max_length: int, *, empty: bool = False) -> str:
     if not isinstance(value, str):
-        raise ValueError(f"{name} must be a string")
+        raise RequestValidationError(f"{name} must be a string")
     if len(value) > max_length or (not empty and not value.strip()):
-        raise ValueError(f"{name} must contain 1 to {max_length} characters")
+        raise RequestValidationError(f"{name} must contain 1 to {max_length} characters")
     if any(ord(char) < 32 for char in value):
-        raise ValueError(f"{name} must not contain control characters")
+        raise RequestValidationError(f"{name} must not contain control characters")
     return value
 
 
 def _integer(value: object, name: str, minimum: int, maximum: int) -> int:
     if isinstance(value, bool) or not isinstance(value, int):
-        raise ValueError(f"{name} must be an integer")
+        raise RequestValidationError(f"{name} must be an integer")
     if not minimum <= value <= maximum:
-        raise ValueError(f"{name} must be between {minimum} and {maximum}")
+        raise RequestValidationError(f"{name} must be between {minimum} and {maximum}")
     return value
 
 
@@ -342,9 +350,9 @@ def _snapshot(connection: sqlite3.Connection) -> dict:
 
 def _query_terms(query: str) -> list[str]:
     if not isinstance(query, str):
-        raise ValueError("query must be a string")
+        raise RequestValidationError("query must be a string")
     if len(query) > MAX_QUERY_CHARS:
-        raise ValueError(f"query must contain at most {MAX_QUERY_CHARS} characters")
+        raise RequestValidationError(f"query must contain at most {MAX_QUERY_CHARS} characters")
     terms: list[str] = []
     for match in _WORDS.finditer(query):
         word = match.group().casefold()
@@ -444,7 +452,7 @@ def get_doc(path: Path, doc_id: str, start_line: int = 1, max_lines: int = 100) 
             cost = len(line) + (1 if selected else 0)
             if used + cost > MAX_PAGE_CHARS:
                 if not selected:
-                    raise ValueError(f"Source line {start_line} exceeds the {MAX_PAGE_CHARS}-character page limit; use search for an excerpt")
+                    raise RequestValidationError(f"Source line {start_line} exceeds the {MAX_PAGE_CHARS}-character page limit; use search for an excerpt")
                 break
             selected.append(line)
             used += cost

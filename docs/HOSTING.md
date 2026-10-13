@@ -2,7 +2,7 @@
 
 Hosted mode serves the same UFE reference tools over Streamable HTTP for a client that supports a server URL and the configured authentication method. Local installation remains the primary distribution: each user runs the connector without a required hosting subscription. Your coding agent uses retrieved context while implementing and verifying requested changes with its own project tools.
 
-The repository includes a Dockerfile and a Hugging Face Space template. It does not provision an endpoint automatically. A successful local HTTP check does not establish compatibility with every web connector, and shared bearer tokens are not an OAuth authorization server. The intended source and public home is `Kenneth-Brisco/Universal-Fight-Engine-MCP`, currently PR #3's `fix/public-release-readiness` branch. This candidate does not deploy a service. See [release parity and evidence](RELEASE-EXPORT.md) for provenance and remaining publication checks. See [README](../README.md) for preview instructions and [CHANGELOG](../CHANGELOG.md) for naming migration.
+The repository includes a Dockerfile and a Hugging Face Space template. It does not provision an endpoint automatically. A successful local HTTP check does not establish compatibility with every web connector, and shared bearer tokens are not an OAuth authorization server. Build from a reviewed revision of `main` in `Kenneth-Brisco/Universal-Fight-Engine-MCP`, or another explicitly selected release ref. See the [README](../README.md) for installation and [verification](../VERIFICATION.md) for tested coverage.
 
 ## What a host must provide
 
@@ -80,7 +80,7 @@ uv run --frozen ufe-docs-mcp client-config --format claude-code \
 
 The smoke test checks unauthorized rejection, the `UFE3D-MCP` identity, four read tools, and an actual status call. An empty offline cache reports unavailable documentation, which is expected for this transport-only check. To include search, complete a normal sync first and use `--expect-index` against that cache.
 
-For an assistant rehearsal, run the printed registration command and launch the client from the same shell so it inherits `UFE_DOCS_TOKEN`. A desktop app opened elsewhere may not inherit it; use its documented secret configuration. The generated entry does not contain the token value. Preserve existing connections and use the [setup guide](SETUP.md) for a safe migration from older names.
+For an assistant rehearsal, run the printed registration command and launch the client from the same shell so it inherits `UFE_DOCS_TOKEN`. A desktop app opened elsewhere may not inherit it; use its documented secret configuration. The generated entry does not contain the token value. Preserve existing connections and use the [setup guide](SETUP.md) to configure and verify one UFE3D-MCP connection.
 
 Stop the rehearsal server and remove its temporary secret and log when finished:
 

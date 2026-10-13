@@ -1,6 +1,6 @@
 # UFE3D-MCP specification
 
-Status: implementation contract for the v0.2.0 release candidate and its unreleased naming/onboarding revision. A source-checkout installation does not imply a published package or hosted endpoint. See [CHANGELOG.md](../CHANGELOG.md) for migration and [naming/onboarding verification](ONBOARDING-VERIFICATION.md) for evidence limits.
+This is the implementation contract for UFE3D-MCP. A source-checkout installation does not imply a published package or hosted endpoint. See [CHANGELOG.md](../CHANGELOG.md) for connector changes and [onboarding verification](ONBOARDING-VERIFICATION.md) for connection checks and evidence limits.
 
 ## Purpose and scope
 
@@ -55,9 +55,9 @@ Shared tokens gate access; they do not identify users and are not an OAuth autho
 
 `client-config --format {json,claude-code,codex,cursor,antigravity,grok}` renders a local entry, or a remote entry with `--url` and `--token-env`. Remote entries reference the token through the client's environment-variable syntax, except Antigravity, which emits `Bearer <paste token>` for private completion. Generic JSON output also requires a client that supports its printed variable syntax. Configuration generation does not install the entry or prove that a client expands it. Emitted shell commands target POSIX shells, not every shell.
 
-The shared skill retains the name `ufe-docs`, so the Claude Code plugin skill is namespaced as `/ufe3d-mcp:ufe-docs`. A bare MCP connection exposes tools without requiring a plugin skill. Individual MCP tool names remain unchanged.
+The shared skill uses the name `ufe-docs`, so the Claude Code plugin skill is namespaced as `/ufe3d-mcp:ufe-docs`. A bare MCP connection exposes tools without requiring a plugin skill. The server exposes the tool names listed in the tool contract above.
 
-Earlier server names `UFE3D`, `ufe_docs`, and `ufe-docs`, and plugin/marketplace `ufe3d`, need an explicit migration. Confirm the entry belongs to this connector, preserve the intended cache/environment/transport/token references and launch options, and replace only that UFE definition. Avoid direct/plugin duplicates and scope shadowing. Keep rollback information private, preserve unrelated connections and permissions, and reconnect before testing. The server does not mutate client configuration automatically.
+Client setup preserves the intended cache, environment, transport, token references, scope, and launch options. Avoid direct/plugin duplicates and scope shadowing. Keep rollback information private, preserve unrelated connections and permissions, and reconnect before testing. The server does not mutate client configuration automatically.
 
 ## Agent-assisted setup and development workflow
 
@@ -148,7 +148,7 @@ Automatic synchronization changes the documentation cache only. It does not upda
 
 If the source adapter needs an update, safe failure guidance is retained in freshness output; detailed diagnosis is available locally. The maintainer must publish compatible connector code. Users update their checkout or obtain a new source archive, install the locked environment, and restart the client. Advice from the current manual must still be checked against the installed engine version.
 
-`CHANGELOG.md` tracks meaningful connector changes under Unreleased in the same PR, including migration steps. At publication, entries receive the real release version and date. Normal source synchronizations are not changelog releases. Agent and contributor instructions require this maintenance; the changelog is not automatically inferred from every commit.
+`CHANGELOG.md` tracks meaningful connector changes under Unreleased in the same PR, including any required compatibility actions. At publication, entries receive the real release version and date. Normal source synchronizations are not changelog releases. Agent and contributor instructions require this maintenance; the changelog is not automatically inferred from every commit.
 
 ## Acceptance and release evidence
 
@@ -173,4 +173,4 @@ Before a livestream demonstration, confirm in the presenter's actual assistant t
 
 Any claim of reduced time, cost, or tokens requires a comparable measured run with the same task and model. The selected historical plugin evaluation used a baseline without web access, so it does not establish an advantage over browsing. Preserve historical names/results instead of relabeling them as new tests. See [VERIFICATION.md](../VERIFICATION.md) and [ONBOARDING-VERIFICATION.md](ONBOARDING-VERIFICATION.md).
 
-`Kenneth-Brisco/Universal-Fight-Engine-MCP` is the intended open-source repository. Its complete PR #3 branch retains the tested implementation and incorporates the earlier export's setup, archive-privacy, and audit material; see [release parity and evidence](RELEASE-EXPORT.md). Updating the branch does not authorize merging or publication. Validate its exact final revision and audit this repository's history and retained GitHub data separately from the previous export, preserving privacy and attribution.
+The complete source is on `main` in `Kenneth-Brisco/Universal-Fight-Engine-MCP`. Validate the exact revision being distributed and follow the [release checklist](RELEASING.md). Publishing source, deploying a service, and running paid evaluations require their own authorization.

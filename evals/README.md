@@ -12,13 +12,13 @@ Eval runs use a temporary home directory. Each case's `scaffold.sh` copies your 
 
 ## Run the current plugin
 
-The plugin/marketplace ID is now `ufe3d-mcp` and the server is `UFE3D-MCP`. Confirm the installed Claude CLI's flags and actual namespaced tools before executing this POSIX-shell example from the repository root:
+The plugin/marketplace ID is `ufe3d-mcp` and the server is `UFE3D-MCP`. Confirm the installed Claude CLI's flags and actual namespaced tools before executing this POSIX-shell example from the repository root:
 
 ```bash
 claude plugin eval . --scaffold --allow-real-servers --allow-tools "mcp__plugin_ufe3d-mcp_UFE3D-MCP__ufe_search_docs" "mcp__plugin_ufe3d-mcp_UFE3D-MCP__ufe_get_doc" "mcp__plugin_ufe3d-mcp_UFE3D-MCP__ufe_list_topics" "mcp__plugin_ufe3d-mcp_UFE3D-MCP__ufe_docs_status" --max-cost-usd 10
 ```
 
-This renamed invocation is configuration-derived, not a newly completed paid evaluation. If the installed client normalizes tool identifiers differently, use the observed exact names and its documented permission syntax; do not disable permission checks. Update the corresponding `used-docs-tool.md` observer definitions together with the exact grants so tool-use indicators measure the current connector rather than an obsolete namespace.
+This invocation is configuration-derived, not a newly completed paid evaluation. If the installed client normalizes tool identifiers differently, use the observed exact names and its documented permission syntax; do not disable permission checks. Update the corresponding `used-docs-tool.md` observer definitions together with the exact grants so tool-use indicators measure the current connector rather than an obsolete namespace.
 
 - `--scaffold` runs each case's script, which copies local cache files.
 - `--allow-real-servers` starts the plugin's real server. Grants cover the four read tools and exclude explicit refresh. The recent-index check avoids a normally due automatic update, but read permissions alone do not disable the server's background refresher.
@@ -26,9 +26,9 @@ This renamed invocation is configuration-derived, not a newly completed paid eva
 
 ## Historical results
 
-Sanitized publication copies live in [docs/eval-reports/](../docs/eval-reports/). The October 7, 2026 run scored 0.99 with the plugin and 0.29 without (mean Δ +0.70); see [VERIFICATION.md](../VERIFICATION.md#plugin-eval-claude-plugin-eval). This was a nine-case comparison with a baseline that had no web access, not a development-speed measurement or a comparison against browsing. The generated report does not identify the resolved answering model.
+Sanitized publication copies live in [docs/eval-reports/](../docs/eval-reports/). The October 7, 2026 run scored 0.99 with the plugin and 0.29 without (mean Δ +0.70); see [the archived evaluation record](../docs/history/VERIFICATION.md#plugin-eval-claude-plugin-eval). This was a nine-case comparison with a baseline that had no web access, not a development-speed measurement or a comparison against browsing. The generated report does not identify the resolved answering model.
 
-Those historical records used the previous `UFE3D` / `ufe3d` names. Keep their answers, tool names, and scores intact. The revised feature-oriented skill and new product identity require their own future evaluation; old scores do not establish their performance. Updating observer definitions for future runs does not rerun, re-score, or rename the saved historical reports.
+Archived records retain the configuration used in each run. Keep their answers, tool names, and scores intact. A changed skill or connector revision needs its own evaluation; updating observer definitions does not rerun, re-score, or rename saved reports.
 
 ## Preparing a report for publication
 

@@ -12,10 +12,6 @@ Tell your agent what you want to change in your game. UFE3D-MCP gives it on-dema
 
 [Agent-assisted setup](#agent-assisted-setup) · [Manual quick start](#quick-start) · [Connect your assistant](#connect-your-assistant) · [Freshness](#documentation-freshness) · [Changelog](CHANGELOG.md)
 
-> **Intended open-source repository:** `Kenneth-Brisco/Universal-Fight-Engine-MCP` is the canonical home for UFE3D-MCP. Until PR #3 is merged with authorization, use `fix/public-release-readiness`; the original `main` is not the complete candidate. [Release parity and evidence](docs/RELEASE-EXPORT.md) account for the earlier private export. The repository remains private; no public endpoint, PyPI release, release tag, or publication approval is implied.
-
-The initial open-source offering is the complete source checkout. Local use needs no hosted service or package-registry release. Maintainers can follow the [remaining publication steps](docs/RELEASE-EXPORT.md#before-publishing-this-repository); the stacked candidate must reach the intended default branch before the repository is made public.
-
 ## Start with something you want to build
 
 After connecting, give your agent a concrete task:
@@ -51,12 +47,12 @@ These are coding-agent workflows supported by documentation retrieval, not new U
 
 ```text
 Read this checkout's README and docs/SETUP.md, then install and register
-UFE3D-MCP for this coding assistant. Use the source revision I provided;
-do not substitute an older release copy or another branch.
+UFE3D-MCP for this coding assistant. Use the source revision I provided,
+or main from Kenneth-Brisco/Universal-Fight-Engine-MCP if none was specified.
 
 Reuse an existing installation when appropriate. Preserve unrelated MCP
-connections, permissions, credentials, and project files. Migrate an older
-UFE registration only after verifying that it belongs to this connector.
+connections, permissions, credentials, and project files. Configure one
+UFE3D-MCP connection and preserve its cache and launch settings.
 
 Verify through actual MCP calls: check status, search for a UFE topic, and
 retrieve a returned document. Allow normal tool discovery when needed.
@@ -66,18 +62,18 @@ required, give the exact remaining action and mark verification pending.
 Do not report success from a configuration file or CLI-only search.
 ```
 
-The guide covers local versus remote clients, durable installation, safe migration, and connection evidence. It is ordinary Markdown, usable even when an agent cannot load skills. It does not grant filesystem permissions or client access. **Manual instructions remain below** for unsupported agents or troubleshooting.
+The guide covers local versus remote clients, durable installation, client configuration, and connection evidence. It is ordinary Markdown, usable even when an agent cannot load skills. It does not grant filesystem permissions or client access. **Manual instructions remain below** for unsupported agents or troubleshooting.
 
 The bundled [development skill](skills/ufe-docs/SKILL.md) is optional. It makes the feature-oriented workflow reusable in clients that support plugin skills; it is not needed to install the MCP or use its tools.
 
 ## Quick start
 
-You need **Python 3.10+**, [uv](https://docs.astral.sh/uv/getting-started/installation/), Git or an extracted source ZIP, and a client that can launch local MCP servers. Keep the checkout in a permanent folder. Private GitHub access is required while this preview remains private.
+You need **Python 3.10+**, [uv](https://docs.astral.sh/uv/getting-started/installation/), Git or an extracted source ZIP, and a client that can launch local MCP servers. Keep the checkout in a permanent folder. If GitHub requests authentication, use an account with access to the repository.
 
-**Install the complete private candidate:**
+**Install from source:**
 
 ```bash
-git clone --branch fix/public-release-readiness --single-branch https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP.git
+git clone --branch main --single-branch https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP.git
 cd Universal-Fight-Engine-MCP
 
 uv sync --frozen
@@ -87,7 +83,7 @@ uv run --frozen ufe-docs-mcp search "input buffer frame links"
 
 If you already have a reviewed checkout, use that checkout rather than cloning another copy. Record its commit with `git rev-parse HEAD` before reporting verification. `uv sync --frozen` installs locked dependencies; the documentation `sync` builds the local index. The source adapter respects the publisher's crawl delay (10 seconds in the recorded verification).
 
-The source ZIP must come from this candidate branch or its verified commit, not the original `main`. Record `git rev-parse HEAD`; [the parity manifest](release-export.json) accounts for all files in the earlier `UFE3D-MCP` export. No checkout of that other repository is needed. At an authorized publication, replace the candidate branch with the approved release ref in this repository and verify access without private credentials.
+For a ZIP installation, download the complete source from `main` or the exact commit you intend to use. Keep the included plugin files and `uv.lock` together with the source.
 
 ## Connect your assistant
 
@@ -113,9 +109,9 @@ uv run --frozen ufe-docs-mcp client-config --format codex
 uv run --frozen ufe-docs-mcp client-config --format claude-code
 ```
 
-The table describes generated configuration and plugin support, not a fresh installation in every app. See [current rehearsal evidence and limits](docs/RELEASE-EXPORT.md).
+The table describes generated configuration and plugin support, not a fresh installation in every app. See [verification evidence and limits](VERIFICATION.md).
 
-The generator **prints** configuration; it does not install it. Shell command output targets a POSIX shell. For another shell, use the JSON output or the client's own registration interface. Keep required local environment overrides when migrating. Never overwrite an entire client configuration with one generated entry.
+The generator **prints** configuration; it does not install it. Shell command output targets a POSIX shell. For another shell, use the JSON output or the client's own registration interface. Keep required local environment overrides when configuring the server. Never overwrite an entire client configuration with one generated entry.
 
 Claude Code and Codex plugins launch with `uv run --frozen` from the plugin folder, so `uv` must be available to the client. Cursor and Antigravity exports point at the installed checkout; re-export after moving it. The exporter refuses to overwrite an existing directory. The Cursor desktop app loads local plugins; the Cursor Agent CLI uses MCP configuration instead.
 
@@ -129,7 +125,7 @@ Claude Code and Codex plugins launch with `uv run --frozen` from the plugin fold
 | Python package / executable | `ufe-docs-mcp` |
 | Python module | `ufe_docs_mcp` |
 
-Individual tool names such as `ufe_search_docs` are unchanged. There is no universal MCP slash command. With the Claude Code plugin loaded, the skill is `/ufe3d-mcp:ufe-docs`; other clients expose skills through their own interfaces.
+Individual tools include `ufe_search_docs` and `ufe_get_doc`. There is no universal MCP slash command. With the Claude Code plugin loaded, the skill is `/ufe3d-mcp:ufe-docs`; other clients expose skills through their own interfaces.
 
 ```text
 Use UFE3D-MCP to help implement [describe the feature] in this project.
@@ -137,16 +133,6 @@ Inspect the relevant project context and UFE version, retrieve the documentation
 needed, implement within my requested scope, and verify the change. Cite the
 sources and tell me what still needs a Unity check.
 ```
-
-### Migrate an earlier preview
-
-Older server names include `UFE3D`, `ufe_docs`, and `ufe-docs`; the previous plugin/marketplace identifier was `ufe3d`.
-
-Inspect the existing definition and confirm that it launches this connector. Generate `UFE3D-MCP` configuration from the updated checkout, carrying over the intended cache, environment, transport, token references, scope, and any explicit launch options. Keep a private rollback copy. Disable/remove only the superseded UFE entry after the replacement is valid, including a duplicate plugin-provided entry if applicable. Check project/local scopes that could shadow user settings. Do not alter unrelated connections.
-
-Reinstall/re-export the renamed plugin if you use it. Client tool permissions may refer to the old server or plugin namespace; update only UFE-specific entries using the installed client's documented syntax and observed tool names. Do not disable approval checks or grant broad wildcard access merely to complete setup. A headless client may require an interactive approval before calls work.
-
-Reconnect/reload the client as supported and verify **status → search → read** through real MCP calls. Configuration saved is not the same as a loaded, callable server. If the current session cannot load the new registration, start a fresh supported session without bypassing nesting/session guards, or report the exact handoff.
 
 ### Compatibility and privacy
 
@@ -164,7 +150,7 @@ Generated settings and local plugin exports contain machine-specific paths. Keep
 | [`tests/`](tests/), [`evals/`](evals/) | Automated checks and selected assistant-evaluation cases. |
 | [`skills/`](skills/), plugin manifests, [`examples/`](examples/) | Optional development workflow and client integrations. |
 | [`docs/`](docs/), [`VERIFICATION.md`](VERIFICATION.md), [`Dockerfile`](Dockerfile), [`uv.lock`](uv.lock) | Setup/behavior records, verification, container setup, and locked dependencies. |
-| [`CHANGELOG.md`](CHANGELOG.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) | User-facing changes, migration notes, and contribution requirements. |
+| [`CHANGELOG.md`](CHANGELOG.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) | User-facing changes and contribution requirements. |
 
 Use the complete checkout or source ZIP for plugins, skills, and locked dependencies. Wheels and Python source-distribution builds contain the core server; they are not complete plugin installations.
 
@@ -236,7 +222,7 @@ There are no independent desktop or Discord notifications. Notices are returned 
 
 The automatic updater changes the documentation cache only—not connector code, dependencies, Unity, or the installed UFE package. Adapter-breaking source changes require a compatible connector release.
 
-Read [CHANGELOG.md](CHANGELOG.md) before upgrading. In a clean checkout on the intended branch, use `git pull --ff-only`, then `uv sync --frozen` and reconnect the client. Do not discard local edits. ZIP installations need a new reviewed archive; changed paths or registration names require regenerated configuration and migration.
+Read [CHANGELOG.md](CHANGELOG.md) before upgrading. In a clean checkout on the intended branch, use `git pull --ff-only`, then `uv sync --frozen` and reconnect the client. Do not discard local edits. ZIP installations need a new reviewed archive; regenerate configuration if the installation path or launch settings change.
 
 Routine documentation refreshes belong in freshness/update state, not the connector changelog. See the [specification](docs/SPECIFICATION.md) for the full contract.
 
@@ -266,13 +252,11 @@ See [docs/HOSTING.md](docs/HOSTING.md) and the included Dockerfile. Hosting rema
 
 ## Verification and coverage
 
-[VERIFICATION.md](VERIFICATION.md) records prior automated and real-client checks; historical reports retain the names actually used during those runs. [Naming and onboarding verification](docs/ONBOARDING-VERIFICATION.md) describes the new checks and their limits. CI results must be matched to the exact reviewed head.
+[VERIFICATION.md](VERIFICATION.md) records automated checks and client evidence with the exact revisions tested. [Onboarding verification](docs/ONBOARDING-VERIFICATION.md) defines the status → search → get-document checks needed for a working installation. Generated configuration alone does not establish compatibility with every app.
 
-The October 7, 2026 baseline recorded 223 visible pages/sections and 1,010 chunks, with 23 `needs_verification` and nine `legacy_docs_differ` flags. Coverage follows the indexed manual's public navigation, not every UFE website or every C# API. The manual is not version-pinned; absence from search does not prove a feature is absent.
+The recorded real cache contains 223 visible pages/sections and 1,010 chunks. Coverage follows the indexed manual's public navigation, not every UFE website or every C# API. The manual is not version-pinned; absence from search does not prove a feature is absent. Check status for your installation's coverage and freshness.
 
-Historical live tool calls were recorded in Claude Code, Codex, Cursor, and Grok. Antigravity's headless permission requirement blocked its attempted call. Those runs do not prove fresh installation under the renamed `UFE3D-MCP` / `ufe3d-mcp` identity in every client. Claude Desktop, public HTTPS onboarding, and a real game-feature implementation with the revised prompt require separate rehearsal.
-
-The nine-case evaluation compared documentation-assisted answers with a baseline **without web access**. It does not establish superiority to browsing, time/token savings, or correctness of a game implementation. See [evals/README.md](evals/README.md).
+The synthetic suite exercises stdio, HTTP, generated configuration, and privacy failures. Recorded client rehearsals have separate limits; they do not establish a public HTTPS deployment or successful implementation of a game feature. The selected model evaluation used a baseline without web access and does not establish superiority to browsing, time/token savings, or gameplay correctness. See [evals/README.md](evals/README.md).
 
 ## Troubleshooting and advanced setup
 
@@ -284,7 +268,7 @@ The nine-case evaluation compared documentation-assisted answers with a baseline
 | Different clients see different snapshots | Verify that they use the intended shared cache or the same remote endpoint. |
 | Refresh is failed or overdue | Preserve the warning. Use refresh only if available and appropriate, or contact the host operator. |
 | Cursor drops plugin tools | Open a project folder, reload the window, then test from a fresh chat. |
-| Old and new UFE entries both appear | Follow the migration section; keep one working connection and leave unrelated servers untouched. |
+| Duplicate UFE3D-MCP tools appear | Use one direct or plugin-provided connection. Check project and user scopes; preserve unrelated servers and permissions. |
 
 <details>
 <summary>Change update cadence or work offline</summary>
@@ -336,9 +320,9 @@ This does not apply the transitive dependency resolution in `uv.lock`. Plugins c
 
 ## Community, sources, and license
 
-Created by **Kenneth Brisco** while building a fighting game with UFE. Contributions can improve setup, documentation retrieval, client compatibility, and useful development examples. Read [CONTRIBUTING.md](CONTRIBUTING.md) and keep [CHANGELOG.md](CHANGELOG.md) updated for meaningful user-facing changes.
+Contributions can improve setup, documentation retrieval, client compatibility, and useful development examples. Read [CONTRIBUTING.md](CONTRIBUTING.md) and keep [CHANGELOG.md](CHANGELOG.md) updated for meaningful user-facing changes.
 
-Share redacted reproductions rather than personal configuration, caches, or full local logs. The intended public repository is [Kenneth-Brisco/Universal-Fight-Engine-MCP](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP). The earlier `UFE3D-MCP` export is a comparison record, not the installation destination. This repository's history, refs, logs, and artifacts require their own privacy check before publication.
+Share redacted reproductions rather than personal configuration, caches, or full local logs. Report issues and contribute changes in [Kenneth-Brisco/Universal-Fight-Engine-MCP](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP).
 
 Official sources: [manual](https://www.ufe3d.com/ufe2/docs/#/docs:home) · [catalog](https://www.ufe3d.com/ufe2/docs/assets/site-data.json) · [release notes](https://www.ufe3d.com/ufe2/changelog.html) · [crawl rules](https://www.ufe3d.com/robots.txt).
 

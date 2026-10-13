@@ -22,6 +22,7 @@ Entries follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Add an 
 
 - Clarified included connector source versus separately downloaded documentation/cache files, complete plugin checkout requirements, local versus hosted refresh, and evidence limits.
 - Kept unrelated client settings and permissions explicitly outside setup/migration scope; setup success requires actual status, search, and retrieval calls rather than configuration alone.
+- Updated all nine future evaluation tool-use observers to the renamed plugin/server namespace and added regression checks. Saved historical answers, judgments, tool records, and scores remain unchanged; a fresh client evaluation is still separate.
 
 ### Security
 

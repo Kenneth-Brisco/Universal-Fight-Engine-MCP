@@ -11,21 +11,27 @@ or history rewrite is authorized by preparing these files.
 The comparison baseline is the earlier private `Kenneth-Brisco/UFE3D-MCP`
 candidate at `60d8d798f86fe93609509e98d4f94b7315a34841`. That export came from
 this repository's tested PR #3 head
-`0b9809867d48d8eb9910a78f2f42013d2cb62c3c`, with PR base
-`656a7cca57fe3a9f38700c7866455ca3e58f59c2`. It is now a historical comparison
-record, not the intended installation or publication destination.
+`0b9809867d48d8eb9910a78f2f42013d2cb62c3c`. Its historical PR base is represented
+in the rewritten history by `99a42414411bcb95ac0724acf147ebacdf731e24`; the
+pre-rewrite base SHA is intentionally not repeated here. This preserves the
+comparison's provenance without providing a direct pointer to former personal
+email metadata. The export is a historical comparison record, not the intended
+installation or publication destination. Removing this pointer does not purge
+GitHub's retained objects or earlier copies of this document.
 
 The [manifest](../release-export.json) accounts for **all 129 baseline paths**.
 No connector capability, test, skill, evaluation record, or other baseline file
 is omitted. Runtime modules, dependencies, lock file, tests, optional skill,
 evaluation material, assets, and the original CI workflow are byte-identical.
+`VERIFICATION.md` adds historical revision labels and corrects naming context;
+its recorded test counts, evaluation answers, and results are preserved.
 The repository URL in the Claude plugin manifest now selects the canonical home.
 Documentation combines the export's setup/evidence and archive-privacy
 improvements with the correct repository and PR branch. AGENTS guidance and the
 three release-audit files are adapted to that same decision. Each differing
 file is identified in the manifest; stale instructions are not copied verbatim.
 
-The audit workflow pins the manifest hash, reconstructs the immutable comparison
+On the preparation branch, the audit workflow pins the manifest hash, reconstructs the immutable comparison
 tree from recorded Git blobs/modes, and checks the exact current tracked-file
 list and expected blobs. Manifest/workflow control files are explicitly marked
 to avoid self-referential hashes. The original export's immutable
@@ -39,6 +45,22 @@ all documented differences; keep the comparison commit/tree fixed unless a new
 baseline is explicitly chosen. Update the manifest hash in the audit workflow.
 A later candidate needs fresh validation; a prior successful audit is not proof
 of a changed revision.
+
+## Audit lifecycle and future contributions
+
+The workflow checks commit metadata on all PRs and on pushes to `main` and
+`fix/public-release-readiness`. The fixed export-parity step runs automatically
+only for the preparation branch (a PR whose head is that branch, or a push to
+it). A manual workflow run can opt into **Verify the recorded export snapshot**
+for the selected ref. Its default is metadata-only outside the preparation
+branch. Each step checks the commit actually selected by the workflow.
+
+After promotion, this manifest remains evidence for the prepared snapshot.
+Ordinary contributor PRs and pushes to `main` do not need to rewrite the old
+129-file manifest or its pinned hash when files change. They still receive
+metadata checks and the normal Python/container CI. A deliberate later export
+audit must first record and review its new candidate differences; opting into
+the historical parity check on changed source should fail.
 
 ## Executed evidence and its exact scope
 
@@ -125,7 +147,9 @@ The metadata rewrite removed eight old commit signatures; none had been shown
 verified by GitHub. Rewritten commits are unsigned. Profile attribution is not
 cryptographic signature verification.
 
-The release audit checks parity and noreply identity on every PR update.
+The release audit checks noreply identity on every PR update and pushes to the
+default/preparation branches. Fixed-snapshot parity is limited to the preparation
+branch or an explicit manual export audit, as described above.
 **Non-UTC offsets are advisory, not merge or publication blockers.** UTC remains
 the convention for new commits; the owner has explicitly accepted the old
 timezone offset as non-blocking. The workflow does not inspect every retained
@@ -206,7 +230,10 @@ follow-ups, not requirements for publishing this source repository.
 3. In that approved promotion, replace private-preview wording and
    `fix/public-release-readiness` setup references in README/SETUP with the chosen
    public default/release ref, then refresh the parity manifest and its workflow
-   fingerprint. Rehearse that exact checkout. If creating a versioned release,
+   fingerprint for the final preparation snapshot. Confirm that ordinary PRs and
+   `main` pushes run metadata/normal CI without the historical parity gate;
+   manually opt into parity when checking the approved final snapshot itself.
+   Rehearse that exact checkout. If creating a versioned release,
    use the actual version/date, update all version-bearing manifests consistently,
    and move the relevant Unreleased entries. A tag or PyPI upload is not required
    just to make the MIT-licensed source public.

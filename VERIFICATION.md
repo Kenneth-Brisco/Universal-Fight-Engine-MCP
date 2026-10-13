@@ -1,9 +1,21 @@
-# Verification — UFE Docs MCP
+# Verification — UFE3D-MCP
 
-## Release preparation — October 13, 2026 UTC
+This file preserves historical checks, names, and counts for the revisions
+actually tested. It is not a claim that every client or evaluation was rerun
+against the current candidate. See [release evidence](docs/RELEASE-EXPORT.md)
+for later 85-test/129-file candidate checks and their exact source/CI revisions.
 
-Fresh deterministic verification of the privacy and documentation corrections,
-using Linux, Python 3.12.14, and the locked MCP SDK 2.3.0 environment:
+## Historical privacy preparation — October 13, 2026 UTC
+
+Recorded for the privacy-preparation source whose rewritten equivalent is
+[`c59d7d9303a60f2e7818dc7cf711a111404c12b5`](https://github.com/Kenneth-Brisco/Universal-Fight-Engine-MCP/tree/c59d7d9303a60f2e7818dc7cf711a111404c12b5).
+The history cleanup changed commit metadata/IDs, not that revision's file tree.
+That source contains 120 tracked files and 72 test methods and predates the
+`UFE3D-MCP` / `ufe3d-mcp` rename. The old names and counts below describe that
+historical revision, not the current PR head.
+
+The checks below were recorded using Linux, Python 3.12.14, and the locked MCP
+SDK 2.3.0 environment:
 
 - `uv sync --frozen` installed the locked environment successfully.
 - **72 tests passed** with `uv run --frozen python -m unittest discover -s tests -v`.
@@ -45,7 +57,7 @@ Publication copies omit personal workstation details, temporary workspace paths,
 
 Recorded **October 7, 2026 UTC** on macOS 26.5.1 (arm64), Python 3.13.9, MCP SDK 2.3.0. Client versions: Claude Code 2.1.292, Codex CLI 0.161.0, Cursor Agent 2026.10.01, Antigravity CLI 1.2.17, Grok Build 1.0.46.
 
-> **Names and evidence:** most client and automated checks in this section preceded the rename from server `ufe_docs` / plugin `ufe-docs` to server `UFE3D` / plugin `ufe3d`. The later Claude plugin evaluation below used `UFE3D`. Historical records retain the names used in each check; current Claude Code tool IDs use `mcp__UFE3D__…` or, for the plugin, `mcp__plugin_ufe3d_UFE3D__…`.
+> **Historical names and evidence:** most client and automated checks in this section preceded the rename from server `ufe_docs` / plugin `ufe-docs` to server `UFE3D` / plugin `ufe3d`. The later Claude plugin evaluation below used `UFE3D`. Tool IDs for that naming stage used `mcp__UFE3D__…` or, for the plugin, `mcp__plugin_ufe3d_UFE3D__…`. These are historical namespaces. Current setup uses server `UFE3D-MCP` and plugin `ufe3d-mcp`; current eval observers recognize `mcp__plugin_ufe3d-mcp_UFE3D-MCP__…`. Discover the actual tool IDs in the installed client rather than copying historical permission rules.
 
 ### Automated checks
 
@@ -104,7 +116,10 @@ The remote client checks used a clean copy of the Docker image's source files, `
 
 Without an allow rule, headless Cursor and Antigravity runs reject MCP calls they cannot prompt for. Cursor reported the read tools as not read-only when rejecting them, so headless runs need an explicit `Mcp(server:tool)` rule; interactive sessions ask.
 
-### Remaining
+### Remaining at the time of this historical record
+
+These were follow-ups for the October 7 naming stage. The current publication
+checklist and qualified client coverage are in [RELEASE-EXPORT.md](docs/RELEASE-EXPORT.md).
 
 - Fresh client sessions using the final release's `UFE3D` / `ufe3d` names across the supported integrations; the post-rename evaluation above covers Claude's plugin only.
 - A live tool call in an interactive Antigravity session.

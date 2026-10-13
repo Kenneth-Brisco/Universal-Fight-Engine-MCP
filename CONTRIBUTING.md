@@ -100,11 +100,19 @@ until an authorized merge or promotion; original `main` is not a substitute.
 [Release parity and evidence](docs/RELEASE-EXPORT.md) and the
 [manifest](release-export.json) account for the earlier private export and the
 repository-specific documentation, URL, and audit changes brought back here.
-Refresh the manifest and audit fingerprint when the candidate changes. Before
+While working on `fix/public-release-readiness`, refresh the manifest and audit
+fingerprint when the candidate changes. Before
 publication, audit this repository's complete history, refs, logs, artifacts,
 and commit identities, then update installation links to the approved release
 ref. The other repository's privacy audit does not clear this one. Preserve
 contributor attribution; a clean reachable log does not prove old data was removed.
+
+After promotion, ordinary contributor PRs do not update this historical export
+manifest. The workflow continues to check commit metadata on every PR and on
+`main` pushes, while fixed-snapshot parity applies only to the preparation
+branch or a manual run with **Verify the recorded export snapshot** selected.
+For another export audit, record the intended snapshot before enabling that
+comparison. See [the audit lifecycle](docs/RELEASE-EXPORT.md#audit-lifecycle-and-future-contributions).
 
 The retained-object assessment and remaining publication actions are recorded in
 [the release checklist](docs/RELEASE-EXPORT.md#before-publishing-this-repository).

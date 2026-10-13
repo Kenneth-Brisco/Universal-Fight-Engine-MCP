@@ -44,21 +44,21 @@
       "path": "AGENTS.md",
       "mode": "100644",
       "baseline_blob": "f26e6a6ddb9120ce5ecb70b5baf21bb00ba10f1c",
-      "current_blob": "d61485a4f61a5e9fcdf981f3b7ab5a607255e812",
+      "current_blob": "49c902a35dc6706f65a2f2034e25f7a6ba56115f",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
       "path": "CHANGELOG.md",
       "mode": "100644",
       "baseline_blob": "e38f5d8a06e5f286620cb0aaaeb69154aa54d231",
-      "current_blob": "84eb5ec8a78ca105084ddcb03da22a2dd57a0f05",
+      "current_blob": "b0d0e817617c3ba1ac78a6553828411460578d5b",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
       "path": "CONTRIBUTING.md",
       "mode": "100644",
       "baseline_blob": "a662bc0944fda1631f6a3873f06dce8fbaa09aa0",
-      "current_blob": "52ced59c9d75e642bd2e9838bb26f1fc95d50b85",
+      "current_blob": "8961a45ecc6f132e817b6711b99491857aa95bf3",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {
@@ -81,7 +81,9 @@
     {
       "path": "VERIFICATION.md",
       "mode": "100644",
-      "baseline_blob": "80a76a481e11773e43fc5f9907e6018887341c92"
+      "baseline_blob": "80a76a481e11773e43fc5f9907e6018887341c92",
+      "current_blob": "c9ab7d83101946f3dc766df02e67bb4b25303c3c",
+      "reason": "Label the historical verification revision and tool namespaces; preserve recorded results."
     },
     {
       "path": "assets/ufe-docs-mcp-banner.svg",
@@ -113,7 +115,7 @@
       "path": "docs/RELEASE-EXPORT.md",
       "mode": "100644",
       "baseline_blob": "27a2d1a84a15918ac8cab04109fa8c189440bc50",
-      "current_blob": "9d97813845683302e2b47e45956a4460e5815668",
+      "current_blob": "920f501f02172942d08e60725a2d8d52e059670c",
       "reason": "Canonical repository URL, setup/evidence guidance, or release-audit adaptation; runtime unchanged."
     },
     {

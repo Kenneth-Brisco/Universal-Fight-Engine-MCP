@@ -1,3 +1,5 @@
+> **Archived evidence.** This records an earlier development stage; its setup and release instructions are not current. Use the [setup guide](../SETUP.md), [verification summary](../../VERIFICATION.md), and [release checklist](../RELEASING.md) for the current version. Names and results below are preserved as recorded.
+
 # Canonical repository and release parity
 
 **`Kenneth-Brisco/Universal-Fight-Engine-MCP` is the user-selected open-source
@@ -19,7 +21,7 @@ email metadata. The export is a historical comparison record, not the intended
 installation or publication destination. Removing this pointer does not purge
 GitHub's retained objects or earlier copies of this document.
 
-The [manifest](../release-export.json) accounts for **all 129 baseline paths**.
+The [manifest](../../release-export.json) accounts for **all 129 baseline paths**.
 No connector capability, test, skill, evaluation record, or other baseline file
 is omitted. Runtime modules, dependencies, lock file, tests, optional skill,
 evaluation material, assets, and the original CI workflow are byte-identical.

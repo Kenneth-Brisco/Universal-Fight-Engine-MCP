@@ -10,7 +10,7 @@ for repository-agent guidance.
 Every meaningful user-facing change must update [CHANGELOG.md](CHANGELOG.md)
 under **Unreleased** in the same pull request. Cover functionality, setup,
 compatibility, privacy, and important documentation changes. Explain the user
-impact and any migration action; group related commits rather than listing each
+impact and any required compatibility action; group related commits rather than listing each
 file edit. For purely internal changes with no user impact, state the reason for
 omitting an entry in the PR.
 
@@ -34,9 +34,9 @@ New naming/onboarding checks must keep direct MCP use independent of skills.
 ## Names and workflow
 
 The product/server is **UFE3D-MCP**; plugin and marketplace IDs are `ufe3d-mcp`.
-The package/executable remains `ufe-docs-mcp`, the module `ufe_docs_mcp`, and the
-optional development skill `ufe-docs`. Individual tool names stay unchanged.
-Use older names only in migration instructions and historical evidence.
+The package/executable is `ufe-docs-mcp`, the module `ufe_docs_mcp`, and the
+optional development skill `ufe-docs`. Use the tool names in the specification.
+Current instructions use these names; archived evidence retains its recorded identifiers.
 
 Lead with building and debugging features, but keep the boundary accurate: the
 MCP supplies documentation context; the agent's own project tools implement and
@@ -71,14 +71,6 @@ Use [GitHub's commit-email guidance](https://docs.github.com/en/account-and-prof
 to locate your account's actual private address. Preserve other contributors'
 authorship when incorporating their work.
 
-## After the UTC history cleanup
-
-The repository history has been normalized to UTC/noreply metadata. Use a fresh
-clone before further work. Preserve local edits separately, and do not merge or
-push an old checkout back into the new history. The cleanup kept every existing
-commit's file tree and actual timestamp unchanged; commit IDs changed. See
-[the release record](docs/RELEASE-EXPORT.md) for scope and retained-data limits.
-
 ## Release artifacts
 
 Build from the reviewed source revision in a clean checkout. Include only tracked
@@ -87,38 +79,21 @@ before publishing, including archive headers as well as file contents. A local
 setuptools source distribution can embed the build account in tar owner/group
 fields. Use a controlled build identity or normalize uid/gid, owner/group names,
 and archive timestamps before distribution, then confirm every member byte is
-unchanged and rescan the archive. Do not reuse an archive from an earlier preview
+unchanged and rescan the archive. Do not reuse an archive from another revision
 or copy a working directory with its local cache and environment.
 
 The complete GitHub source checkout includes the plugins and `uv.lock`.
 Python wheels and source distributions currently package the core server;
 do not advertise them as complete plugin installations.
 
-`Kenneth-Brisco/Universal-Fight-Engine-MCP` is the intended open-source home.
-The complete candidate remains on PR #3's `fix/public-release-readiness` branch
-until an authorized merge or promotion; original `main` is not a substitute.
-[Release parity and evidence](docs/RELEASE-EXPORT.md) and the
-[manifest](release-export.json) account for the earlier private export and the
-repository-specific documentation, URL, and audit changes brought back here.
-While working on `fix/public-release-readiness`, refresh the manifest and audit
-fingerprint when the candidate changes. Before
-publication, audit this repository's complete history, refs, logs, artifacts,
-and commit identities, then update installation links to the approved release
-ref. The other repository's privacy audit does not clear this one. Preserve
-contributor attribution; a clean reachable log does not prove old data was removed.
+The complete source is on `main` in `Kenneth-Brisco/Universal-Fight-Engine-MCP`.
+Follow [RELEASING.md](docs/RELEASING.md) for source selection, packaging,
+privacy checks, installation rehearsal, and publication authorization.
 
-After promotion, ordinary contributor PRs do not update this historical export
-manifest. The workflow continues to check commit metadata on every PR and on
-`main` pushes, while fixed-snapshot parity applies only to the preparation
-branch or a manual run with **Verify the recorded export snapshot** selected.
-For another export audit, record the intended snapshot before enabling that
-comparison. See [the audit lifecycle](docs/RELEASE-EXPORT.md#audit-lifecycle-and-future-contributions).
-
-The retained-object assessment and remaining publication actions are recorded in
-[the release checklist](docs/RELEASE-EXPORT.md#before-publishing-this-repository).
-Do not require a support request or another history rewrite solely for old
-timezone offsets. Distinguish residual email privacy from credential exposure;
-neither a green workflow nor this distinction authorizes making the repository public.
+The export manifest records a historical snapshot. Ordinary contributor PRs
+do not update its blobs or workflow fingerprint. Normal CI and metadata checks
+run on PRs and `main`; an explicitly selected historical parity audit is a
+separate comparison, not a gate that freezes future development.
 
 Keep documentation provenance and evaluation limitations visible. A passing
 protocol test is evidence for that transport and source revision; it is not a

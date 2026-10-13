@@ -197,9 +197,6 @@ class OnboardingTests(unittest.TestCase):
             self.assertIn("Unreleased", text)
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
         self.assertIn("## Unreleased", changelog)
-        self.assertIn("### Migration", changelog)
-        for old in ("`UFE3D`", "`ufe_docs`", "`ufe-docs`", "`ufe3d`"):
-            self.assertIn(old, changelog)
 
     def test_relative_links_in_onboarding_documents_exist(self):
         paths = ("README.md", "docs/SETUP.md", "docs/ONBOARDING-VERIFICATION.md",

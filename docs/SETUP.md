@@ -18,9 +18,9 @@ Inspect existing UFE registrations and plugin-provided servers without printing 
 
 Use the user's provided checkout/ref and read its applicable repository instructions. Record `git rev-parse HEAD`, branch, remote, and dirty/clean state without copying private data into a public report. Preserve existing edits and unrelated worktrees.
 
-The intended open-source repository is `Kenneth-Brisco/Universal-Fight-Engine-MCP`. Until authorized promotion, use PR #3's complete `fix/public-release-readiness` branch as shown in the README. Record its exact commit and inspect [release parity and evidence](RELEASE-EXPORT.md). Do not substitute the original `main`, the earlier `UFE3D-MCP` export, or the staging backup. Private access remains necessary until publication; a 404 can mean insufficient access, not a missing repository.
+The source repository is `Kenneth-Brisco/Universal-Fight-Engine-MCP`. Use `main` unless the user supplied a specific revision. Follow the clone or source-ZIP instructions in the [README](../README.md#quick-start) and record the exact commit. If authentication is required, use an account with repository access; a 404 can mean insufficient access rather than a missing repository.
 
-Maintainers must follow the [publication checklist](RELEASE-EXPORT.md#before-publishing-this-repository) when promoting this preview. Merging the stacked PR into its feature-branch base alone does not install the complete candidate on `main`. End-user setup never performs that promotion or changes repository visibility.
+End-user setup does not merge branches, publish a release, or change repository visibility.
 
 Place a new checkout or extracted source ZIP in a durable user-selected development location. Reuse an appropriate existing one. Never hard-code the maintainer's home directory, hostname, or timezone. Keep generated configuration and caches private.
 
@@ -52,9 +52,9 @@ Use `uv run --frozen ufe-docs-mcp client-config --format <client>` and the [clie
 
 Choose an appropriate scope. For a user who wants this across game projects, user scope is reasonable when supported; honor an explicit project-only request. Local paths must exist on the machine that launches the server. Preserve the intended cache path, environment, token references, arguments, transport, and unrelated settings. Keep a private rollback copy before changing configuration. Do not overwrite an entire configuration file with one entry.
 
-Earlier server names include `UFE3D`, `ufe_docs`, and `ufe-docs`; the old plugin identifier is `ufe3d`. Verify the launch target before touching any such entry. Migrate only this connector to `UFE3D-MCP`, or reinstall/re-export the optional `ufe3d-mcp` plugin. Avoid both direct and plugin-provided registrations for the same connector. Update UFE-specific permission references only through the client's supported syntax. Do not grant broad wildcard tools or bypass permission prompts to obtain a pass.
+Register the server as `UFE3D-MCP`, using either a direct MCP connection or the optional `ufe3d-mcp` plugin. Verify the launch target before changing an existing definition. Avoid duplicate direct/plugin registrations and check for project settings that shadow user settings. Use the client's supported permission syntax and discovered tool names. Do not grant broad wildcard access or bypass permission prompts to obtain a pass.
 
-Client/plugin naming is not the executable name: the executable stays `ufe-docs-mcp`, the module stays `ufe_docs_mcp`, and tool names such as `ufe_docs_status` remain unchanged. POSIX shell commands emitted by the generator are not automatically valid in every shell; use JSON or the native UI/CLI for other environments.
+Client/plugin naming is not the executable name: the executable is `ufe-docs-mcp`, the module is `ufe_docs_mcp`, and tools include `ufe_docs_status`. POSIX shell commands emitted by the generator are not automatically valid in every shell; use JSON or the native UI/CLI for other environments.
 
 For a real remote endpoint supplied by its operator, generate using `--url` and, when supported, `--token-env`. Keep bearer tokens out of chat/logs and confirm the target client's authentication support. Do not assume every generic JSON client expands the same environment syntax.
 
@@ -62,7 +62,7 @@ For a real remote endpoint supplied by its operator, generate using `--url` and,
 
 Reload/reconnect as documented by the installed client. Permit normal deferred-tool discovery. If this session cannot load a newly saved registration, use a supported fresh session on the same machine or provide the exact user handoff. Do not remove nesting guards, disable approvals, or start repeated paid child sessions.
 
-In the recorded Claude Code 2.1.296 plugin rehearsal, the first `claude mcp list` connection check timed out; one reconnect succeeded, with the client reporting a cached legacy-protocol fallback. After confirming the locked installation and launch paths, retry the check once. If it still fails, inspect redacted local diagnostics and leave verification pending; do not increase permissions or repeat paid sessions to obtain a pass. A successful connection check must still be followed by the tool calls below.
+If a connection check times out, confirm the locked installation and launch paths, then reconnect once. If it still fails, inspect redacted local diagnostics and leave verification pending; do not increase permissions or repeat paid sessions to obtain a pass. A successful connection check must still be followed by the tool calls below.
 
 Through the actual registered MCP:
 
@@ -88,4 +88,96 @@ make the requested scoped changes with your project tools, and run relevant
 checks. Cite the sources and identify anything still requiring Unity testing.
 ```
 
-A plugin skill is optional. For manual setup or a host without skill support, the direct MCP connection and prompt are sufficient. See [README](../README.md) and [CHANGELOG](../CHANGELOG.md) for compatibility and migration information.
+A plugin skill is optional. For manual setup or a host without skill support, the direct MCP connection and prompt are sufficient. See [README](../README.md) and [CHANGELOG](../CHANGELOG.md) for compatibility information and connector changes.
+
+## Optional plugins
+
+Use the optional `ufe3d-mcp` plugin instead of a direct registration when your
+client supports plugins. Follow the same status → search → get-document checks
+in section 5. Avoid loading both registrations for the same installation.
+Run local generator commands from the permanent checkout.
+
+| Client | Install the optional plugin |
+| --- | --- |
+| Claude Code | `claude plugin marketplace add <checkout>` then `claude plugin install ufe3d-mcp@ufe3d-mcp` |
+| Codex | `codex plugin marketplace add <checkout>` then `codex plugin add ufe3d-mcp@ufe3d-mcp` |
+| Cursor | `uv run --frozen ufe-docs-mcp export-plugin cursor --out ~/.cursor/plugins/local/ufe3d-mcp`, then reload the desktop app. The Cursor Agent CLI uses direct MCP configuration. |
+| Antigravity | `uv run --frozen ufe-docs-mcp export-plugin antigravity --out <new-directory>`, then `agy plugin install <new-directory>` |
+| Grok Build | `grok plugin install <checkout>` adds the skill; its MCP server comes from the client connection. |
+
+Replace `<checkout>` with the installed source directory and `<new-directory>`
+with a directory that does not already exist. Inspect the installed client's
+supported commands. This table describes packaging support, not a newly verified
+installation in every app; see [VERIFICATION.md](../VERIFICATION.md).
+
+Claude Code and Codex plugins launch with `uv run --frozen` from their plugin
+folder, so `uv` must be available to the client. Cursor and Antigravity exports
+use absolute paths to the installed interpreter; re-export after moving it.
+The exporter refuses to overwrite an existing directory. Preserve required cache
+and environment settings when selecting the launch configuration.
+
+| Component | Name |
+| --- | --- |
+| Product / MCP server | `UFE3D-MCP` |
+| Plugin / marketplace | `ufe3d-mcp` |
+| Optional skill | `ufe-docs` |
+| Python package / executable | `ufe-docs-mcp` |
+| Python module | `ufe_docs_mcp` |
+
+With the Claude Code plugin loaded, invoke the skill as `/ufe3d-mcp:ufe-docs`.
+Other clients expose skills through their own interfaces; direct MCP use needs
+no slash command or skill.
+
+## Advanced local setup
+
+Apply options on the machine that launches the server. Preserve the same cache
+location for synchronization and serving. Full raw-page refresh requires a
+separate explicit decision; it is not an installation or verification step.
+
+<details>
+<summary>Change update cadence or work offline</summary>
+
+```bash
+uv run --frozen ufe-docs-mcp serve --refresh-hours 6
+uv run --frozen ufe-docs-mcp serve --no-auto-refresh
+uv run --frozen ufe-docs-mcp serve --offline
+```
+
+For a local client, append the chosen options after `serve` in its generated arguments. Intervals must be finite and at least one hour. Disabling automatic refresh still allows explicit online refresh; offline mode never downloads. An empty offline cache cannot answer documentation queries.
+
+</details>
+
+<details>
+<summary>Cache locations and a custom folder</summary>
+
+| Platform | Default index |
+| --- | --- |
+| macOS | `~/Library/Caches/ufe-docs-mcp/docs.sqlite3` |
+| Windows | `%LOCALAPPDATA%\ufe-docs-mcp\docs.sqlite3` |
+| Linux | `${XDG_CACHE_HOME:-~/.cache}/ufe-docs-mcp/docs.sqlite3` |
+
+Set `UFE_DOCS_CACHE_DIR` or put `--cache-dir` before the subcommand:
+
+```bash
+uv run --frozen ufe-docs-mcp --cache-dir /absolute/path/to/ufe-docs-cache sync
+uv run --frozen ufe-docs-mcp --cache-dir /absolute/path/to/ufe-docs-cache client-config
+```
+
+Use the same location for serving and synchronization. Paths above are generic examples, not distributed personal configuration.
+
+</details>
+
+<details>
+<summary>Install without uv (macOS/Linux)</summary>
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install .
+ufe-docs-mcp sync
+ufe-docs-mcp client-config
+```
+
+This does not apply the transitive dependency resolution in `uv.lock`. Plugins configured to launch `uv` still require it; this fallback is for a direct MCP connection.
+
+</details>

@@ -1,29 +1,21 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "ufe3d",
+  "name": "ufe3d-mcp",
   "version": "0.2.0",
-  "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices.",
-  "author": {
-    "name": "Kenneth Brisco"
-  },
+  "description": "Build and debug UFE features with your coding agent using official reference context, source links, and freshness warnings.",
+  "author": {"name": "Kenneth Brisco"},
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "UFE Documentation",
-        "shortDescription": "Search the UFE manual",
-        "longDescription": "Search the official UFE manual, read relevant sections with source URLs, browse topics, and check documentation freshness. Runs locally with Python and uv; no model API key or Unity installation needed.",
+        "displayName": "UFE3D-MCP",
+        "shortDescription": "UFE context for game development",
+        "longDescription": "Give your coding agent official UFE reference context while it builds, debugs, and plans features. The MCP searches and reads the manual with source links and freshness warnings; your agent's own project tools implement and verify requested changes. No model API key is required by the connector.",
         "developerName": "Kenneth Brisco",
         "category": "Developer Tools",
-        "defaultPrompt": "Use the UFE documentation tools to answer my question and cite the official source."
+        "defaultPrompt": "Use UFE3D-MCP to gather the UFE context needed for my task. Inspect relevant project files if available, retrieve and cite the official documentation, and implement and verify changes only within my requested scope."
       }
     }
   },
   "license": "MIT",
-  "keywords": [
-    "ufe",
-    "unity",
-    "fighting-game",
-    "documentation",
-    "mcp"
-  ]
+  "keywords": ["ufe", "unity", "fighting-game", "documentation", "mcp"]
 }

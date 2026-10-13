@@ -15,8 +15,8 @@ import shutil
 from . import __version__
 from .cli import SERVER_KEY, local_launch
 
-PLUGIN_NAME = "ufe3d"
-DESCRIPTION = "Search and read the official UFE manual with source links and freshness notices."
+PLUGIN_NAME = "ufe3d-mcp"
+DESCRIPTION = "UFE reference context for building and debugging game features with a coding agent."
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SKILLS_DIR = REPO_ROOT / "skills"
 

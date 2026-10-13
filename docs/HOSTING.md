@@ -1,8 +1,8 @@
-# Hosting the UFE Docs MCP
+# Hosting UFE3D-MCP
 
-Hosted mode serves the same documentation tools over Streamable HTTP for a client that supports a server URL and the configured authentication method. Local installation remains the primary distribution: each user runs the connector without a required hosting subscription.
+Hosted mode serves the same UFE reference tools over Streamable HTTP for a client that supports a server URL and the configured authentication method. Local installation remains the primary distribution: each user runs the connector without a required hosting subscription. Your coding agent uses retrieved context while implementing and verifying requested changes with its own project tools.
 
-The repository includes a Dockerfile and a Hugging Face Space template. It does not provision an endpoint automatically. A successful local HTTP check does not establish compatibility with every web connector, and shared bearer tokens are not an OAuth authorization server.
+The repository includes a Dockerfile and a Hugging Face Space template. It does not provision an endpoint automatically. A successful local HTTP check does not establish compatibility with every web connector, and shared bearer tokens are not an OAuth authorization server. This PR updates the private development branch; a previous release copy is not automatically synchronized. See [README](../README.md) for preview instructions and [CHANGELOG](../CHANGELOG.md) for naming migration.
 
 ## What a host must provide
 
@@ -31,31 +31,31 @@ The server refuses to bind beyond loopback without an explicit access policy:
 - **Private or team endpoint:** set `UFE_DOCS_HTTP_TOKENS` to one or more long random tokens, comma-separated, as a host secret, or use `--token-file`. Clients send `Authorization: Bearer <token>`. To rotate a token, replace the accepted token set and restart or redeploy the process; tokens are read at startup. For a staged rotation, temporarily accept both old and new tokens, migrate clients, then remove the old token and restart again.
 - **Open public endpoint:** set `UFE_DOCS_ALLOW_ANONYMOUS=1` deliberately. Keep the rate limit enabled. The four exposed tools are read-only; `ufe_refresh_docs` stays hidden unless `--remote-refresh` is passed. The server's automatic refresh still runs.
 
-The default rate limit is 120 requests per client per minute. Shared tokens gate access but do not establish individual user identities. Match the server's authentication method to the client's supported configuration before selecting a host or connector directory.
+The default rate limit is 120 requests per client per minute. Shared tokens gate access but do not establish individual user identities. Match authentication to the client's supported configuration. A remote-only client needs the real deployed URL, not a GitHub URL or the operator's localhost address.
 
-Both transports omit cache filesystem paths from normal MCP status and return safe operational error guidance. Local server logs, generated configuration, and refresh-state files can retain machine details and should not be published. Keep bearer tokens out of source control, images, screenshots, and issue reports.
+Both transports omit cache filesystem paths from normal MCP status and return safe operational errors. Local server logs, generated configuration, and refresh-state files can retain machine details and should not be published. Keep tokens out of source control, images, screenshots, and issue reports.
 
-The MIT license covers this connector's original code. UFE documentation retains its publisher's ownership and terms. A hosted instance serves retrieved manual text to its clients; publishing the connector code does not itself grant additional rights to that content.
+The MIT license covers this connector's original code. UFE documentation retains its publisher's ownership and terms. A hosted instance serves retrieved manual text to its clients; publishing connector code does not grant additional rights to that content.
 
 ## Hugging Face Space setup
 
-1. Create a Docker Space and copy this repository's `pyproject.toml`, `uv.lock`, `README.md`, `LICENSE`, `src/`, and `Dockerfile` into it. Replace the Space's `README.md` with [deploy/huggingface/README.md](../deploy/huggingface/README.md), which contains the Space configuration header. Keep this project's README under another name if desired.
-2. In the Space settings, add either the secret `UFE_DOCS_HTTP_TOKENS` or the variable `UFE_DOCS_ALLOW_ANONYMOUS=1`, according to the intended access policy.
-3. If the selected host provides persistent storage, mount it and point `UFE_DOCS_CACHE_DIR` at that writable directory; `/data/ufe-docs-mcp` is an example, not a provisioned volume.
-4. After building, check `https://<space-host>/healthz`. A healthy process can still be downloading its first index; use `ufe_docs_status` to check documentation availability.
-5. Generate a client entry for `https://<space-host>/mcp`, for example:
+1. Create a Docker Space and copy this repository's reviewed `pyproject.toml`, `uv.lock`, `README.md`, `LICENSE`, `src/`, and `Dockerfile` into it. Replace the Space's README with [deploy/huggingface/README.md](../deploy/huggingface/README.md), which contains the Space configuration header. Keep the project README under another name if desired.
+2. In Space settings, add either the secret `UFE_DOCS_HTTP_TOKENS` or the variable `UFE_DOCS_ALLOW_ANONYMOUS=1`, according to the intended access policy.
+3. If the host provides persistent storage, point `UFE_DOCS_CACHE_DIR` at its writable mount; `/data/ufe-docs-mcp` is an example, not a provisioned volume.
+4. After building, check `https://<space-host>/healthz`. A healthy process may still be downloading its first index; use `ufe_docs_status` for documentation readiness.
+5. Generate a client entry:
 
    ```bash
    uv run --frozen ufe-docs-mcp client-config --format claude-code --url https://<space-host>/mcp --token-env UFE_DOCS_TOKEN
    ```
 
-The server's accepted secret is `UFE_DOCS_HTTP_TOKENS`; the example client reads one accepted value from `UFE_DOCS_TOKEN`. Install the printed entry through the client's normal configuration and supply its environment variable securely. The generator prints configuration; it does not configure secrets or connect the client.
+The server's secret is `UFE_DOCS_HTTP_TOKENS`; the example client reads one accepted value from `UFE_DOCS_TOKEN`. Install the printed `UFE3D-MCP` entry and supply the variable securely. The generator does not configure secrets or connect the client.
 
-**Antigravity exception:** `--token-env` produces a `Bearer <paste token>` placeholder because that client has no documented header-variable expansion for this format. Fill it privately using the client's supported configuration. Generic JSON output also requires a host that supports its printed variable syntax. A web client that accepts only OAuth cannot be assumed to accept this shared-token setup.
+**Antigravity exception:** `--token-env` produces a `Bearer <paste token>` placeholder because that client has no documented header-variable expansion for this format. Fill it privately through the client's supported configuration. Generic JSON requires a host supporting its printed syntax. A web client that accepts only OAuth cannot be assumed to accept shared tokens.
 
 ## Local authenticated rehearsal
 
-The following POSIX-shell example uses a protected temporary token file, keeps the same token available to the smoke-test client, and starts an **offline loopback** server. It tests transport, access control, and tool discovery without downloading documentation. Run it from the checkout, with Python, `uv`, and `curl` available:
+This POSIX-shell example keeps the token in a protected temporary file and starts an **offline loopback** server. It checks transport, access control, and discovery without downloading documentation. Run from the checkout with Python, uv, and curl available:
 
 ```bash
 uv sync --frozen --no-dev
@@ -78,11 +78,11 @@ uv run --frozen ufe-docs-mcp client-config --format claude-code \
   --url http://127.0.0.1:7860/mcp --token-env UFE_DOCS_TOKEN
 ```
 
-The smoke test verifies that unauthenticated MCP requests are rejected and an authenticated client sees the four read tools. An empty offline cache reports unavailable documentation, which is expected for this transport-only check. To include document search, first complete the normal `sync`, then run the smoke script with `--expect-index` against a server using that cache.
+The smoke test checks unauthorized rejection, the `UFE3D-MCP` identity, four read tools, and an actual status call. An empty offline cache reports unavailable documentation, which is expected for this transport-only check. To include search, complete a normal sync first and use `--expect-index` against that cache.
 
-For an assistant rehearsal, run the printed registration command and launch the client from the same shell so it inherits `UFE_DOCS_TOKEN`. A desktop app opened elsewhere may not inherit that variable; use its documented secret configuration instead. The generated entry does not contain the token value.
+For an assistant rehearsal, run the printed registration command and launch the client from the same shell so it inherits `UFE_DOCS_TOKEN`. A desktop app opened elsewhere may not inherit it; use its documented secret configuration. The generated entry does not contain the token value. Preserve existing connections and use the [setup guide](SETUP.md) for a safe migration from older names.
 
-When finished, stop the rehearsal server and remove its temporary secret and log:
+Stop the rehearsal server and remove its temporary secret and log when finished:
 
 ```bash
 kill "$UFE_DOCS_REHEARSAL_PID"
@@ -93,4 +93,4 @@ rmdir "$UFE_DOCS_REHEARSAL_DIR"
 unset UFE_DOCS_REHEARSAL_DIR UFE_DOCS_REHEARSAL_PID
 ```
 
-Replace or remove a temporary client registration when changing to the final endpoint. For online operation, omit `--offline`; the server then evaluates the saved cache and refresh policy at startup. These checks do not establish a deployed HTTPS endpoint or a live session in an untested assistant.
+Replace/remove only the temporary UFE registration when changing to the final endpoint. For online operation, omit `--offline`; the server evaluates its saved cache and refresh policy at startup. These checks do not establish a deployed HTTPS endpoint, a new paid-model session, or a live session in an untested assistant.

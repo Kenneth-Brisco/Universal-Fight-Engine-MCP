@@ -1,31 +1,18 @@
 {
-  "name": "ufe3d",
-  "displayName": "UFE Documentation",
+  "name": "ufe3d-mcp",
+  "displayName": "UFE3D-MCP",
   "version": "0.2.0",
-  "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices.",
+  "description": "Build and debug UFE features with your coding agent using official reference context, source links, and freshness warnings.",
   "author": {
     "name": "Kenneth Brisco"
   },
   "repository": "https://github.com/Kenneth-Brisco/UFE3D-MCP",
   "license": "MIT",
-  "keywords": [
-    "ufe",
-    "unity",
-    "fighting-game",
-    "documentation",
-    "mcp"
-  ],
+  "keywords": ["ufe", "unity", "fighting-game", "documentation", "mcp"],
   "mcpServers": {
-    "UFE3D": {
+    "UFE3D-MCP": {
       "command": "uv",
-      "args": [
-        "run",
-        "--frozen",
-        "--directory",
-        "${CLAUDE_PLUGIN_ROOT}",
-        "ufe-docs-mcp",
-        "serve"
-      ]
+      "args": ["run", "--frozen", "--directory", "${CLAUDE_PLUGIN_ROOT}", "ufe-docs-mcp", "serve"]
     }
   }
 }

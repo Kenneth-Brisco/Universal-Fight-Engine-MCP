@@ -1,16 +1,14 @@
 {
-  "name": "ufe3d",
-  "owner": {
-    "name": "Kenneth Brisco"
-  },
+  "name": "ufe3d-mcp",
+  "owner": {"name": "Kenneth Brisco"},
   "metadata": {
-    "description": "UFE Documentation plugin: the official Universal Fighting Engine manual for coding assistants."
+    "description": "UFE3D-MCP: official UFE reference context for AI-assisted game development."
   },
   "plugins": [
     {
-      "name": "ufe3d",
+      "name": "ufe3d-mcp",
       "source": "./",
-      "description": "Search and read the official UFE manual with source links, publisher warnings, and freshness notices."
+      "description": "Build, debug, and plan UFE features with a coding agent using the official manual."
     }
   ]
 }

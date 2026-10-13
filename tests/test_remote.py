@@ -79,7 +79,8 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
         async with httpx2.AsyncClient(headers=headers, timeout=15.0, trust_env=False) as client:
             async with streamable_http_client(base + "/mcp", http_client=client) as (read, write):
                 async with ClientSession(read, write, read_timeout_seconds=15.0) as session:
-                    await session.initialize()
+                    initialized = await session.initialize()
+                    self.assertEqual(initialized.server_info.name, "UFE3D-MCP")
                     yield session
 
     @staticmethod
@@ -96,7 +97,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
                 async with httpx2.AsyncClient(trust_env=False) as probe:
                     health = (await probe.get(base + "/healthz")).json()
                 self.assertEqual(health["status"], "ok")
-                self.assertEqual(health["server"], "UFE3D")
+                self.assertEqual(health["server"], "UFE3D-MCP")
                 async with self._session(base) as session:
                     tools = {tool.name: tool for tool in (await session.list_tools()).tools}
                     self.assertEqual(set(tools), READ_TOOLS)
@@ -146,7 +147,7 @@ class HTTPTransportTests(unittest.IsolatedAsyncioTestCase):
                     self.assertFalse(refresh.annotations.read_only_hint)
                     self.assertFalse(refresh.annotations.destructive_hint)
                     rejected = await session.call_tool("ufe_refresh_docs", {})
-                    self.assertTrue(rejected.is_error)  # offline server never downloads
+                    self.assertTrue(rejected.is_error)
 
 
 class HTTPPolicyTests(unittest.IsolatedAsyncioTestCase):
@@ -169,23 +170,17 @@ class HTTPPolicyTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             token_file = Path(temp_dir) / "tokens"
             token_file.write_text("second-token-0123456789\n\n", encoding="utf-8")
-            self.assertEqual(
-                load_tokens(token_file, {"UFE_DOCS_HTTP_TOKENS": f" {TOKEN} ,"}),
-                [TOKEN, "second-token-0123456789"],
-            )
+            self.assertEqual(load_tokens(token_file, {"UFE_DOCS_HTTP_TOKENS": f" {TOKEN} ,"}), [TOKEN, "second-token-0123456789"])
         self.assertEqual(load_tokens(None, {}), [])
         with self.assertRaisesRegex(ValueError, "16"):
             load_tokens(None, {"UFE_DOCS_HTTP_TOKENS": "short"})
 
     async def _call(self, app, path="/mcp", headers=(), client=("203.0.113.9", 1234)):
         sent = []
-
         async def receive():
             return {"type": "http.request", "body": b"", "more_body": False}
-
         async def send(message):
             sent.append(message)
-
         scope = {"type": "http", "path": path, "headers": list(headers), "client": client}
         await app(scope, receive, send)
         return sent[0]["status"] if sent else None
@@ -194,7 +189,6 @@ class HTTPPolicyTests(unittest.IsolatedAsyncioTestCase):
         async def ok(scope, receive, send):
             await send({"type": "http.response.start", "status": 200, "headers": []})
             await send({"type": "http.response.body", "body": b""})
-
         now = [1000.0]
         limited = RateLimitMiddleware(ok, 2, clock=lambda: now[0])
         self.assertEqual([await self._call(limited) for _ in range(3)], [200, 200, 429])
@@ -202,9 +196,7 @@ class HTTPPolicyTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(await self._call(limited, client=("198.51.100.1", 1)), 200)
         now[0] += 61
         self.assertEqual(await self._call(limited), 200)
-
         proxied = RateLimitMiddleware(ok, 1, trust_proxy=True, clock=lambda: now[0])
-        # A client cannot dodge the limit by forging the left-most forwarded address.
         self.assertEqual(await self._call(proxied, headers=[(b"x-forwarded-for", b"6.6.6.6, 192.0.2.7")]), 200)
         self.assertEqual(await self._call(proxied, headers=[(b"x-forwarded-for", b"7.7.7.7, 192.0.2.7")]), 429)
         self.assertEqual(await self._call(proxied, headers=[(b"x-forwarded-for", b"192.0.2.8")]), 200)
@@ -213,7 +205,6 @@ class HTTPPolicyTests(unittest.IsolatedAsyncioTestCase):
         async def ok(scope, receive, send):
             await send({"type": "http.response.start", "status": 200, "headers": []})
             await send({"type": "http.response.body", "body": b""})
-
         guarded = BearerTokenMiddleware(ok, [TOKEN])
         self.assertEqual(await self._call(guarded), 401)
         self.assertEqual(await self._call(guarded, headers=[(b"authorization", f"Bearer {TOKEN}".encode())]), 200)

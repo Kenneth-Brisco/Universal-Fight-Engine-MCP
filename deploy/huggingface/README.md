@@ -1,5 +1,5 @@
 ---
-title: UFE Docs MCP
+title: UFE3D-MCP
 emoji: 🥋
 colorFrom: gray
 colorTo: red
@@ -7,21 +7,21 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: mit
-short_description: Community MCP connector for the official UFE manual
+short_description: UFE reference context for AI-assisted game development
 ---
 
-# UFE Docs MCP
+# UFE3D-MCP
 
-An MCP server for the official Universal Fighting Engine manual. Assistants search and read the documentation with official source links, publisher warnings, and freshness notices.
+Give your coding agent official UFE reference context while it builds, debugs, and plans game features. The MCP retrieves relevant manual sections, source links, publisher warnings, and freshness notices; the agent's own project/editor tools implement and test requested changes.
 
 - **MCP endpoint:** `/mcp` (Streamable HTTP)
 - **Health check:** `/healthz`
 - **Tools:** `ufe_search_docs`, `ufe_get_doc`, `ufe_list_topics`, `ufe_docs_status`
 
-For source code and local installation, see [UFE3D-MCP](https://github.com/Kenneth-Brisco/UFE3D-MCP). This Space exposes the HTTP transport for clients that support Streamable HTTP and the configured authentication method.
+This is a deployment template, not an automatically provisioned endpoint. Deploy the reviewed source revision. The intended release home is [UFE3D-MCP](https://github.com/Kenneth-Brisco/UFE3D-MCP); its existing private export predates the current naming/onboarding PR and must be synchronized before publication. Follow the development README for preview installation.
 
-`/healthz` reports whether the process is running; `ufe_docs_status` reports whether its documentation index is ready. Automatic refresh continues while the Space's server process runs. After a restart, an available persistent cache is reused and checked when due; a missing cache needs a new download. Source-check dates and publisher-catalog dates are reported separately, so a recent check is not a guarantee that every raw documentation page is current.
+`/healthz` reports whether the process is running; `ufe_docs_status` reports index readiness. Automatic refresh continues while the server process runs. After restart, a persistent cache is reused and checked when due; a missing cache needs a new download. Source-check dates and publisher-catalog dates are separate, so a recent catalog check does not certify every raw page is current.
 
-Access is configured by the operator through accepted bearer tokens or explicit anonymous access. Shared bearer tokens are not OAuth. Normal MCP responses omit local cache paths and raw internal exception details; host logs and runtime state remain private operational files.
+Access is configured by the operator through bearer tokens or deliberate anonymous access. Shared bearer tokens are not OAuth. Normal MCP responses omit local cache paths and raw exceptions; host logs and runtime state remain private operational files.
 
-The documentation belongs to its publisher. This is an independent community project.
+The documentation belongs to its publisher. This is an independent community project, not an official UFE product.

@@ -93,8 +93,8 @@ class BearerTokenMiddleware:
             return
         await _send_json(send, 401, {
             "error": "unauthorized",
-            "message": "Send 'Authorization: Bearer <token>' with an access token for this UFE Docs server.",
-        }, [(b"www-authenticate", b'Bearer realm="ufe3d"')])
+            "message": "Send 'Authorization: Bearer <token>' with an access token for this UFE3D-MCP server.",
+        }, [(b"www-authenticate", b'Bearer realm="ufe3d-mcp"')])
 
 
 class RateLimitMiddleware:
@@ -187,7 +187,7 @@ def build_http_app(
 
     @mcp.custom_route(HEALTH_PATH, methods=["GET"], include_in_schema=False)
     async def health(_request: Request) -> JSONResponse:
-        return JSONResponse({"status": "ok", "server": "UFE3D", "version": __version__})
+        return JSONResponse({"status": "ok", "server": "UFE3D-MCP", "version": __version__})
 
     security = None
     if allowed_hosts:
@@ -204,7 +204,7 @@ def build_http_app(
         # Outermost, so failed authentication attempts count against the limit too.
         app = RateLimitMiddleware(app, rate_limit, trust_proxy=trust_proxy)
     LOG.info(
-        "UFE Docs MCP over HTTP: path=%s auth=%s rate_limit=%s/min refresh_tool=%s",
+        "UFE3D-MCP over HTTP: path=%s auth=%s rate_limit=%s/min refresh_tool=%s",
         path, "tokens" if tokens else "anonymous", rate_limit or "off", remote_refresh,
     )
     return app

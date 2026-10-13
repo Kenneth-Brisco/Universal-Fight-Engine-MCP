@@ -12,7 +12,7 @@ from . import __version__
 from .index import get_doc, list_topics, search_docs
 from .runtime import DEFAULT_REFRESH_HOURS, DocumentationRuntime, sync_cache
 
-SERVER_KEY = "UFE3D"
+SERVER_KEY = "UFE3D-MCP"
 CLIENT_FORMATS = ("json", "claude-code", "codex", "cursor", "antigravity", "grok")
 
 
@@ -42,7 +42,7 @@ def local_launch(cache_dir: Path) -> tuple[str, list[str]]:
 
 
 def client_config(fmt: str, cache_dir: Path, *, url: str | None = None, token_env: str | None = None) -> str:
-    """Render the UFE3D entry in one client's native configuration format."""
+    """Render the UFE3D-MCP entry in one client's native configuration format."""
     command, args = local_launch(cache_dir)
     if fmt == "codex":
         lines = [f"[mcp_servers.{SERVER_KEY}]"]
@@ -83,7 +83,7 @@ def client_config(fmt: str, cache_dir: Path, *, url: str | None = None, token_en
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Search official UFE documentation locally through MCP.")
+    parser = argparse.ArgumentParser(description="UFE reference context for coding agents through UFE3D-MCP.")
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument("--cache-dir", type=Path, default=default_cache_dir())
     commands = parser.add_subparsers(dest="command", required=True)
@@ -118,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
     topics.add_argument("--category")
     topics.add_argument("--offset", type=int, default=0)
     topics.add_argument("--limit", type=int, default=50)
-    config = commands.add_parser("client-config", help="Print the UFE3D entry for a client's MCP configuration")
+    config = commands.add_parser("client-config", help="Print the UFE3D-MCP entry for a client's MCP configuration")
     config.add_argument("--format", choices=CLIENT_FORMATS, default="json")
     config.add_argument("--url", help="Configure a remote HTTP endpoint instead of this local installation")
     config.add_argument("--token-env", help="Environment variable holding the bearer token for --url")
@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except Exception as exc:
-        print(f"UFE Docs MCP: {exc}", file=sys.stderr)
+        print(f"UFE3D-MCP: {exc}", file=sys.stderr)
         return 1
 
 

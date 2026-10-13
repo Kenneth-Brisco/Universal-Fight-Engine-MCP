@@ -16,7 +16,7 @@ from .index import RequestValidationError, get_doc, list_topics, search_docs
 from .runtime import DEFAULT_REFRESH_HOURS, DocumentationRuntime
 
 
-SERVER_NAME = "UFE3D"
+SERVER_NAME = "UFE3D-MCP"
 LOG = logging.getLogger("ufe_docs_mcp")
 
 
@@ -34,7 +34,7 @@ def _tool_errors():
     try:
         yield
     except _PublicToolError:
-        raise  # Fixed guidance created below, never an internal exception.
+        raise
     except RequestValidationError as exc:
         raise _PublicToolError(str(exc)) from None
     except Exception:
@@ -46,7 +46,9 @@ def _tool_errors():
         ) from None
 
 INSTRUCTIONS = (
-    "Tools for the official Universal Fighting Engine (UFE) manual, served from a local snapshot. "
+    "UFE3D-MCP supplies official Universal Fighting Engine reference context for building, "
+    "debugging, and planning game features with a coding agent. The agent uses its own "
+    "project/editor tools for requested inspection, implementation, and verification. "
     "ufe_search_docs finds passages; ufe_get_doc reads a returned document ID with line pagination; "
     "ufe_list_topics browses titles and IDs; ufe_docs_status reports coverage and freshness. "
     "Every result carries official source URLs, publisher warnings (needs_verification, "
@@ -90,7 +92,7 @@ def create_server(
     mcp = MCPServer(
         SERVER_NAME,
         version=__version__,
-        title="UFE Documentation",
+        title="UFE3D-MCP",
         instructions=INSTRUCTIONS,
         website_url="https://www.ufe3d.com/ufe2/docs/",
         log_level="WARNING",

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="banner-title banner-description">
-  <title id="banner-title">UFE Docs MCP</title>
-  <desc id="banner-description">UFE documentation, inside your coding assistant. A community project with local MCP tools to search documentation, read pages, and follow source links. A document card and search field sit over a subtle octagonal outline.</desc>
+  <title id="banner-title">UFE3D-MCP</title>
+  <desc id="banner-description">UFE reference context for building and debugging your game with a coding agent. A community MCP project with official documentation, source links, and freshness information.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1280" y2="360" gradientUnits="userSpaceOnUse">
       <stop stop-color="#0B1424"/>
@@ -16,51 +16,39 @@
       <stop offset="1" stop-color="#182A43"/>
     </linearGradient>
   </defs>
-
   <!-- Neutral, self-contained artwork: no external images, fonts, or scripts. -->
   <rect width="1280" height="360" rx="20" fill="url(#background)"/>
   <rect x="0.5" y="0.5" width="1279" height="359" rx="19.5" fill="none" stroke="#9BBCE0" stroke-opacity="0.14"/>
   <path d="M756 0V360" stroke="#91B9E4" stroke-opacity="0.055"/>
-
   <g font-family="Arial, Helvetica, sans-serif">
     <rect x="64" y="47" width="7" height="7" rx="2" fill="#65D8EB"/>
     <text x="84" y="56" fill="#B0C3D9" font-size="12" font-weight="600" letter-spacing="1.5">COMMUNITY PROJECT</text>
     <circle cx="273" cy="51" r="2" fill="#637F9F"/>
-    <text x="289" y="56" fill="#B0C3D9" font-size="12" font-weight="600" letter-spacing="1.5">LOCAL MCP</text>
-
-    <text x="61" y="149" fill="#F3F7FC" font-size="68" font-weight="700" letter-spacing="-2.2">UFE Docs MCP</text>
-    <text x="65" y="193" fill="#B7C9DE" font-size="24">UFE documentation, inside your coding assistant.</text>
-
+    <text x="289" y="56" fill="#B0C3D9" font-size="12" font-weight="600" letter-spacing="1.5">STDIO + HTTP</text>
+    <text x="61" y="149" fill="#F3F7FC" font-size="68" font-weight="700" letter-spacing="-2.2">UFE3D-MCP</text>
+    <text x="65" y="193" fill="#B7C9DE" font-size="24">UFE context for building your game.</text>
     <g transform="translate(64 242)">
       <rect width="121" height="43" rx="10" fill="#14273F" stroke="#2F506D"/>
       <circle cx="24" cy="20" r="5" fill="none" stroke="#78DBEA" stroke-width="1.8"/>
       <path d="M28 24L32 28" stroke="#78DBEA" stroke-width="1.8" stroke-linecap="round"/>
       <text x="43" y="27" fill="#DDEAF7" font-size="16">Search</text>
-
       <rect x="133" width="106" height="43" rx="10" fill="#14273F" stroke="#2F506D"/>
       <path d="M153 14H162L166 18V29H153Z M161 14V19H166 M156 23H163 M156 26H162" fill="none" stroke="#78DBEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="177" y="27" fill="#DDEAF7" font-size="16">Read</text>
-
       <rect x="251" width="163" height="43" rx="10" fill="#14273F" stroke="#2F506D"/>
       <path d="M274 20L278 16C281 13 285 17 282 20L278 24 M277 23L273 27C270 30 266 26 269 23L273 19 M272 24L279 17" fill="none" stroke="#78DBEA" stroke-width="1.6" stroke-linecap="round"/>
       <text x="296" y="27" fill="#DDEAF7" font-size="16">Source links</text>
     </g>
-
-    <!-- An abstract octagon suggests the fighting-game context without a logo. -->
     <path d="M966 33H1085L1194 104V233L1085 315H966L856 233V104Z" fill="#5DABDB" fill-opacity="0.025" stroke="url(#accent)" stroke-opacity="0.19" stroke-width="1.5"/>
     <path d="M979 56H1073L1170 119V221L1073 291H979L880 221V119Z" fill="none" stroke="#6B9CCD" stroke-opacity="0.13" stroke-width="1"/>
     <circle cx="856" cy="104" r="3" fill="#65D8EB" fill-opacity="0.5"/>
     <circle cx="1194" cy="233" r="3" fill="#78A7EE" fill-opacity="0.5"/>
     <path d="M819 209H850V224H881" fill="none" stroke="#65D8EB" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/>
-
-    <!-- Search field. -->
     <rect x="832" y="68" width="325" height="50" rx="12" fill="#07111F" fill-opacity="0.35"/>
     <rect x="832" y="62" width="325" height="50" rx="12" fill="#172A42" stroke="#47758F"/>
     <circle cx="858" cy="86" r="6" fill="none" stroke="#81DDEB" stroke-width="2"/>
     <path d="M863 91L868 96" stroke="#81DDEB" stroke-width="2" stroke-linecap="round"/>
     <text x="884" y="93" fill="#DCEBF8" font-size="17">Find the right reference</text>
-
-    <!-- Source page: exact document cues, with no game-editing controls. -->
     <rect x="883" y="143" width="301" height="166" rx="14" fill="#060D18" fill-opacity="0.3"/>
     <rect x="883" y="133" width="301" height="166" rx="14" fill="url(#page)" stroke="#45617F"/>
     <rect x="883" y="152" width="3" height="28" rx="1.5" fill="#6BD6E7"/>
@@ -72,8 +60,6 @@
     <path d="M907 251H1159" stroke="#7396B9" stroke-opacity="0.2"/>
     <path d="M909 271V278H921V266 M914 265H922V273 M913 274L922 265" fill="none" stroke="#7DDEEC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="934" y="278" fill="#9FE5EF" font-size="14">Open source link</text>
-
-    <!-- A compact tool symbol balances the document illustration. -->
     <rect x="785" y="187" width="43" height="43" rx="12" fill="#142B40" stroke="#39647D"/>
     <path d="M800 199H798C796 199 796 201 796 203V205C796 207 795 208 793 209C795 210 796 211 796 213V215C796 217 796 219 798 219H800 M813 199H815C817 199 817 201 817 203V205C817 207 818 208 820 209C818 210 817 211 817 213V215C817 217 817 219 815 219H813" fill="none" stroke="#87DAE9" stroke-width="1.7" stroke-linecap="round"/>
     <circle cx="806.5" cy="209" r="1.4" fill="#87DAE9"/>

@@ -1,4 +1,4 @@
-"""Smoke-test a running UFE Docs MCP HTTP endpoint.
+"""Smoke-test a running UFE3D-MCP HTTP endpoint.
 
 Usage: python scripts/smoke_http.py BASE_URL [--expect-index]
 Reads the bearer token from UFE_DOCS_TOKEN. Checks the health route, that the
@@ -31,7 +31,7 @@ async def main() -> int:
     # inherited proxy settings must not receive test requests or bearer tokens.
     async with httpx2.AsyncClient(timeout=15.0, trust_env=False) as probe:
         health = await probe.get(base + "/healthz")
-        assert health.status_code == 200 and health.json()["server"] == "UFE3D", health.text
+        assert health.status_code == 200 and health.json()["server"] == "UFE3D-MCP", health.text
         denied = await probe.post(base + "/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
         assert denied.status_code == 401, denied.status_code
     print("health ok; unauthenticated request rejected")
@@ -39,7 +39,8 @@ async def main() -> int:
     async with httpx2.AsyncClient(headers={"Authorization": f"Bearer {token}"}, timeout=30.0, trust_env=False) as client:
         async with streamable_http_client(base + "/mcp", http_client=client) as (read, write):
             async with ClientSession(read, write, read_timeout_seconds=30.0) as session:
-                await session.initialize()
+                initialized = await session.initialize()
+                assert initialized.server_info.name == "UFE3D-MCP", initialized.server_info.name
                 tools = {tool.name: tool for tool in (await session.list_tools()).tools}
                 assert set(tools) == READ_TOOLS, sorted(tools)
                 assert all(tool.title for tool in tools.values())

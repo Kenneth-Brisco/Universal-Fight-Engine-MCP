@@ -10,9 +10,11 @@ import os
 from pathlib import Path
 import re
 import shlex
+import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from urllib.parse import unquote, urlsplit
 
 from mcp import ClientSession
@@ -33,6 +35,18 @@ def read_json(path: Path) -> dict:
 
 
 class OnboardingTests(unittest.TestCase):
+    def _registration_arguments(self, command: str) -> list[str]:
+        # Shell functions capture argv without launching clients or changing settings.
+        script = 'claude() { printf "%s\\0" "$@"; }\ngrok() { printf "%s\\0" "$@"; }\n' + command
+        result = subprocess.run(
+            ["/bin/sh", "-c", script], capture_output=True, text=True, encoding="utf-8",
+            env={"PATH": os.defpath, "UFE_CONFIG_MARKER": "expanded-marker", "UFE_CONFIG_TOKEN": "synthetic-token"},
+            check=True, timeout=10,
+        )
+        self.assertEqual(result.stderr, "")
+        self.assertTrue(result.stdout.endswith("\0"))
+        return result.stdout[:-1].split("\0")
+
     def test_public_identifiers_are_fixed_and_manifests_match(self):
         self.assertEqual(SERVER_KEY, EXPECTED_SERVER)
         self.assertEqual(SERVER_NAME, EXPECTED_SERVER)
@@ -79,12 +93,73 @@ class OnboardingTests(unittest.TestCase):
             self.assertEqual(grok[:4], ["grok", "mcp", "add", EXPECTED_SERVER])
         self.assertEqual(set(CLIENT_FORMATS), {"json", "claude-code", "codex", "cursor", "antigravity", "grok"})
 
+    @unittest.skipUnless(os.name == "posix", "Generated shell commands target POSIX shells")
+    def test_shell_registration_preserves_literal_local_paths(self):
+        names = (
+            "O'Brien's Game", 'Game "quoted"', "Game $UFE_CONFIG_MARKER",
+            "Game $(printf substituted)", "Game `printf substituted`",
+            "Game 🥋", "Game\\backslash\nnewline",
+        )
+        for name in names:
+            cache = Path("/synthetic") / name / "cache"
+            interpreter = str(Path("/synthetic") / name / "venv" / "bin" / "python")
+            args = ["-m", "ufe_docs_mcp", "--cache-dir", str(cache), "serve"]
+            for fmt in ("claude-code", "grok"):
+                with self.subTest(format=fmt, path=name):
+                    with mock.patch("ufe_docs_mcp.cli.sys.executable", interpreter):
+                        command = client_config(fmt, cache)
+                    actual = self._registration_arguments(command)
+                    if fmt == "claude-code":
+                        self.assertEqual(actual[:5], ["mcp", "add-json", "--scope", "user", EXPECTED_SERVER])
+                        self.assertEqual(len(actual), 6)
+                        self.assertEqual(json.loads(actual[5]), {"type": "stdio", "command": interpreter, "args": args})
+                    else:
+                        self.assertEqual(actual, ["mcp", "add", EXPECTED_SERVER, interpreter, "--", *args])
+
+    @unittest.skipUnless(os.name == "posix", "Generated shell commands target POSIX shells")
+    def test_shell_registration_preserves_remote_url_and_token_reference(self):
+        url = "https://example.invalid/mcp?one=1&two=O'Brien&marker=$UFE_CONFIG_MARKER#section"
+        for fmt in ("claude-code", "grok"):
+            for token_env in (None, "UFE_CONFIG_TOKEN"):
+                with self.subTest(format=fmt, token_env=token_env):
+                    actual = self._registration_arguments(client_config(fmt, Path("/synthetic/cache"), url=url, token_env=token_env))
+                    if fmt == "claude-code":
+                        self.assertEqual(actual[:5], ["mcp", "add-json", "--scope", "user", EXPECTED_SERVER])
+                        self.assertEqual(len(actual), 6)
+                        entry = {"type": "http", "url": url}
+                        if token_env:
+                            entry["headers"] = {"Authorization": "Bearer ${UFE_CONFIG_TOKEN}"}
+                        self.assertEqual(json.loads(actual[5]), entry)
+                    else:
+                        expected = ["mcp", "add", EXPECTED_SERVER, url]
+                        if token_env:
+                            expected += ["-H", "Authorization: Bearer ${UFE_CONFIG_TOKEN}"]
+                        self.assertEqual(actual, expected)
+
     @unittest.skipIf(sys.version_info < (3, 11), "tomllib requires Python 3.11")
     def test_hyphenated_codex_table_parses_as_one_server(self):
         import tomllib
         for url in (None, "https://example.invalid/mcp"):
             result = tomllib.loads(client_config("codex", Path("/example/cache"), url=url))
             self.assertEqual(set(result["mcp_servers"]), {EXPECTED_SERVER})
+
+    @unittest.skipIf(sys.version_info < (3, 11), "tomllib requires Python 3.11")
+    def test_codex_toml_preserves_unicode_and_escaped_values(self):
+        import tomllib
+
+        for name in ("Game 🥋", 'Game "quoted"\\name\tline\n\x7f'):
+            with self.subTest(path=name):
+                cache = Path("/synthetic") / name / "cache"
+                interpreter = os.path.abspath(str(Path("/synthetic") / name / "venv" / "bin" / "python"))
+                with mock.patch("ufe_docs_mcp.cli.sys.executable", interpreter):
+                    local = tomllib.loads(client_config("codex", cache))["mcp_servers"][EXPECTED_SERVER]
+                self.assertEqual(local, {
+                    "command": interpreter,
+                    "args": ["-m", "ufe_docs_mcp", "--cache-dir", str(cache), "serve"],
+                })
+        url = "https://example.invalid/🥋?one=1&two=2"
+        remote = tomllib.loads(client_config("codex", Path("/synthetic/cache"), url=url, token_env="UFE_CONFIG_TOKEN"))
+        self.assertEqual(remote["mcp_servers"][EXPECTED_SERVER], {"url": url, "bearer_token_env_var": "UFE_CONFIG_TOKEN"})
 
     def test_exported_plugins_carry_new_names_and_optional_development_skill(self):
         with tempfile.TemporaryDirectory(prefix="ufe-export-fixture-") as directory:

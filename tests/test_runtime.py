@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import closing
 from dataclasses import replace
 from datetime import datetime, timezone
 import hashlib
@@ -296,7 +297,7 @@ class RuntimeTests(unittest.TestCase):
                 cache = self.cache / label
                 self._seed(cache=cache, age=0)
                 path = cache / "docs.sqlite3"
-                with sqlite3.connect(path) as connection:
+                with closing(sqlite3.connect(path)) as connection, connection:
                     state = json.loads(connection.execute("SELECT value FROM index_metadata WHERE key='status'").fetchone()[0])
                     state["indexed_at"] = _iso(NOW)
                     if timestamp is None:

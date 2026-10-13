@@ -6,6 +6,7 @@ import json
 import logging
 import os
 from pathlib import Path
+import shlex
 import sys
 
 from . import __version__
@@ -41,24 +42,30 @@ def local_launch(cache_dir: Path) -> tuple[str, list[str]]:
     return command, ["-m", "ufe_docs_mcp", "--cache-dir", str(cache_dir), "serve"]
 
 
+def _toml_value(value: str | list[str]) -> str:
+    """Encode configuration strings/arrays without JSON's surrogate-pair escapes."""
+    # TOML also requires DEL to be escaped; JSON leaves it raw with ensure_ascii=False.
+    return json.dumps(value, ensure_ascii=False).replace("\x7f", "\\u007f")
+
+
 def client_config(fmt: str, cache_dir: Path, *, url: str | None = None, token_env: str | None = None) -> str:
     """Render the UFE3D-MCP entry in one client's native configuration format."""
     command, args = local_launch(cache_dir)
     if fmt == "codex":
         lines = [f"[mcp_servers.{SERVER_KEY}]"]
         if url:
-            lines.append("url = " + json.dumps(url))
+            lines.append("url = " + _toml_value(url))
             if token_env:
-                lines.append("bearer_token_env_var = " + json.dumps(token_env))
+                lines.append("bearer_token_env_var = " + _toml_value(token_env))
         else:
-            lines += ["command = " + json.dumps(command), "args = " + json.dumps(args)]
+            lines += ["command = " + _toml_value(command), "args = " + _toml_value(args)]
         return "\n".join(lines)
     if fmt == "claude-code":
         entry: dict = {"type": "http", "url": url} if url else {"type": "stdio", "command": command, "args": args}
         if url and token_env:
             entry["headers"] = {"Authorization": f"Bearer ${{{token_env}}}"}
         # One shell-quoted JSON argument for `claude mcp add-json`.
-        return f"claude mcp add-json --scope user {SERVER_KEY} '{json.dumps(entry)}'"
+        return shlex.join(["claude", "mcp", "add-json", "--scope", "user", SERVER_KEY, json.dumps(entry)])
     if fmt == "cursor":
         entry = {"url": url} if url else {"type": "stdio", "command": command, "args": args}
         if url and token_env:
@@ -72,10 +79,12 @@ def client_config(fmt: str, cache_dir: Path, *, url: str | None = None, token_en
         return json.dumps({"mcpServers": {SERVER_KEY: entry}}, indent=2)
     if fmt == "grok":
         if url:
-            # Single quotes keep ${VAR} literal; Grok expands it when connecting.
-            header = f" -H 'Authorization: Bearer ${{{token_env}}}'" if token_env else ""
-            return f"grok mcp add {SERVER_KEY} {url}{header}"
-        return f"grok mcp add {SERVER_KEY} {json.dumps(command)} -- " + " ".join(json.dumps(part) for part in args)
+            registration = ["grok", "mcp", "add", SERVER_KEY, url]
+            if token_env:
+                # Shell quoting keeps ${VAR} literal; Grok expands it when connecting.
+                registration += ["-H", f"Authorization: Bearer ${{{token_env}}}"]
+            return shlex.join(registration)
+        return shlex.join(["grok", "mcp", "add", SERVER_KEY, command, "--", *args])
     entry = {"type": "http", "url": url} if url else {"command": command, "args": args}
     if url and token_env:
         entry["headers"] = {"Authorization": f"Bearer ${{{token_env}}}"}

@@ -1,0 +1,410 @@
+{
+ "schema_version": 1,
+ "description": "Deterministic retrieval checks against a local UFE3D-MCP documentation index. Cases name document IDs and setting labels only; no manual text is stored here.",
+ "defaults": {
+  "limit": 3
+ },
+ "cases": [
+  {
+   "id": "links-nl-jab-cross",
+   "issue": "ranking",
+   "query": "how do I make a jab cancel into a cross combo",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "links-nl-chain",
+   "issue": "ranking",
+   "query": "chain a punch into a kick when the first move hits",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "links-nl-cancel-window",
+   "issue": "ranking",
+   "query": "which frames can I cancel a move into another move",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "links-nl-combo-into",
+   "issue": "ranking",
+   "query": "combo a light attack into a special move",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "combo-scaling-still-works",
+   "issue": "ranking",
+   "query": "combo damage scaling and hit stun decay",
+   "expect_doc_in_top": "global.match.combo"
+  },
+  {
+   "id": "no-empty-chunks-combo",
+   "issue": "chunks",
+   "query": "combo counter display",
+   "forbid_heading_only": true,
+   "forbid_related_pages": true
+  },
+  {
+   "id": "hit-stun-options-settings",
+   "issue": "chunks",
+   "query": "hit stun freezing time hit stop hit options",
+   "expect_doc_in_top": "move.active.group.hit.group.hit-stun-options",
+   "expect_heading_suffix": "Options",
+   "forbid_heading_only": true,
+   "forbid_related_pages": true
+  },
+  {
+   "id": "blending-no-related-pages",
+   "issue": "chunks",
+   "query": "blending in out animation return to idle transition move end",
+   "expect_doc_in_top": "move.animation",
+   "forbid_heading_only": true,
+   "forbid_related_pages": true
+  },
+  {
+   "id": "linked-moves-no-related-pages",
+   "issue": "chunks",
+   "query": "linked moves destination list",
+   "expect_doc_in_top": "move.links.group.linked-moves",
+   "forbid_heading_only": true,
+   "forbid_related_pages": true
+  },
+  {
+   "id": "diversity-combo",
+   "issue": "duplicates",
+   "query": "how do I make a jab cancel into a cross combo",
+   "max_chunks_per_doc": 2
+  },
+  {
+   "id": "diversity-hit-stun",
+   "issue": "duplicates",
+   "query": "hit stun options",
+   "max_chunks_per_doc": 2
+  },
+  {
+   "id": "diversity-blocking",
+   "issue": "duplicates",
+   "query": "block stun guard break parry",
+   "max_chunks_per_doc": 2
+  },
+  {
+   "id": "field-frameLinks",
+   "issue": "fields",
+   "query": "frameLinks",
+   "expect_doc_in_top": "move.links.group.move-links"
+  },
+  {
+   "id": "field-activeFramesBegins",
+   "issue": "fields",
+   "query": "activeFramesBegins",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "field-activeFramesEnds",
+   "issue": "fields",
+   "query": "activeFramesEnds",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "field-linkableMoves",
+   "issue": "fields",
+   "query": "linkableMoves",
+   "expect_doc_in_top": "move.links.group.linked-moves"
+  },
+  {
+   "id": "field-linkType",
+   "issue": "fields",
+   "query": "linkType",
+   "expect_doc_in_top": "move.links.group.move-links"
+  },
+  {
+   "id": "field-allowBlockCancel",
+   "issue": "fields",
+   "query": "allowBlockCancel",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "field-nextMoveStartupFrame",
+   "issue": "fields",
+   "query": "nextMoveStartupFrame",
+   "expect_doc_prefix_in_top": "move.links"
+  },
+  {
+   "id": "field-inputBufferType",
+   "issue": "fields",
+   "query": "inputBufferType",
+   "expect_doc_in_top": "move.links.group.move-links"
+  },
+  {
+   "id": "field-executionBufferType",
+   "issue": "fields",
+   "query": "executionBufferType",
+   "expect_doc_in_top": "global.advanced"
+  },
+  {
+   "id": "field-_blendingTime",
+   "issue": "fields",
+   "query": "_blendingTime",
+   "expect_any_result": true
+  },
+  {
+   "id": "field-overrideBlendingOut",
+   "issue": "fields",
+   "query": "overrideBlendingOut",
+   "expect_doc_in_top": "move.animation"
+  },
+  {
+   "id": "field-hitStunOnHit",
+   "issue": "fields",
+   "query": "hitStunOnHit",
+   "expect_doc_in_top": "move.active.group.hit.group.hit-stun-options"
+  },
+  {
+   "id": "field-hitStunOnBlock",
+   "issue": "fields",
+   "query": "hitStunOnBlock",
+   "expect_doc_in_top": "move.active.group.hit.group.hit-stun-options"
+  },
+  {
+   "id": "field-_freezingTime",
+   "issue": "fields",
+   "query": "_freezingTime",
+   "expect_any_result": true
+  },
+  {
+   "id": "enum-linkType-values",
+   "issue": "enums",
+   "query": "linkType",
+   "expect_enum": {
+    "LinkType": [
+     "HitConfirm",
+     "CounterMove",
+     "NoConditions"
+    ]
+   }
+  },
+  {
+   "id": "enum-inputBufferType-values",
+   "issue": "enums",
+   "query": "inputBufferType",
+   "expect_enum": {
+    "InputBufferType": [
+     "Global",
+     "Custom",
+     "None"
+    ]
+   }
+  },
+  {
+   "id": "enum-executionBufferType-values",
+   "issue": "enums",
+   "query": "executionBufferType",
+   "expect_enum": {
+    "ExecutionBufferType": [
+     "OnlyMoveLinks",
+     "AnyMove",
+     "NoBuffer"
+    ]
+   }
+  },
+  {
+   "id": "clarification-allowBlockCancel",
+   "issue": "clarifications",
+   "query": "allow block cancel",
+   "expect_clarification_field": "allowBlockCancel"
+  },
+  {
+   "id": "compact-response",
+   "issue": "bloat",
+   "query": "move links",
+   "max_envelope_chars": 500
+  },
+  {
+   "id": "video-pointer",
+   "issue": "videos",
+   "query": "move links video tutorial",
+   "expect_video_pointer": "EVkQ_4EMADo"
+  },
+  {
+   "id": "regression-plinking",
+   "issue": "regression",
+   "query": "What does UFE's Plinking Delay setting control, what unit is it in, and where do I find it?",
+   "expect_doc_in_top": "global.advanced"
+  },
+  {
+   "id": "regression-buffer",
+   "issue": "regression",
+   "query": "How do I let players queue the next move a few frames early when chaining moves, and where is the global buffer window configured?",
+   "expect_doc_in_top": "global.advanced",
+   "expect_doc_prefix_in_top": "move.links",
+   "limit": 5
+  },
+  {
+   "id": "regression-teleport",
+   "issue": "regression",
+   "query": "How do I make a move teleport the character?",
+   "expect_doc_in_top": "move.teleport"
+  },
+  {
+   "id": "regression-hitbox-collision",
+   "issue": "regression",
+   "query": "What hitbox collision types does UFE support?",
+   "expect_doc_in_top": "hitbox.start"
+  },
+  {
+   "id": "regression-rollback",
+   "issue": "regression",
+   "query": "rollback netcode balancing options",
+   "expect_doc_in_top": "global.network"
+  },
+  {
+   "id": "agent-label-execution-buffer",
+   "issue": "agent-gaps",
+   "query": "Execution Buffer Type Only Move Links",
+   "limit": 4,
+   "expect_doc_in_top": "global.advanced"
+  },
+  {
+   "id": "agent-hit-preset-selection",
+   "issue": "agent-gaps",
+   "query": "make one move use heavier hit stop freeze than other moves hit reaction clip",
+   "limit": 5,
+   "expect_clarification_field": "hitReactionClip"
+  },
+  {
+   "id": "agent-override-hit-effects-contents",
+   "issue": "agent-gaps",
+   "query": "override hit effects for a single hit",
+   "limit": 5,
+   "expect_clarification_field": "overrideHitEffects"
+  },
+  {
+   "id": "agent-required-moves-standalone",
+   "issue": "agent-gaps",
+   "query": "only allow a move right after another specific move",
+   "limit": 5,
+   "expect_doc_in_top": "move.links.group.required-moves",
+   "expect_clarification_field": "previousMoves"
+  },
+  {
+   "id": "agent-allow-move-cancel",
+   "issue": "agent-gaps",
+   "query": "block options allow move canceling",
+   "limit": 5,
+   "expect_clarification_field": "allowMoveCancel"
+  },
+  {
+   "id": "agent-enum-dropdown-labels",
+   "issue": "agent-gaps",
+   "query": "linkType",
+   "expect_enum_labels": {
+    "LinkType": [
+     "Hit Confirm",
+     "Counter Move",
+     "No Conditions"
+    ]
+   }
+  },
+  {
+   "id": "named-page-options-first",
+   "issue": "agent-gaps",
+   "query": "character gauge Gauge Options energy meter",
+   "limit": 3,
+   "expect_doc_in_top": "character.gauge",
+   "expect_heading_suffix": "Options",
+   "forbid_related_pages": true
+  },
+  {
+   "id": "budget-no-heading-scraps",
+   "issue": "agent-gaps",
+   "query": "Meter Adjustments gauge percentage delta value type",
+   "limit": 3,
+   "max_chars": 2400,
+   "forbid_heading_only": true
+  },
+  {
+   "id": "budget-no-heading-scraps-2",
+   "issue": "agent-gaps",
+   "query": "gauge passive regeneration fill speed delay rollback",
+   "limit": 3,
+   "max_chars": 2400,
+   "forbid_heading_only": true
+  },
+  {
+   "id": "gauge-auto-fill",
+   "issue": "agent-gaps",
+   "query": "gauge passive regeneration fill speed delay",
+   "limit": 3,
+   "expect_doc_in_top": "character.gauge",
+   "expect_clarification_field": "meterState"
+  },
+  {
+   "id": "gauge-reset-timing",
+   "issue": "agent-gaps",
+   "query": "how does the reset every round option work for gauges",
+   "limit": 3,
+   "expect_clarification_field": "resetEveryRound"
+  },
+  {
+   "id": "gauge-delta-percentage",
+   "issue": "agent-gaps",
+   "query": "Meter Adjustments gauge percentage delta value type",
+   "limit": 3,
+   "expect_clarification_field": "deltaValueType"
+  },
+  {
+   "id": "parry-gauge-adjustments",
+   "issue": "agent-gaps",
+   "query": "does a parry apply gauge meter adjustments",
+   "limit": 3,
+   "expect_clarification_field": "meterAdjustmentsOnParry"
+  },
+  {
+   "id": "field-meterState",
+   "issue": "fields",
+   "query": "meterState flowSpeed actionDelay",
+   "expect_doc_in_top": "character.gauge",
+   "expect_enum": {
+    "MeterStates": [
+     "Normal",
+     "Infinite",
+     "Refill",
+     "Drain",
+     "Fill"
+    ]
+   }
+  },
+  {
+   "id": "concept-keeps-topic-throw",
+   "issue": "ranking",
+   "query": "cancel a throw",
+   "limit": 3,
+   "expect_doc_in_top": "more.throw-tutorial"
+  },
+  {
+   "id": "concept-keeps-topic-projectile",
+   "issue": "ranking",
+   "query": "can a projectile cancel another projectile",
+   "limit": 3,
+   "expect_doc_in_top": "move.projectiles"
+  },
+  {
+   "id": "concept-yields-to-quoted-setting",
+   "issue": "ranking",
+   "query": "what does allow move canceling do",
+   "limit": 1,
+   "expect_doc_in_top": "global.match.block"
+  },
+  {
+   "id": "required-moves-not-for-round-timing",
+   "issue": "ranking",
+   "query": "only use the special after the round ends",
+   "limit": 3,
+   "forbid_doc_in_top": "move.links.group.required-moves"
+  },
+  {
+   "id": "plain-word-no-field-match",
+   "issue": "fields",
+   "query": "how does gravity work",
+   "expect_no_field_matches": true
+  }
+ ]
+}

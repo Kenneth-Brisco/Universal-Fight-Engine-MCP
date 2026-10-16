@@ -44,6 +44,42 @@ clients does not establish a fresh installation in every app. Claude Desktop,
 a public HTTPS endpoint, and actual game-feature implementation require separate
 checks. A connector test does not verify Unity behavior or gameplay.
 
+## Retrieval quality and live-manual check
+
+These checks ran on 2026-10-15 for the retrieval-quality change (branch `fix/retrieval-quality`, based on `acb7d01`). They are not results for later commits.
+
+| Check | Result |
+| --- | --- |
+| Retrieval suite (`scripts/eval_retrieval.py`, 56 cases) on a real cache: snapshot `0cebaa7a…`, published catalog generated 2026-07-31, 223 documents | `main` 0.25 (14/56). This change 1.00 (56/56). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). |
+| Synthetic suite | 102 tests passed on Python 3.13. Three timing-sensitive tests failed once while four agent sessions loaded the machine, and passed on rerun and in the next full run. |
+| Real-cache stdio session (offline, copy of the cache) | `ufe_search_docs` for the jab→cross question returned Linked Moves, Move Links, and Hit Confirm Options. The envelope fell from 1,574 to 475 characters. `frameLinks` and `allowBlockCancel` resolved to their pages; `ufe_get_doc` returned the Linked Moves clarifications. |
+| Live manual, compared in a browser | Linked Moves, Advanced, Hit Stun Options, Animation Options (character), and Effect Options matched the cached text word for word. Each label used by the field mappings checked here was present on its mapped page. |
+| Field reference | 180 fields, 23 enums, and 14 notes were read from UFE 2.7.3 engine source. A script checked each field and label against the source, and each note's claims were rechecked by hand. References name the file and class member. |
+| Raw pages vs catalog | 10 pages fetched at the site's 10-second crawl delay. All 9 catalog pages matched their raw Markdown line for line, differing only in line endings. The 10th is fetched raw already. |
+
+### Agent round trip
+
+Eight common move-set change tasks were defined, such as "make a jab cancel into a cross only on hit" and "let the player block out of a slow kick". The answer to each was first found in the live manual in a browser, including with the site's own search. The site search returned nothing for "combo into", "frameLinks", "hit stun block", or "return to idle".
+
+Each task was then given to a fresh headless Claude Code agent (Sonnet 5.5) attached only to an offline copy of the real cache, with no web, shell, or file tools. Every task ran against `main` and against this branch.
+
+- **Named settings:** both versions named the right settings (keyword rubric 20/20 each).
+- **Factual errors on `main`:**
+  - It guessed that `inputBufferType: 2` means Custom. It means None.
+  - It recommended Allow Move Canceling to block out of a move, and dismissed Allow Block Cancel.
+  - It could not say whether Required Moves blocks standalone use.
+- **Gaps on the first branch pass, all fixed here:**
+  - The hit-effect preset selector was not found.
+  - "Execution Buffer Type" ranked below Move Links pages.
+  - Allow Move Canceling was still suggested for blocking out of a move.
+  - Enum dropdown text was missing.
+
+  Each gap became an `agent-gaps` retrieval case. On a re-run of those four tasks, each answer was correct and attributed the code-derived facts to the labelled supplement.
+
+The 20 agent runs cost $2.79 in total.
+
+The paid plugin evaluation (0.99 / 0.29 on October 7) was not rerun for this change.
+
 ## Source and evaluation limits
 
 The cache covers visible manual navigation, not every UFE website or C# API.

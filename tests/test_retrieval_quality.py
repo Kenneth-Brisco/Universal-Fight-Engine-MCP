@@ -95,13 +95,14 @@ class RetrievalQualityTests(unittest.TestCase):
         # Indexes built by the previous chunker contain heading-only rows;
         # simulate one directly instead of rebuilding with the new chunker.
         import sqlite3
+        # The heading's word appears nowhere else, so neither the per-page cap
+        # nor other passages can hide a failure of the heading-only filter.
         with sqlite3.connect(self.path) as connection:
             connection.execute(
                 "INSERT INTO chunks (doc_id, title, heading, start_line, end_line, content) "
-                "VALUES ('global.match.combo', 'Combo', 'Combo', 1, 1, '# Combo')")
+                "VALUES ('global.match.round', 'Round', 'Zephyrquill', 1, 1, '# Zephyrquill')")
             connection.execute("INSERT INTO chunks_fts(chunks_fts) VALUES ('rebuild')")
-        for result in search_docs(self.path, "combo", 10)["results"]:
-            self.assertNotEqual(result["content"].strip(), "# Combo")
+        self.assertEqual(search_docs(self.path, "zephyrquill", 10)["results"], [])
 
     def test_related_pages_remain_a_fallback_when_nothing_else_matches(self):
         build_index([Document("only.links", "Index", URL, "# Index\n## Related Pages\n- [Lantern](lantern.md)\n")],

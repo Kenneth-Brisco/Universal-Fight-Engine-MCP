@@ -50,7 +50,7 @@ These checks ran on 2026-10-15 for the retrieval-quality change (branch `fix/ret
 
 | Check | Result |
 | --- | --- |
-| Retrieval suite (`scripts/eval_retrieval.py`, 56 cases) on a real cache: snapshot `0cebaa7a…`, published catalog generated 2026-07-31, 223 documents | `main` 0.25 (14/56). This change 1.00 (56/56). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). |
+| Retrieval suite (`scripts/eval_retrieval.py`, 58 cases) on a real cache: snapshot `0cebaa7a…`, published catalog generated 2026-07-31, 223 documents | `main` 0.26 (15/58). This change 1.00 (58/58). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). |
 | Synthetic suite | 102 tests passed on Python 3.13. Three timing-sensitive tests failed once while four agent sessions loaded the machine, and passed on rerun and in the next full run. |
 | Real-cache stdio session (offline, copy of the cache) | `ufe_search_docs` for the jab→cross question returned Linked Moves, Move Links, and Hit Confirm Options. The envelope fell from 1,574 to 475 characters. `frameLinks` and `allowBlockCancel` resolved to their pages; `ufe_get_doc` returned the Linked Moves clarifications. |
 | Live manual, compared in a browser | Linked Moves, Advanced, Hit Stun Options, Animation Options (character), and Effect Options matched the cached text word for word. Each label used by the field mappings checked here was present on its mapped page. |

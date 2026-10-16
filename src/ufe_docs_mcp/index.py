@@ -73,7 +73,7 @@ _CONCEPTS = (
     ), ("link",), "move.links", re.compile(r"cancel\w*|chain\w*|follow\w*|ups?|combo\w*")),
     ("required_moves", re.compile(
         r"\bprerequisite\w*|\brequire\w*\b.*\bmoves?\b|\bafter\b.*\b(?:another|previous|specific|other|preceding)\b.*\bmoves?\b"
-        r"|\bonly\b.*\bafter\b.*\bmoves?\b"
+        r"|\bonly\b.*\bafter\b.*\b(?:a|an|the|another|that|this|one)\s+(?:(?:specific|particular|certain|previous|preceding|other|given|opening)\s+)?moves?\b"
     ), ("required", "prerequisite"), "move.links.group.required-moves",
         re.compile(r"prerequisite\w*|require\w*|only|after|another|previous|specific|other|preceding|moves?")),
     ("gauge_flow", re.compile(
@@ -633,7 +633,10 @@ def search_docs(path: Path, query: str, limit: int = 5, max_chars: int = 12_000)
         # passages, and the rest of that family competes unboosted.
         boosted.sort(key=lambda entry: (-entry[0], entry[1]))
         scored += boosted[:2] + [(score / 2.0, chunk_id, row) for score, chunk_id, row in boosted[2:]]
-        ranked = _diverse(scored or fallback, limit + 1)
+        # A concept question spans a page family, so prefer more pages over a
+        # second passage from one page; a single-topic question keeps more of
+        # its own page.
+        ranked = _diverse(scored or fallback, limit + 1, 0.5 if homes else 0.75)
         videos_by_doc: dict[str, list[dict]] = {}
         matched_fields = frozenset(match["field"] for match in field_matches)
         attached: set[tuple[str, str, str]] = set()  # each note once per response
@@ -685,16 +688,16 @@ def _body_chars(passage: str) -> int:
                if line.strip() and not _MARKDOWN_HEADING.match(line))
 
 
-def _diverse(entries: list[tuple[float, int, sqlite3.Row]], count: int) -> list[sqlite3.Row]:
-    """Greedy selection that halves a document's score for each passage it
-    already contributed and allows at most two passages per document."""
+def _diverse(entries: list[tuple[float, int, sqlite3.Row]], count: int, decay: float = 0.75) -> list[sqlite3.Row]:
+    """Greedy selection that scales a document's score by ``decay`` for each
+    passage it already contributed and allows at most two per document."""
     pending = sorted(entries, key=lambda entry: (-entry[0], entry[1]))
     used: dict[str, int] = {}
     selected: list[sqlite3.Row] = []
     while pending and len(selected) < count:
         best = max(
             (index for index, entry in enumerate(pending) if used.get(entry[2]["doc_id"], 0) < _MAX_PER_DOC),
-            key=lambda index: (pending[index][0] * 0.5 ** used.get(pending[index][2]["doc_id"], 0), -pending[index][1]),
+            key=lambda index: (pending[index][0] * decay ** used.get(pending[index][2]["doc_id"], 0), -pending[index][1]),
             default=None,
         )
         if best is None:

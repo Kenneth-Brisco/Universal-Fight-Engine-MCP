@@ -43,7 +43,7 @@ def _key(name: str) -> str:
 
 
 def _identifier_like(token: str) -> bool:
-    """Plain English words never trigger a field lookup, only code-shaped names."""
+    """Code-shaped names (leading or inner underscore, inner capitals) trigger a field lookup."""
     return token.startswith("_") or any(char.isupper() for char in token[1:]) or "_" in token.strip("_")
 
 

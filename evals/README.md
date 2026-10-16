@@ -46,7 +46,7 @@ uv run --frozen python scripts/eval_retrieval.py
 
 Pass `--cache DIR` for another index or `--json` for machine-readable output. Results depend on the indexed snapshot, so record the snapshot ID and catalog date with a score.
 
-On 2026-10-15, against snapshot `0cebaa7a…` (catalog generated 2026-07-31, 223 documents), `main` at `acb7d01` scored 0.25 (14/56) and this change scored 1.00 (56/56). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). The paid plugin evaluation was not rerun for this change.
+On 2026-10-15, against snapshot `0cebaa7a…` (catalog generated 2026-07-31, 223 documents), `main` at `acb7d01` scored 0.26 (15/58) and this change scored 1.00 (58/58). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). The paid plugin evaluation was not rerun for this change.
 
 ## Historical results
 

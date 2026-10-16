@@ -405,6 +405,21 @@
    "issue": "fields",
    "query": "how does gravity work",
    "expect_no_field_matches": true
+  },
+  {
+   "id": "required-moves-not-for-verb-moves",
+   "issue": "ranking",
+   "query": "only block after the opponent moves",
+   "limit": 3,
+   "forbid_doc_in_top": "move.links.group.required-moves"
+  },
+  {
+   "id": "same-page-second-passage",
+   "issue": "duplicates",
+   "query": "how do I set up a throw",
+   "limit": 3,
+   "expect_doc_in_top": "more.throw-tutorial",
+   "max_chunks_per_doc": 2
   }
  ]
 }

@@ -116,13 +116,13 @@ Candidates are reranked by:
 - **Section kind:** Options sections are preferred (×1.25); video embed sections are down-weighted (×0.4).
 - **Named page:** passages from a page whose title the question names are boosted. Coverage for them is measured across the whole page, so the page's Options section is preferred.
 - **Named setting:** passages that define a multi-word setting label quoted in the question ("Execution Buffer Type") are boosted.
-- **Concept expansion:** a small curated table maps fighting-game vocabulary to the manual's words. A concept boosts at most two passages of its page family. A page whose title contains another distinctive word of the question ("cancel a **throw**") is boosted too, and a quoted setting label of three or more words turns the concept boost off.
+- **Concept expansion:** a small curated table maps fighting-game vocabulary to the manual's words. A concept boosts at most two passages of its page family. A page whose title contains another distinctive word of the question ("cancel a **throw**") is boosted too (×1.5, against the concept's ×2), and a quoted setting label of three or more words turns the concept boost off.
   - Cancel, chain, follow-up, or "combo … into" questions also search `link` and prefer the Move Links page family. The literal word "link" adds no boost, because keyword matching already finds those pages.
   - "Only after another move" and "prerequisite" questions prefer Required Moves.
   - Questions about gauge or meter regeneration, refill, recharge, or drain prefer Gauge Options. Hit stop and hit freeze search `freezing`; `hitstun` and `blockstun` are split into words. Expansions add terms and never remove the user's own words.
 - **Field names:** pages mapped from serialized field names in the query.
 
-Passages consisting only of headings are never returned; at index build time a heading with no body of its own is kept with the following section. Related Pages link lists are returned only when nothing else matches. After the first result, a passage that the character budget clips to less than 120 characters of body text is dropped, and the response is marked truncated. Each document contributes at most two passages, and its second passage competes at half score. Retrieved text is never rewritten.
+Passages consisting only of headings are never returned; at index build time a heading with no body of its own is kept with the following section. Related Pages link lists are returned only when nothing else matches. After the first result, a passage that the character budget clips to less than 120 characters of body text is dropped, and the response is marked truncated. Each document contributes at most two passages. Its second passage competes at three-quarters of its score, or at half when a concept fired, so a concept question spreads across its page family. Retrieved text is never rewritten.
 
 The repository's deterministic retrieval suite (`scripts/eval_retrieval.py`, `evals/retrieval/cases.json`) checks these behaviors against a local index.
 

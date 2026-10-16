@@ -414,12 +414,45 @@
    "forbid_doc_in_top": "move.links.group.required-moves"
   },
   {
+   "id": "required-moves-not-for-other-player-moves",
+   "issue": "ranking",
+   "query": "attack only after the other player moves",
+   "limit": 3,
+   "forbid_doc_in_top": "move.links.group.required-moves"
+  },
+  {
+   "id": "required-moves-not-for-other-character-moves",
+   "issue": "ranking",
+   "query": "after the other character moves",
+   "limit": 3,
+   "forbid_doc_in_top": "move.links.group.required-moves"
+  },
+  {
+   "id": "required-moves-not-for-hit-confirm",
+   "issue": "ranking",
+   "query": "only cancel after the move connects",
+   "limit": 3,
+   "expect_doc_in_top": "move.links.group.hit-confirm-options",
+   "forbid_doc_in_top": "move.links.group.required-moves"
+  },
+  {
+   "id": "required-moves-after-named-move",
+   "issue": "ranking",
+   "query": "my super should only be usable right after the opening move",
+   "limit": 3,
+   "expect_doc_in_top": "move.links.group.required-moves"
+  },
+  {
    "id": "same-page-second-passage",
    "issue": "duplicates",
    "query": "how do I set up a throw",
    "limit": 3,
    "expect_doc_in_top": "more.throw-tutorial",
-   "max_chunks_per_doc": 2
+   "max_chunks_per_doc": 2,
+   "expect_top_docs": [
+    "more.throw-tutorial",
+    "more.throw-tutorial"
+   ]
   }
  ]
 }

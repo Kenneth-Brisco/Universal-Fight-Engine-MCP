@@ -67,13 +67,18 @@ _KIND_WEIGHTS = {"options": 1.25, "overview": 1.0, "body": 1.0, "video": 0.4}
 # Curated query concepts for fighting-game vocabulary the manual words
 # differently. Each adds terms; it never removes the user's own words.
 _LINK_WORDS = r"cancel\w*|chain\w*|follow[- ]?ups?"
+# "move" as a noun right after a qualifier or determiner, so "after the other
+# player moves" (a verb) and "after the move connects" (a hit confirm) do not
+# count as a move prerequisite.
+_MOVE_NOUN = r"moves?\b(?!\s+(?:connect|hit|land|whiff|miss)\w*)"
 _CONCEPTS = (
     ("move_links", re.compile(
         r"\b(?:" + _LINK_WORDS + r")|\bcombo\w*\b.*\binto\b|\binto\b.*\bcombo\w*\b"
     ), ("link",), "move.links", re.compile(r"cancel\w*|chain\w*|follow\w*|ups?|combo\w*")),
     ("required_moves", re.compile(
-        r"\bprerequisite\w*|\brequire\w*\b.*\bmoves?\b|\bafter\b.*\b(?:another|previous|specific|other|preceding)\b.*\bmoves?\b"
-        r"|\bonly\b.*\bafter\b.*\b(?:a|an|the|another|that|this|one)\s+(?:(?:specific|particular|certain|previous|preceding|other|given|opening)\s+)?moves?\b"
+        r"\bprerequisite\w*|\brequire\w*\b.*\bmoves?\b|\bafter\b.*\b(?:another|previous|specific|preceding)\s+" + _MOVE_NOUN
+        + r"|\bonly\b.*\bafter\b.*\b(?:a|an|the|another|that|this|one)\s+(?:(?:specific|particular|certain|previous|preceding|other|given|opening)\s+)?"
+        + _MOVE_NOUN
     ), ("required", "prerequisite"), "move.links.group.required-moves",
         re.compile(r"prerequisite\w*|require\w*|only|after|another|previous|specific|other|preceding|moves?")),
     ("gauge_flow", re.compile(

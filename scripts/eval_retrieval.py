@@ -54,6 +54,8 @@ def run_case(runtime: DocumentationRuntime, case: dict, defaults: dict) -> tuple
     failures: list[str] = []
     if "expect_doc_in_top" in case and case["expect_doc_in_top"] not in ids:
         failures.append(f"{case['expect_doc_in_top']} not in top {limit}: {ids}")
+    if "expect_top_docs" in case and ids[:len(case["expect_top_docs"])] != case["expect_top_docs"]:
+        failures.append(f"top {len(case['expect_top_docs'])} {ids[:len(case['expect_top_docs'])]} != {case['expect_top_docs']}")
     if "forbid_doc_in_top" in case and case["forbid_doc_in_top"] in ids:
         failures.append(f"{case['forbid_doc_in_top']} should not be in top {limit}: {ids}")
     if "expect_doc_prefix_in_top" in case and not any(i.startswith(case["expect_doc_prefix_in_top"]) for i in ids):

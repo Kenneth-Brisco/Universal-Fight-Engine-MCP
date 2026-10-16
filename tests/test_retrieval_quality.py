@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 from ufe_docs_mcp import reference
-from ufe_docs_mcp.index import Document, _chunks, build_index, search_docs
+from ufe_docs_mcp.index import Document, _chunks, _concepts, build_index, search_docs
 from ufe_docs_mcp.runtime import CATALOG_LAG_WARNING, DocumentationRuntime
 
 URL = "https://example.invalid/docs/"
@@ -76,6 +76,20 @@ class RetrievalQualityTests(unittest.TestCase):
                       "chain one practice move into another"):
             with self.subTest(query=query):
                 self.assertTrue(any(i.startswith("move.links") for i in self._ids(query)), self._ids(query))
+
+    def test_required_moves_concept_needs_move_as_a_qualified_noun(self):
+        home = "move.links.group.required-moves"
+        for query in ("only allow a move right after another specific move",
+                      "my super should only be usable right after the opening move",
+                      "can the uppercut only come out after a previous move"):
+            with self.subTest(query=query):
+                self.assertIn(home, [concept[1] for concept in _concepts(query)])
+        for query in ("attack only after the other player moves",
+                      "after the other character moves",
+                      "only block after the opponent moves",
+                      "only cancel after the move connects"):
+            with self.subTest(query=query):
+                self.assertNotIn(home, [concept[1] for concept in _concepts(query)])
 
     def test_one_document_cannot_fill_every_result(self):
         for query in ("combo", "combo damage scaling counter decay", "hit stun"):

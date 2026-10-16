@@ -34,6 +34,7 @@ not connector releases.
 - Search, document, and topic responses are compact by default. The repeated snapshot and freshness envelope fell from about 1.5 KB to under 0.5 KB. `verbose: true` and `ufe_docs_status` still return the full records, including the catalog-lag notice.
 - Search ranking prefers passages that cover more of the question, Options sections, and passages defining a setting the question names. When a question names a page, its Options section comes first. Questions about gauge regeneration reach Gauge Options.
 - Search no longer spends a result slot on a heading or a scrap of text clipped by `max_chars`; it reports truncation instead. It limits each page to two passages and understands cancel, chain, link, and "combo into" questions, so they reach the Move Links pages.
+- Questions where "moves" is a verb ("attack only after the other player moves") or about a move connecting ("only cancel after the move connects") no longer pull in the Required Moves page; questions about allowing a move only after another move still reach it.
 
 - Current documentation uses `main` and the `UFE3D-MCP` server / `ufe3d-mcp`
   plugin names. Removed obsolete setup guidance and the creator biography.

@@ -28,9 +28,9 @@ This invocation is configuration-derived, not a newly completed paid evaluation.
 
 `evals/retrieval/cases.json` holds deterministic search checks, grouped by the issue each one guards:
 
-- **ranking:** linking and cancelling questions reach Move Links.
+- **ranking:** linking and cancelling questions reach Move Links; "only after another move" questions reach Required Moves, but "after the opponent moves" and "after the move connects" do not.
 - **chunks:** no heading-only or Related Pages passages.
-- **duplicates:** at most two passages per page.
+- **duplicates:** at most two passages per page, and a single-topic question can still fill the top two with its own page.
 - **fields and enums:** serialized names resolve, with stored values.
 - **clarifications:** notes reach the passages they apply to.
 - **bloat:** the response envelope stays under 500 characters.
@@ -47,6 +47,8 @@ uv run --frozen python scripts/eval_retrieval.py
 Pass `--cache DIR` for another index or `--json` for machine-readable output. Results depend on the indexed snapshot, so record the snapshot ID and catalog date with a score.
 
 On 2026-10-15, against snapshot `0cebaa7a…` (catalog generated 2026-07-31, 223 documents), `main` at `acb7d01` scored 0.26 (15/58) and this change scored 1.00 (58/58). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). The paid plugin evaluation was not rerun for this change.
+
+On the same snapshot, tightening the Required Moves concept and adding position checks scored 1.00 (62/62); the previous Required Moves pattern from `c42eb5b` scored 0.95 (59/62), and forcing the single-topic decay to 0.5 scored 0.98 (61/62).
 
 ## Historical results
 

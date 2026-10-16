@@ -44,6 +44,20 @@ verify requested changes. A planning-only question never authorizes editing.
 The setup prompt and [setup guide](docs/SETUP.md) are the primary assisted path;
 manual client directions remain available. Do not require a separate setup skill.
 
+## Keep users' games out of this repository
+
+People use UFE3D-MCP while building their own games, and those games are their intellectual property. Do not put any information from a user's or contributor's project, including your own, into tracked files, commit messages, branch names, pull requests, issues, or review comments. That covers:
+
+- titles and studio names;
+- character, stage, and move names;
+- story;
+- original mechanics;
+- assets;
+- paths;
+- code, including modified engine files.
+
+Describe bugs and examples with generic fighting-game terms (jab, cross, Character A). When engine behavior matters, record only stock UFE facts by file and class member, never line numbers, and never copy engine code. [AGENTS.md](AGENTS.md#users-games-and-projects-are-confidential) has the full rules and the pre-push checklist. Coding agents working in this repository must follow them.
+
 ## Protect personal information
 
 - Use your own GitHub-provided `noreply` commit email so GitHub attributes your

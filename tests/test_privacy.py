@@ -98,7 +98,7 @@ class RuntimePrivacyTests(unittest.TestCase):
                 "catalog_generated_at": "2000-01-01", "source_url": MOVE_URL,
             })
             runtime = DocumentationRuntime(cache, auto_refresh=False)
-            result = runtime.decorate(get_doc(runtime.path, MOVE_ID))
+            result = runtime.decorate(get_doc(runtime.path, MOVE_ID), verbose=True)
             self.assertEqual(result["content"], body.rstrip("\n"))
             self.assertEqual(result["url"], MOVE_URL)
             self.assertEqual(result["warnings"], ["needs_verification"])

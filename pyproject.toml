@@ -19,6 +19,9 @@ ufe-docs-mcp = "ufe_docs_mcp.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+ufe_docs_mcp = ["data/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]

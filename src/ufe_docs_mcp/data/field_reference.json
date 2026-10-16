@@ -1,0 +1,2393 @@
+{
+ "schema_version": 1,
+ "ufe_version": "2.7.3",
+ "source": "Field names, Inspector labels, enum declaration order and clarification notes were read from the UFE 2.7.3 engine source by the UFE3D-MCP maintainers. source_ref and source_refs name a file relative to Assets/UFE/Engine/ and the class member involved. No engine code is reproduced.",
+ "version_evidence": "UFE's Readme.txt names v2.7.3. UFEUpgrader.cs holds the asset data-format version (2.7.2), which is not the release version.",
+ "fields": [
+  {
+   "field": "frameLinks",
+   "owner": "MoveInfo",
+   "type": "FrameLink[]",
+   "label": "Move Links",
+   "doc_id": "move.links.group.move-links",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (frameLinks)",
+   "notes": "Foldout header is 'Move Links (N)'. 'Frame Links' in the Inspector is the per-link frame-window slider (activeFramesBegins/activeFramesEnds), not this array. Doc page title is 'Move Links'; also summarized in move.links."
+  },
+  {
+   "field": "activeFramesBegins",
+   "owner": "FrameLink",
+   "type": "int",
+   "label": "Frame Links",
+   "doc_id": "move.links.group.move-links",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (activeFramesBegins)",
+   "notes": "Start of the min/max 'Frame Links' slider. Window test (FrameLink.IsLinkActive, FrameLink.cs (IsLinkActive)) subtracts the input buffer from this begin frame."
+  },
+  {
+   "field": "activeFramesEnds",
+   "owner": "FrameLink",
+   "type": "int",
+   "label": "Frame Links",
+   "doc_id": "move.links.group.move-links",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (activeFramesEnds)",
+   "notes": "End of the min/max 'Frame Links' slider (inclusive)."
+  },
+  {
+   "field": "linkType",
+   "owner": "FrameLink",
+   "type": "LinkType",
+   "label": "Link Conditions",
+   "doc_id": "move.links.group.move-links",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (linkType)",
+   "enum": "LinkType",
+   "notes": "Default NoConditions (2)."
+  },
+  {
+   "field": "onStrike",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "On Strike",
+   "doc_id": "move.links.group.hit-confirm-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (onStrike)",
+   "notes": "Only shown when Link Conditions = HitConfirm."
+  },
+  {
+   "field": "onBlock",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "On Block",
+   "doc_id": "move.links.group.hit-confirm-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (onBlock)",
+   "notes": "Hit-confirm on a blocked hit opens the link (ControlsScript.cs (ReadMove)). Not the same as allowBlockCancel."
+  },
+  {
+   "field": "onParry",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "On Parry",
+   "doc_id": "move.links.group.hit-confirm-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (onParry)"
+  },
+  {
+   "field": "counterMoveType",
+   "owner": "FrameLink",
+   "type": "CounterMoveType",
+   "label": "Filter Type",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (counterMoveType)",
+   "enum": "CounterMoveType",
+   "notes": "Only shown when Link Conditions = CounterMove."
+  },
+  {
+   "field": "anyHitType",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Any Hit Reaction",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (anyHitType)",
+   "notes": "Serialized name says 'HitType' but it filters on HitReactionType."
+  },
+  {
+   "field": "hitReactionType",
+   "owner": "FrameLink",
+   "type": "HitReactionType",
+   "label": "Hit Reaction",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (hitReactionType)",
+   "enum": "HitReactionType",
+   "notes": "Counter-move filter (shown when Any Hit Reaction is off)."
+  },
+  {
+   "field": "anyHitStrength",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Any Hit Reaction Clip",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (anyHitStrength)",
+   "notes": "Legacy serialized name ('hit strength'); filters on HitReactionClip."
+  },
+  {
+   "field": "hitReactionClip",
+   "owner": "FrameLink",
+   "type": "HitReactionClip",
+   "label": "Hit Reaction Clip",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (hitReactionClip)",
+   "enum": "HitReactionClip"
+  },
+  {
+   "field": "anyStrokeHitBox",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Any Stroke Hit Box",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (anyStrokeHitBox)"
+  },
+  {
+   "field": "hitBoxType",
+   "owner": "FrameLink",
+   "type": "HitBoxType",
+   "label": "Stroke Hit Box",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (hitBoxType)",
+   "enum": "HitBoxType"
+  },
+  {
+   "field": "counterMoveFilter",
+   "owner": "FrameLink",
+   "type": "MoveInfo",
+   "label": "Move",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (counterMoveFilter)",
+   "notes": "Used when Filter Type = SpecificMove."
+  },
+  {
+   "field": "disableHitImpact",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Disable Hit Impact",
+   "doc_id": "move.links.group.counter-move-options",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (disableHitImpact)",
+   "notes": "Default true. When a CounterMove link opens on being hit, the incoming hit is reset/ignored (ControlsScript.cs (GetHit))."
+  },
+  {
+   "field": "linkableMoves",
+   "owner": "FrameLink",
+   "type": "MoveInfo[]",
+   "label": "Linked Moves",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (linkableMoves)",
+   "notes": "Foldout header is 'Linked Moves (N)'; each element's label is 'Move'."
+  },
+  {
+   "field": "ignorePlayerConditions",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Ignore Character States",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (ignorePlayerConditions)",
+   "notes": "Only honored in the OnlyMoveLinks execution path (ControlsScript.cs (ResolveMove)); AnyMove always ignores player conditions."
+  },
+  {
+   "field": "ignoreGauge",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Ignore Meter Requirements",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (ignoreGauge)"
+  },
+  {
+   "field": "ignoreInputs",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Ignore Inputs (Auto Execution)",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (ignoreInputs)"
+  },
+  {
+   "field": "allowBlockCancel",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Allow Block Cancel",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (allowBlockCancel)",
+   "notes": "Lets the character interrupt its OWN current move by blocking while this link is open (cancelable). See clarifications. Added in UFE 2.7.1 per change log."
+  },
+  {
+   "field": "inputBufferType",
+   "owner": "FrameLink",
+   "type": "InputBufferType",
+   "label": "Input Buffer Type",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (inputBufferType)",
+   "enum": "InputBufferType",
+   "notes": "Drawn inside the 'Linked Moves' foldout in the editor; the manual also lists it on move.links.group.move-links. Global uses GlobalInfo.executionBufferTime, Custom uses customInputBuffer, None = 0 (FrameLink.cs (IsLinkActive))."
+  },
+  {
+   "field": "customInputBuffer",
+   "owner": "FrameLink",
+   "type": "int",
+   "label": "Buffer Time (frames)",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (customInputBuffer)",
+   "notes": "Shown only when Input Buffer Type = Custom. Also listed on move.links.group.move-links."
+  },
+  {
+   "field": "nextMoveStartupFrame",
+   "owner": "FrameLink",
+   "type": "int",
+   "label": "Startup Frame",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (nextMoveStartupFrame)",
+   "notes": "Default 1. Becomes the linked move's starting frame (overrideStartupFrame). Only applied when Execution Buffer Type = OnlyMoveLinks; see clarifications. Also listed on move.links.group.move-links."
+  },
+  {
+   "field": "useCharacterMoves",
+   "owner": "FrameLink",
+   "type": "bool",
+   "label": "Character Specific",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (useCharacterMoves)"
+  },
+  {
+   "field": "characterSpecificMoves",
+   "owner": "FrameLink",
+   "type": "CharacterSpecificMoves[]",
+   "label": "Character Name",
+   "doc_id": "move.links.group.linked-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/FrameLink.cs (characterSpecificMoves)",
+   "notes": "Array shown when Character Specific is on; each element has 'Character Name' (characterName) and 'Move' (move)."
+  },
+  {
+   "field": "previousMoves",
+   "owner": "MoveInfo",
+   "type": "MoveInfo[]",
+   "label": "Required Moves",
+   "doc_id": "move.links.group.required-moves",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (previousMoves)",
+   "notes": "Foldout header 'Required Moves (N)'; each element labeled 'Move'. The doc title is 'Required Moves' (bold label on move.links)."
+  },
+  {
+   "field": "moveName",
+   "owner": "MoveInfo",
+   "type": "string",
+   "label": "Move Name",
+   "doc_id": "move.start",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (moveName)"
+  },
+  {
+   "field": "description",
+   "owner": "MoveInfo",
+   "type": "string",
+   "label": "Move Description",
+   "doc_id": "move.start",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (description)"
+  },
+  {
+   "field": "gameplayType",
+   "owner": "MoveInfo",
+   "type": "GameplayType",
+   "label": "Gameplay Type",
+   "doc_id": "move.start",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (gameplayType)",
+   "enum": "GameplayType"
+  },
+  {
+   "field": "fps",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "FPS Architecture",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (fps)",
+   "notes": "Slider value only commits when 'Apply' is pressed (MoveBehaviourOptionsUI.cs (Edit))."
+  },
+  {
+   "field": "ignoreGravity",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Ignore Gravity",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (ignoreGravity)"
+  },
+  {
+   "field": "ignoreFriction",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Ignore Ground Friction",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (ignoreFriction)"
+  },
+  {
+   "field": "cancelMoveWhenLanding",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Cancel Move On Landing",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (cancelMoveWhenLanding)",
+   "notes": "FormerlySerializedAs 'cancelMoveWheLanding' (typo) - older .asset files may use that key."
+  },
+  {
+   "field": "landingMoveLink",
+   "owner": "MoveInfo",
+   "type": "MoveInfo",
+   "label": "Link On Landing",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (landingMoveLink)"
+  },
+  {
+   "field": "autoCorrectRotation",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Auto Correct Rotation",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (autoCorrectRotation)"
+  },
+  {
+   "field": "minFrameWindowRotation",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Min. Frame",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (minFrameWindowRotation)"
+  },
+  {
+   "field": "maxFrameWindowRotation",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Max. Frame",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (maxFrameWindowRotation)",
+   "notes": "FormerlySerializedAs 'frameWindowRotation'."
+  },
+  {
+   "field": "cooldown",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Execution Cooldown",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (cooldown)"
+  },
+  {
+   "field": "cooldownFrames",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Frames cooldown",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (cooldownFrames)"
+  },
+  {
+   "field": "allowSideSwitch",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Allow Side Switch",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (allowSideSwitch)"
+  },
+  {
+   "field": "isFinisher",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Finisher",
+   "doc_id": "move.behaviour",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (isFinisher)"
+  },
+  {
+   "field": "wrapMode",
+   "owner": "MoveInfo",
+   "type": "UnityEngine.WrapMode",
+   "label": "Wrap Mode",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (wrapMode)",
+   "notes": "Unity built-in enum."
+  },
+  {
+   "field": "disableHeadLook",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Disable Head Look",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (disableHeadLook)",
+   "label_in_manual": false,
+   "notes": "Label not documented on move.animation."
+  },
+  {
+   "field": "applyRootMotion",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Apply Root Motion",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (applyRootMotion)"
+  },
+  {
+   "field": "lockXMotion",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Lock X Motion",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (lockXMotion)"
+  },
+  {
+   "field": "lockYMotion",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Lock Y Motion",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (lockYMotion)"
+  },
+  {
+   "field": "lockZMotion",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Lock Z Motion",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (lockZMotion)"
+  },
+  {
+   "field": "fixedSpeed",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Fixed Speed",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (fixedSpeed)",
+   "notes": "Speed controls only drawn for AutoMap hit-box definition type."
+  },
+  {
+   "field": "_animationSpeed",
+   "owner": "MoveInfo",
+   "type": "Fix64",
+   "label": "Base Speed",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (_animationSpeed)",
+   "notes": "Editor label is 'Base Speed:'; the manual spells it 'Based Speed'. Clamped to >= 0.1 in editor. Doc bold label checked: 'Based Speed'."
+  },
+  {
+   "field": "speedKeyFrameToggle",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Speed Key Frames",
+   "doc_id": "move.animation.group.speed-key-frames",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (speedKeyFrameToggle)",
+   "notes": "Foldout toggle; the data lives in animSpeedKeyFrame[] (MoveInfo.cs (animSpeedKeyFrame))."
+  },
+  {
+   "field": "animSpeedKeyFrame",
+   "owner": "MoveInfo",
+   "type": "AnimSpeedKeyFrame[]",
+   "label": "Speed Key Frames",
+   "doc_id": "move.animation.group.speed-key-frames",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (animSpeedKeyFrame)",
+   "notes": "Elements have 'Casting Frame' (castingFrame) and 'New Speed'. Doc page title 'Speed Key Frames'. Doc bold label checked: 'Casting Frame'."
+  },
+  {
+   "field": "totalFrames",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Total Frames",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (totalFrames)",
+   "notes": "Read-only label when Fixed Speed is on; with speed key frames it shows 'Total frames:' plus an Apply button (MoveAnimationOptionsUI.cs (Edit))."
+  },
+  {
+   "field": "startUpFrames",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Start Up",
+   "doc_id": "move.active",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (startUpFrames)",
+   "label_in_manual": false,
+   "notes": "Not user-editable: computed by the editor from hits[0].activeFramesBegin and shown in the timeline as 'Start Up: N' (UFEGUILayout.cs (StyledMarker)). No manual label; closest page is Hit Options. Runtime uses it for currentFrameData (ControlsScript.cs (ReadMove))."
+  },
+  {
+   "field": "activeFrames",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Active",
+   "doc_id": "move.active",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (activeFrames)",
+   "label_in_manual": false,
+   "notes": "Computed: last hit activeFramesEnds - first hit activeFramesBegin + 1 (UFEGUILayout.cs (StyledMarker)). No manual label; closest page is Hit Options."
+  },
+  {
+   "field": "recoveryFrames",
+   "owner": "MoveInfo",
+   "type": "int",
+   "label": "Recovery",
+   "doc_id": "move.active",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (recoveryFrames)",
+   "label_in_manual": false,
+   "notes": "Computed: max casting frame - last hit activeFramesEnds (UFEGUILayout.cs (StyledMarker)). No manual label; closest page is Hit Options."
+  },
+  {
+   "field": "overrideBlendingIn",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Override Blending (In)",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (overrideBlendingIn)",
+   "notes": "Default true. When false, the move blends in with CharacterInfo._blendingTime (ControlsScript.cs (SetMove))."
+  },
+  {
+   "field": "_blendingIn",
+   "owner": "MoveInfo",
+   "type": "Fix64",
+   "label": "Blend In Duration",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (_blendingIn)",
+   "notes": "Only used when overrideBlendingIn is true."
+  },
+  {
+   "field": "overrideBlendingOut",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Override Blending (Out)",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (overrideBlendingOut)",
+   "notes": "Default false. When true, _blendingOut is used as the blend for whatever plays next (ControlsScript.cs (SetMove))."
+  },
+  {
+   "field": "_blendingOut",
+   "owner": "MoveInfo",
+   "type": "Fix64",
+   "label": "Blend Out Duration",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (_blendingOut)"
+  },
+  {
+   "field": "forceMirrorLeft",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Mirror Animation (Left)",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (forceMirrorLeft)"
+  },
+  {
+   "field": "invertRotationLeft",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Rotate Character (Left)",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (invertRotationLeft)"
+  },
+  {
+   "field": "forceMirrorRight",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Mirror Animation (Right)",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (forceMirrorRight)"
+  },
+  {
+   "field": "invertRotationRight",
+   "owner": "MoveInfo",
+   "type": "bool",
+   "label": "Rotate Character (Right)",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (invertRotationRight)"
+  },
+  {
+   "field": "characterPrefabStorage",
+   "owner": "MoveInfo",
+   "type": "PrefabStorageType",
+   "label": "Loading Method",
+   "doc_id": "move.animation",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (characterPrefabStorage)",
+   "enum": "PrefabStorageType",
+   "notes": "Editor preview prefab loading."
+  },
+  {
+   "field": "hits",
+   "owner": "MoveInfo",
+   "type": "Hit[]",
+   "label": "Hits",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (hits)",
+   "notes": "Foldout 'Hits (N)' inside the 'Hit Options (N)' pane (ActiveFramesOptionsUI.cs (Edit)); each element is 'Hit i'. Manual pages: move.active (Hit Options) and move.active.group.hit (Hit). Doc bold label checked: 'Hit'."
+  },
+  {
+   "field": "blockableArea",
+   "owner": "MoveInfo",
+   "type": "BlockArea",
+   "label": "Blockable Area",
+   "doc_id": "move.active.group.blockable-area",
+   "source_ref": "Scripts/Core/Definitions/Move/MoveInfo.cs (blockableArea)"
+  },
+  {
+   "field": "activeFramesBegin",
+   "owner": "Hit",
+   "type": "int",
+   "label": "Active Frames",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (activeFramesBegin)",
+   "label_in_manual": false,
+   "notes": "Note singular 'Begin' on Hit (vs FrameLink.activeFramesBegins). Min/max slider; the manual's Hit page does not list 'Active Frames'."
+  },
+  {
+   "field": "activeFramesEnds",
+   "owner": "Hit",
+   "type": "int",
+   "label": "Active Frames",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (activeFramesEnds)",
+   "label_in_manual": false,
+   "notes": "Upper bound of the same 'Active Frames' slider; not listed on the manual's Hit page."
+  },
+  {
+   "field": "hitConfirmType",
+   "owner": "Hit",
+   "type": "HitConfirmType",
+   "label": "Hit Confirm Type",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitConfirmType)",
+   "enum": "HitConfirmType"
+  },
+  {
+   "field": "groundHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Standing",
+   "doc_id": "move.active.group.hit.group.opponent-collision-filters",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (groundHit)"
+  },
+  {
+   "field": "crouchingHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Crouching",
+   "doc_id": "move.active.group.hit.group.opponent-collision-filters",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (crouchingHit)"
+  },
+  {
+   "field": "airHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "In the Air",
+   "doc_id": "move.active.group.hit.group.opponent-collision-filters",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (airHit)"
+  },
+  {
+   "field": "stunHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Stunned",
+   "doc_id": "move.active.group.hit.group.opponent-collision-filters",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (stunHit)"
+  },
+  {
+   "field": "downHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Down",
+   "doc_id": "move.active.group.hit.group.opponent-collision-filters",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (downHit)"
+  },
+  {
+   "field": "hitReactionType",
+   "owner": "Hit",
+   "type": "HitReactionType",
+   "label": "Hit Reaction",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitReactionType)",
+   "enum": "HitReactionType"
+  },
+  {
+   "field": "hitReactionClip",
+   "owner": "Hit",
+   "type": "HitReactionClip",
+   "label": "Reaction Clip",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitReactionClip)",
+   "enum": "HitReactionClip"
+  },
+  {
+   "field": "usePredefinedKnockDownValues",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Use Predefined Values",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (usePredefinedKnockDownValues)",
+   "label_in_manual": false,
+   "notes": "Shown for knockdown reactions; not documented. When on (KnockDownMid/High/Sweep), 'Hit Stun on Hit' is disabled (UFEEditorUtilities.cs (HitOptions))."
+  },
+  {
+   "field": "forceGrounded",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Force Grounded",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (forceGrounded)"
+  },
+  {
+   "field": "forceStand",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Force Stand",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (forceStand)"
+  },
+  {
+   "field": "staggerHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Stagger Opponent",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (staggerHit)"
+  },
+  {
+   "field": "resetHitAnimations",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Reset Hit Animation",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (resetHitAnimations)"
+  },
+  {
+   "field": "fixRotation",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Fix Rotation",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (fixRotation)"
+  },
+  {
+   "field": "blockCondition",
+   "owner": "Hit",
+   "type": "BlockStateCondition",
+   "label": "Block Condition",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (blockCondition)",
+   "enum": "BlockStateCondition",
+   "notes": "Editor label 'Block Condition:'; manual says 'Block Conditions'. FormerlySerializedAs 'newBlockCondition'. Doc bold label checked: 'Block Conditions'."
+  },
+  {
+   "field": "armorBreaker",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Armor Breaker",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (armorBreaker)"
+  },
+  {
+   "field": "allowMultiHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Allow Multi-Hit",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (allowMultiHit)"
+  },
+  {
+   "field": "continuousHit",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Continuous Hit",
+   "doc_id": "move.active.group.hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (continuousHit)",
+   "notes": "Sub-fields 'Space Between Hits' (spaceBetweenHits, Sizes) and 'Total Hits' (totalHits) are not documented."
+  },
+  {
+   "field": "hitStunType",
+   "owner": "Hit",
+   "type": "HitStunType",
+   "label": "Hit Stun Type",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitStunType)",
+   "enum": "HitStunType",
+   "notes": "Default Frames (1). FrameAdvantage (0) swaps the stun fields for frameAdvantageOnHit/Block sliders (-40..120)."
+  },
+  {
+   "field": "resetPreviousHitStun",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Reset Hit Stun",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (resetPreviousHitStun)"
+  },
+  {
+   "field": "resetCrumples",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Reset Crumples",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (resetCrumples)"
+  },
+  {
+   "field": "hitStunOnHit",
+   "owner": "Hit",
+   "type": "Fix64",
+   "label": "Hit Stun on Hit",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitStunOnHit)",
+   "notes": "FormerlySerializedAs '_hitStunOnHit'. Rounded up to whole frames when Hit Stun Type = Frames. Hidden when type = FrameAdvantage."
+  },
+  {
+   "field": "hitStunOnBlock",
+   "owner": "Hit",
+   "type": "Fix64",
+   "label": "Hit Stun on Block",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitStunOnBlock)",
+   "notes": "FormerlySerializedAs '_hitStunOnBlock'. Rounded up when Hit Stun Type = Frames. Hidden when type = FrameAdvantage."
+  },
+  {
+   "field": "frameAdvantageOnHit",
+   "owner": "Hit",
+   "type": "int",
+   "label": "Frame Advantage on Hit",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (frameAdvantageOnHit)",
+   "label_in_manual": false,
+   "notes": "Only when Hit Stun Type = FrameAdvantage. Not documented in the manual."
+  },
+  {
+   "field": "frameAdvantageOnBlock",
+   "owner": "Hit",
+   "type": "int",
+   "label": "Frame Advantage on Block",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (frameAdvantageOnBlock)",
+   "label_in_manual": false,
+   "notes": "Only when Hit Stun Type = FrameAdvantage. Not documented in the manual."
+  },
+  {
+   "field": "pushForce",
+   "owner": "Hit",
+   "type": "FPVector",
+   "label": "Applied Force",
+   "doc_id": "move.active.group.hit.group.force-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (pushForce)",
+   "notes": "Under Force Options > Opponent. FormerlySerializedAs '_pushForce'. Manual Force Options page only lists 'Opponent'/'Self'. Doc bold label checked: 'Opponent'."
+  },
+  {
+   "field": "appliedForce",
+   "owner": "Hit",
+   "type": "FPVector",
+   "label": "Applied Force",
+   "doc_id": "move.active.group.hit.group.force-options",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (appliedForce)",
+   "notes": "Under Force Options > Self. FormerlySerializedAs '_appliedForce'. Doc bold label checked: 'Self'."
+  },
+  {
+   "field": "cornerPush",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Corner Push",
+   "doc_id": "move.active.group.hit.group.stage-reactions",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (cornerPush)"
+  },
+  {
+   "field": "groundBounce",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Ground Bounce",
+   "doc_id": "move.active.group.hit.group.stage-reactions",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (groundBounce)"
+  },
+  {
+   "field": "wallBounce",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Wall Bounce",
+   "doc_id": "move.active.group.hit.group.stage-reactions",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (wallBounce)"
+  },
+  {
+   "field": "overrideHitEffects",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Override Hit Effects (Hit)",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (overrideHitEffects)",
+   "notes": "Gates hitEffects."
+  },
+  {
+   "field": "hitEffects",
+   "owner": "Hit",
+   "type": "HitTypeOptions",
+   "label": "Hit Effects",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitEffects)",
+   "notes": "Per-hit HitTypeOptions; only used when overrideHitEffects is true. Its sub-fields match global.match.hiteffects.group.effect-options. Doc bold label checked: 'Override Hit Effects (Hit)'."
+  },
+  {
+   "field": "overrideHitEffectsBlock",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Override Hit Effects (Block)",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (overrideHitEffectsBlock)",
+   "notes": "Gates hitEffectsBlock."
+  },
+  {
+   "field": "hitEffectsBlock",
+   "owner": "Hit",
+   "type": "HitTypeOptions",
+   "label": "Override Hit Effects (Block)",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (hitEffectsBlock)",
+   "notes": "Per-hit block-effect HitTypeOptions; edited in a nested foldout also titled 'Hit Effects' (UFEEditorUtilities.cs (HitOptions)) beneath the 'Override Hit Effects (Block)' toggle."
+  },
+  {
+   "field": "overrideHitAnimation",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Override Hit Animation",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (overrideHitAnimation)"
+  },
+  {
+   "field": "overrideHitAnimationBlend",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Override Hit Animation Blend-in",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (overrideHitAnimationBlend)"
+  },
+  {
+   "field": "newHitBlendingIn",
+   "owner": "Hit",
+   "type": "Fix64",
+   "label": "Blending In",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (newHitBlendingIn)",
+   "notes": "FormerlySerializedAs '_newHitBlendingIn'. 'Blending In' label itself is not in the manual. Doc bold label checked: 'Override Hit Animation Blend-in'."
+  },
+  {
+   "field": "overrideJuggleWeight",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Override Juggle Weight",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (overrideJuggleWeight)"
+  },
+  {
+   "field": "overrideAirRecoveryType",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Override Air Recovery Type",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (overrideAirRecoveryType)"
+  },
+  {
+   "field": "newAirRecoveryType",
+   "owner": "Hit",
+   "type": "AirRecoveryType",
+   "label": "New Air Recovery Type",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (newAirRecoveryType)",
+   "enum": "AirRecoveryType",
+   "notes": "Doc bold label checked: 'Override Air Recovery Type'."
+  },
+  {
+   "field": "showTextAlert",
+   "owner": "Hit",
+   "type": "bool",
+   "label": "Display Text Alert (Hit)",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "source_ref": "Scripts/Core/Definitions/Move/Hit.cs (showTextAlert)"
+  },
+  {
+   "field": "hitParticle",
+   "owner": "HitTypeOptions",
+   "type": "GameObject",
+   "label": "Particle Effect",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (hitParticle)",
+   "notes": "Same class used for Hit.hitEffects/hitEffectsBlock and armor hit effects (move.armor.group.hit-effects)."
+  },
+  {
+   "field": "spawnPoint",
+   "owner": "HitTypeOptions",
+   "type": "HitEffectSpawnPoint",
+   "label": "Spawn Point",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (spawnPoint)",
+   "enum": "HitEffectSpawnPoint"
+  },
+  {
+   "field": "killTime",
+   "owner": "HitTypeOptions",
+   "type": "float",
+   "label": "Effect Duration",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (killTime)"
+  },
+  {
+   "field": "hitSound",
+   "owner": "HitTypeOptions",
+   "type": "AudioClip",
+   "label": "Sound Effect",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (hitSound)"
+  },
+  {
+   "field": "sticky",
+   "owner": "HitTypeOptions",
+   "type": "bool",
+   "label": "Stick to Character",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (sticky)"
+  },
+  {
+   "field": "_freezingTime",
+   "owner": "HitTypeOptions",
+   "type": "Fix64",
+   "label": "Freezing Time (seconds)",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (_freezingTime)",
+   "notes": "Hit-freeze duration. In per-hit overrides the label is 'Freezing Time:' (UFEEditorUtilities.cs (HitEffectOptions)). Also on move.armor.group.hit-effects. Disabled/'(Automatic)' in some global presets (HitEffectsOptionsUI.cs (HitOptionBlock))."
+  },
+  {
+   "field": "_animationSpeed",
+   "owner": "HitTypeOptions",
+   "type": "Fix64",
+   "label": "Animation Speed (%)",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (_animationSpeed)",
+   "notes": "Not the same as MoveInfo._animationSpeed."
+  },
+  {
+   "field": "autoHitStop",
+   "owner": "HitTypeOptions",
+   "type": "bool",
+   "label": "Auto Hit Stop",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (autoHitStop)",
+   "notes": "When on, the editor copies _freezingTime into _hitStop (HitEffectsOptionsUI.cs (HitOptionBlock))."
+  },
+  {
+   "field": "_hitStop",
+   "owner": "HitTypeOptions",
+   "type": "Fix64",
+   "label": "Hit Stop (seconds)",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (_hitStop)"
+  },
+  {
+   "field": "mirrorOn2PSide",
+   "owner": "HitTypeOptions",
+   "type": "bool",
+   "label": "Mirror on Right Side",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (mirrorOn2PSide)"
+  },
+  {
+   "field": "shakeCharacterOnHit",
+   "owner": "HitTypeOptions",
+   "type": "bool",
+   "label": "Shake Character On Hit",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (shakeCharacterOnHit)"
+  },
+  {
+   "field": "_shakeDensity",
+   "owner": "HitTypeOptions",
+   "type": "Fix64",
+   "label": "Shake Density",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (_shakeDensity)"
+  },
+  {
+   "field": "shakeCameraOnHit",
+   "owner": "HitTypeOptions",
+   "type": "bool",
+   "label": "Shake Camera On Hit",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (shakeCameraOnHit)"
+  },
+  {
+   "field": "_shakeCameraDensity",
+   "owner": "HitTypeOptions",
+   "type": "Fix64",
+   "label": "Shake Density",
+   "doc_id": "global.match.hiteffects.group.effect-options",
+   "source_ref": "Scripts/Core/Definitions/Global/HitTypeOptions.cs (_shakeCameraDensity)",
+   "notes": "Second 'Shake Density' field, under Shake Camera On Hit."
+  },
+  {
+   "field": "fps",
+   "owner": "GlobalInfo",
+   "type": "int",
+   "label": "Frames Per Second",
+   "doc_id": "global.advanced",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (fps)",
+   "notes": "Not the same as MoveInfo.fps ('FPS Architecture')."
+  },
+  {
+   "field": "executionBufferType",
+   "owner": "GlobalInfo",
+   "type": "ExecutionBufferType",
+   "label": "Execution Buffer Type",
+   "doc_id": "global.advanced",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (executionBufferType)",
+   "enum": "ExecutionBufferType"
+  },
+  {
+   "field": "executionBufferTime",
+   "owner": "GlobalInfo",
+   "type": "int",
+   "label": "Execution Buffer (frames)",
+   "doc_id": "global.advanced",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (executionBufferTime)",
+   "notes": "Default 10; clamped >= 1; disabled when type = NoBuffer. Used as the stored-move lifetime (ControlsScript.cs (SetStoredMove)) and as the link buffer when FrameLink.inputBufferType = Global (FrameLink.cs (IsLinkActive))."
+  },
+  {
+   "field": "plinkingDelay",
+   "owner": "GlobalInfo",
+   "type": "int",
+   "label": "Plinking Delay (frames)",
+   "doc_id": "global.advanced",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (plinkingDelay)"
+  },
+  {
+   "field": "_gameSpeed",
+   "owner": "GlobalInfo",
+   "type": "Fix64",
+   "label": "Game Speed",
+   "doc_id": "global.advanced",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (_gameSpeed)"
+  },
+  {
+   "field": "_gravity",
+   "owner": "GlobalInfo",
+   "type": "Fix64",
+   "label": "Global Gravity",
+   "doc_id": "global.advanced",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (_gravity)"
+  },
+  {
+   "field": "comboOptions",
+   "owner": "GlobalInfo",
+   "type": "ComboOptions",
+   "label": "Combo Options",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (comboOptions)",
+   "notes": "Doc title 'Combo'. Doc bold label checked: 'Combo'."
+  },
+  {
+   "field": "counterHitOptions",
+   "owner": "GlobalInfo",
+   "type": "CounterHitOptions",
+   "label": "Counter Hit Options",
+   "doc_id": "global.match.counter",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (counterHitOptions)",
+   "notes": "Doc title 'Counter Hit'. Doc bold label checked: 'Counter Hit'."
+  },
+  {
+   "field": "blockOptions",
+   "owner": "GlobalInfo",
+   "type": "BlockOptions",
+   "label": "Block Options",
+   "doc_id": "global.match.block",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (blockOptions)",
+   "notes": "Doc title 'Block'. Doc bold label checked: 'Block'."
+  },
+  {
+   "field": "hitOptions",
+   "owner": "GlobalInfo",
+   "type": "HitOptions",
+   "label": "Preset Hit Effects",
+   "doc_id": "global.match.hiteffects",
+   "source_ref": "Scripts/Core/Definitions/Global/GlobalInfo.cs (hitOptions)",
+   "notes": "Holds weakHit ('Light Hit Effects'), mediumHit, heavyHit, crumpleHit, customHit1-9 (HitOptions.cs (weakHit)). Block/parry effects live in blockOptions.blockHitEffects/parryHitEffects (BlockOptions.cs (blockHitEffects, parryHitEffects))."
+  },
+  {
+   "field": "weakHit",
+   "owner": "HitOptions",
+   "type": "HitTypeOptions",
+   "label": "Light Hit Effects",
+   "doc_id": "global.match.hiteffects",
+   "source_ref": "Scripts/Core/Definitions/Global/HitOptions.cs (weakHit)",
+   "notes": "Serialized name 'weakHit' corresponds to HitReactionClip.Light."
+  },
+  {
+   "field": "comboDisplayMode",
+   "owner": "ComboOptions",
+   "type": "ComboDisplayMode",
+   "label": "Display Mode",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (comboDisplayMode)",
+   "enum": "ComboDisplayMode"
+  },
+  {
+   "field": "maxCombo",
+   "owner": "ComboOptions",
+   "type": "int",
+   "label": "Maximum Hits",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (maxCombo)"
+  },
+  {
+   "field": "maxConsecutiveCrumple",
+   "owner": "ComboOptions",
+   "type": "int",
+   "label": "Max Crumple Hits",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (maxConsecutiveCrumple)"
+  },
+  {
+   "field": "hitStunDeterioration",
+   "owner": "ComboOptions",
+   "type": "Sizes",
+   "label": "Hit Stun Deterioration",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (hitStunDeterioration)",
+   "enum": "Sizes"
+  },
+  {
+   "field": "_minHitStun",
+   "owner": "ComboOptions",
+   "type": "int",
+   "label": "Minimum Hit Stun (frames)",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (_minHitStun)"
+  },
+  {
+   "field": "damageDeterioration",
+   "owner": "ComboOptions",
+   "type": "Sizes",
+   "label": "Damage Deterioration",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (damageDeterioration)",
+   "enum": "Sizes"
+  },
+  {
+   "field": "minScaledDamage",
+   "owner": "ComboOptions",
+   "type": "Fix64",
+   "label": "Min. Scaled Damage",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (minScaledDamage)",
+   "label_in_manual": false,
+   "notes": "Not listed on the manual's Combo page (the change log mentions it was reintroduced in 2.7.1)."
+  },
+  {
+   "field": "airJuggleDeterioration",
+   "owner": "ComboOptions",
+   "type": "Sizes",
+   "label": "Air-Juggle Deterioration",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (airJuggleDeterioration)",
+   "enum": "Sizes"
+  },
+  {
+   "field": "airJuggleDeteriorationType",
+   "owner": "ComboOptions",
+   "type": "AirJuggleDeteriorationType",
+   "label": "Air-Juggle Deterioration Type",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (airJuggleDeteriorationType)",
+   "enum": "AirJuggleDeteriorationType"
+  },
+  {
+   "field": "_minPushForce",
+   "owner": "ComboOptions",
+   "type": "Fix64",
+   "label": "Minimum Juggle Force (Y)",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (_minPushForce)"
+  },
+  {
+   "field": "airRecoveryType",
+   "owner": "ComboOptions",
+   "type": "AirRecoveryType",
+   "label": "Air Recovery Type",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (airRecoveryType)",
+   "enum": "AirRecoveryType",
+   "notes": "Default CantMove (1)."
+  },
+  {
+   "field": "resetFallingForceOnHit",
+   "owner": "ComboOptions",
+   "type": "bool",
+   "label": "Reset Falling Force On Hit",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (resetFallingForceOnHit)"
+  },
+  {
+   "field": "neverCornerPush",
+   "owner": "ComboOptions",
+   "type": "bool",
+   "label": "Never Corner Push",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (neverCornerPush)"
+  },
+  {
+   "field": "neverAirRecover",
+   "owner": "ComboOptions",
+   "type": "bool",
+   "label": "Never Air-Recover",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (neverAirRecover)",
+   "notes": "Serialized but NOT drawn in the 2.7.3 editor and not read by runtime code. The manual itself flags it as legacy; label taken from the manual."
+  },
+  {
+   "field": "fixJuggleWeight",
+   "owner": "ComboOptions",
+   "type": "bool",
+   "label": "Fixed Juggle Weight",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (fixJuggleWeight)"
+  },
+  {
+   "field": "_juggleWeight",
+   "owner": "ComboOptions",
+   "type": "Fix64",
+   "label": "Juggle Weight",
+   "doc_id": "global.match.combo",
+   "source_ref": "Scripts/Core/Definitions/Global/ComboOptions.cs (_juggleWeight)"
+  },
+  {
+   "field": "startUpFrames",
+   "owner": "CounterHitOptions",
+   "type": "bool",
+   "label": "Start Up Frames",
+   "doc_id": "global.match.counter",
+   "source_ref": "Scripts/Core/Definitions/Global/CounterHitOptions.cs (startUpFrames)",
+   "notes": "Bool on CounterHitOptions (counter hit allowed during startup); not the int MoveInfo.startUpFrames."
+  },
+  {
+   "field": "activeFrames",
+   "owner": "CounterHitOptions",
+   "type": "bool",
+   "label": "Active Frames",
+   "doc_id": "global.match.counter",
+   "source_ref": "Scripts/Core/Definitions/Global/CounterHitOptions.cs (activeFrames)",
+   "notes": "Bool; not MoveInfo.activeFrames."
+  },
+  {
+   "field": "recoveryFrames",
+   "owner": "CounterHitOptions",
+   "type": "bool",
+   "label": "Recovery Frames",
+   "doc_id": "global.match.counter",
+   "source_ref": "Scripts/Core/Definitions/Global/CounterHitOptions.cs (recoveryFrames)",
+   "notes": "Bool; not MoveInfo.recoveryFrames."
+  },
+  {
+   "field": "_damageMultiplier",
+   "owner": "CounterHitOptions",
+   "type": "Fix64",
+   "label": "Damage Multiplier",
+   "doc_id": "global.match.counter",
+   "source_ref": "Scripts/Core/Definitions/Global/CounterHitOptions.cs (_damageMultiplier)"
+  },
+  {
+   "field": "_hitStunMultiplier",
+   "owner": "CounterHitOptions",
+   "type": "Fix64",
+   "label": "Hit Stun Multiplier",
+   "doc_id": "global.match.counter",
+   "source_ref": "Scripts/Core/Definitions/Global/CounterHitOptions.cs (_hitStunMultiplier)"
+  },
+  {
+   "field": "blockType",
+   "owner": "BlockOptions",
+   "type": "BlockType",
+   "label": "Block Input",
+   "doc_id": "global.match.block",
+   "source_ref": "Scripts/Core/Definitions/Global/BlockOptions.cs (blockType)",
+   "enum": "BlockType"
+  },
+  {
+   "field": "allowAirBlock",
+   "owner": "BlockOptions",
+   "type": "bool",
+   "label": "Allow Air Block",
+   "doc_id": "global.match.block",
+   "source_ref": "Scripts/Core/Definitions/Global/BlockOptions.cs (allowAirBlock)"
+  },
+  {
+   "field": "allowMoveCancel",
+   "owner": "BlockOptions",
+   "type": "bool",
+   "label": "Allow Move Canceling",
+   "doc_id": "global.match.block",
+   "source_ref": "Scripts/Core/Definitions/Global/BlockOptions.cs (allowMoveCancel)",
+   "notes": "Global; unrelated to FrameLink.allowBlockCancel. Relaxes the block-stunned/stunned player-state checks when validating a move's possible character states (MoveSetScript.cs (ValidateMoveStances))."
+  },
+  {
+   "field": "_blendingTime",
+   "owner": "CharacterInfo",
+   "type": "Fix64",
+   "label": "Default Blending Duration",
+   "doc_id": "character.animation",
+   "source_ref": "Scripts/Core/Definitions/Character/CharacterInfo.cs (_blendingTime)",
+   "notes": "Default 0.1. The fallback blend for moves whose Override Blending (In) is off (ControlsScript.cs (SetMove)) and for basic moves (MoveSetScript.cs (PlayBasicMove)); also Mecanim default transition (MoveSetScript.cs (spriteRenderer))."
+  },
+  {
+   "field": "initialValue",
+   "owner": "MeterInfo",
+   "type": "Fix64",
+   "label": "Initial Value",
+   "doc_id": "character.gauge",
+   "source_ref": "Scripts/Core/Definitions/Character/MeterInfo.cs (initialValue)",
+   "notes": "Default 0. Also the value a gauge returns to (clamped to its min/max percentage) when the round-end reset fires."
+  },
+  {
+   "field": "maxValue",
+   "owner": "MeterInfo",
+   "type": "Fix64",
+   "label": "Max Value",
+   "doc_id": "character.gauge",
+   "source_ref": "Scripts/Core/Definitions/Character/MeterInfo.cs (maxValue)",
+   "notes": "Default 100. Min/Max percentage bounds are computed as a percentage of this value. Refill and Infinite states set the value to maxValue (then the max-percentage clamp applies)."
+  },
+  {
+   "field": "meterState",
+   "owner": "MeterInfo",
+   "type": "MeterStates",
+   "label": "Gauge Default Status",
+   "doc_id": "character.gauge",
+   "source_ref": "Editor/Utils/UFEEditorUtilities.cs (MeterSettings)",
+   "enum": "MeterStates",
+   "label_in_manual": false,
+   "notes": "Default Normal. Label is prefixed by the meter type: \"Gauge Default Status:\" for character gauges, \"Life Default Status:\" for life in the global player settings. Not listed on the manual's Gauge Options page."
+  },
+  {
+   "field": "actionDelay",
+   "owner": "MeterInfo",
+   "type": "Fix64",
+   "label": "<State> Delay (seconds)",
+   "doc_id": "character.gauge",
+   "source_ref": "Editor/Utils/UFEEditorUtilities.cs (MeterSettings)",
+   "label_in_manual": false,
+   "notes": "Default 3. Shown only when Default Status is Refill, Fill or Drain, labelled \"Refill Delay (seconds)\", \"Fill Delay (seconds)\" or \"Drain Delay (seconds)\"; clamped to >= 0. Forced to 0 when Default Status is Infinite. Seconds without a gauge/life change before the automatic behavior kicks in. Not listed on the manual's Gauge Options page."
+  },
+  {
+   "field": "flowSpeed",
+   "owner": "MeterInfo",
+   "type": "Fix64",
+   "label": "<State> Per Second",
+   "doc_id": "character.gauge",
+   "source_ref": "Editor/Utils/UFEEditorUtilities.cs (MeterSettings)",
+   "label_in_manual": false,
+   "notes": "Default 10. Shown only for Fill or Drain, labelled \"Fill Per Second\" or \"Drain Per Second\"; clamped to >= 0. Points per second added (Fill) or removed (Drain). Not listed on the manual's Gauge Options page."
+  },
+  {
+   "field": "minPercentage",
+   "owner": "MeterInfo",
+   "type": "Fix64",
+   "label": "Gauge Min Value (%)",
+   "doc_id": "character.gauge",
+   "source_ref": "Editor/Utils/UFEEditorUtilities.cs (MeterSettings)",
+   "label_in_manual": false,
+   "notes": "Default 0, slider 0-100. Hidden in the editor when Default Status is Infinite, but the stored value still clamps at runtime. Lower bound = maxValue * minPercentage / 100. Not listed on the manual's Gauge Options page."
+  },
+  {
+   "field": "maxPercentage",
+   "owner": "MeterInfo",
+   "type": "Fix64",
+   "label": "Gauge Max Value (%)",
+   "doc_id": "character.gauge",
+   "source_ref": "Editor/Utils/UFEEditorUtilities.cs (MeterSettings)",
+   "label_in_manual": false,
+   "notes": "Default 100, slider 0-100. Hidden when Default Status is Infinite, but still applied by the runtime clamp. Upper bound = maxValue * maxPercentage / 100. Not listed on the manual's Gauge Options page."
+  },
+  {
+   "field": "resetEveryRound",
+   "owner": "GaugeInfo",
+   "type": "bool",
+   "label": "Reset every round",
+   "doc_id": "character.gauge",
+   "source_ref": "Scripts/Core/Definitions/Character/GaugeInfo.cs (resetEveryRound)",
+   "notes": "Runs from MatchManager.EndRound, so the reset happens at the end of each round, before the next round starts. It also runs at the end of the final round. Sets currentValue to initialValue, clamped to the min/max percentage."
+  },
+  {
+   "field": "resetOnlyIfActiveGOT",
+   "owner": "GaugeInfo",
+   "type": "bool",
+   "label": "Only if active GOT",
+   "doc_id": "character.gauge",
+   "source_ref": "Scripts/Core/Definitions/Character/GaugeInfo.cs (resetOnlyIfActiveGOT)",
+   "notes": "GOT means Gauge Over Time. Editable only while Reset every round is on. When set, the value reset happens only if the gauge has at least one active over-time status at round end (meterStatuses.Length > 0). The default Fill/Drain status does not count."
+  },
+  {
+   "field": "gaugeId",
+   "owner": "GaugeInfo",
+   "type": "GaugeId",
+   "label": "Gauge Id",
+   "doc_id": "character.gauge",
+   "source_ref": "Scripts/Core/Definitions/Character/GaugeInfo.cs (gaugeId)",
+   "notes": "Default Gauge1."
+  },
+  {
+   "field": "visible",
+   "owner": "GaugeInfo",
+   "type": "bool",
+   "label": "Visible",
+   "doc_id": "character.gauge",
+   "source_ref": "Scripts/Core/Definitions/Character/GaugeInfo.cs (visible)",
+   "notes": "Default true."
+  },
+  {
+   "field": "targetMeter",
+   "owner": "MeterAdjustment",
+   "type": "TargetMeter",
+   "label": "Target Meter",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Scripts/Core/Definitions/Move/MeterAdjustment.cs (targetMeter)",
+   "enum": "TargetMeter",
+   "notes": "Default Gauge. Values are Life and Gauge."
+  },
+  {
+   "field": "targetGauge",
+   "owner": "MeterAdjustment",
+   "type": "GaugeId",
+   "label": "Gauge Id",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Scripts/Core/Definitions/Move/MeterAdjustment.cs (targetGauge)",
+   "notes": "Default Gauge1."
+  },
+  {
+   "field": "deltaValueType",
+   "owner": "MeterAdjustment",
+   "type": "DeltaValueType",
+   "label": "Delta Value Type",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Scripts/Core/Definitions/Move/MeterAdjustment.cs (deltaValueType)",
+   "enum": "DeltaValueType",
+   "notes": "Default Points. The editor shows it for both gauge and life adjustments. At runtime only life Damage converts Percentage, as a percentage of the character's lifePoints. Gauge adjustments and life Heal treat the value as points."
+  },
+  {
+   "field": "deltaAdjustment",
+   "owner": "MeterAdjustment",
+   "type": "Fix64",
+   "label": "Gain/Loss Value",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Scripts/Core/Definitions/Move/MeterAdjustment.cs (deltaAdjustment)",
+   "label_in_manual": false,
+   "notes": "Labelled \"Gain/Loss Value:\" for gauges and can be negative. For life it is labelled \"Damage Value:\" / \"Heal Value:\" (or \"Damage On Impact:\" / \"Heal On Impact:\" in hit options) and is clamped to >= 0."
+  },
+  {
+   "field": "lifeAdjustmentType",
+   "owner": "MeterAdjustment",
+   "type": "LifeAdjustmentType",
+   "label": "Life Adjustment Type",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Scripts/Core/Definitions/Move/MeterAdjustment.cs (lifeAdjustmentType)",
+   "enum": "LifeAdjustmentType",
+   "notes": "Default Damage. Values are Heal and Damage."
+  },
+  {
+   "field": "clearPreviousStatuses",
+   "owner": "MeterAdjustment",
+   "type": "bool",
+   "label": "Clear Previous GOT",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Scripts/Core/Definitions/Move/MeterAdjustment.cs (clearPreviousStatuses)",
+   "label_in_manual": false,
+   "notes": "Labelled \"Clear Previous GOT\" for gauges and \"Clear Previous DOT\" / \"Clear Previous HOT\" for life. For a gauge it clears all statuses on that gauge. For life it clears only statuses in the matching direction."
+  },
+  {
+   "field": "meterStatus.meterFlowDirection",
+   "owner": "MeterAdjustment",
+   "type": "MeterFlowDirection",
+   "label": "Gauge Over Time (GOT)",
+   "doc_id": "move.active.group.meter-adjustments",
+   "source_ref": "Editor/Utils/UFEEditorUtilities.cs (GaugeAdjustment)",
+   "enum": "MeterFlowDirection",
+   "label_in_manual": false,
+   "notes": "Any value other than None adds an over-time status (GOT) to the target gauge. That status is what Only if active GOT checks for."
+  },
+  {
+   "field": "deltaValueType",
+   "owner": "PlayerMeterCondition",
+   "type": "DeltaValueType",
+   "label": "Delta Value Type",
+   "doc_id": "move.conditions.group.meter-requirements",
+   "source_ref": "Scripts/Core/Definitions/Move/PlayerMeterCondition.cs (deltaValueType)",
+   "enum": "DeltaValueType",
+   "notes": "Default Points. Shown only for GaugePoints and LifePoints targets. With Percentage, Value Required becomes a 0-100 slider and is compared as a fraction: gauge value / gauge maxValue, or life / character lifePoints."
+  },
+  {
+   "field": "valueRequired",
+   "owner": "PlayerMeterCondition",
+   "type": "Fix64",
+   "label": "Value Required",
+   "doc_id": "move.conditions.group.meter-requirements",
+   "source_ref": "Scripts/Core/Definitions/Move/PlayerMeterCondition.cs (valueRequired)",
+   "notes": "Divided by 100 when Delta Value Type is Percentage."
+  }
+ ],
+ "enums": {
+  "LinkType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/LinkType.cs (LinkType)",
+   "values": [
+    {
+     "name": "HitConfirm",
+     "value": 0,
+     "label": "Hit Confirm"
+    },
+    {
+     "name": "CounterMove",
+     "value": 1,
+     "label": "Counter Move"
+    },
+    {
+     "name": "NoConditions",
+     "value": 2,
+     "label": "No Conditions"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "InputBufferType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/InputBufferType.cs (InputBufferType)",
+   "values": [
+    {
+     "name": "Global",
+     "value": 0,
+     "label": "Global"
+    },
+    {
+     "name": "Custom",
+     "value": 1,
+     "label": "Custom"
+    },
+    {
+     "name": "None",
+     "value": 2,
+     "label": "None"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "ExecutionBufferType": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/ExecutionBufferType.cs (ExecutionBufferType)",
+   "values": [
+    {
+     "name": "OnlyMoveLinks",
+     "value": 0,
+     "label": "Only Move Links"
+    },
+    {
+     "name": "AnyMove",
+     "value": 1,
+     "label": "Any Move"
+    },
+    {
+     "name": "NoBuffer",
+     "value": 2,
+     "label": "No Buffer"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "HitStunType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/HitStunType.cs (HitStunType)",
+   "values": [
+    {
+     "name": "FrameAdvantage",
+     "value": 0,
+     "label": "Frame Advantage"
+    },
+    {
+     "name": "Frames",
+     "value": 1,
+     "label": "Frames"
+    },
+    {
+     "name": "Seconds",
+     "value": 2,
+     "label": "Seconds"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "CounterMoveType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/CounterMoveType.cs (CounterMoveType)",
+   "values": [
+    {
+     "name": "MoveFilter",
+     "value": 0,
+     "label": "Move Filter"
+    },
+    {
+     "name": "SpecificMove",
+     "value": 1,
+     "label": "Specific Move"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "HitConfirmType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/HitConfirmType.cs (HitConfirmType)",
+   "values": [
+    {
+     "name": "Hit",
+     "value": 0,
+     "label": "Hit"
+    },
+    {
+     "name": "Throw",
+     "value": 1,
+     "label": "Throw"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "HitReactionType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/HitReactionType.cs (HitReactionType)",
+   "values": [
+    {
+     "name": "StandingMid",
+     "value": 0,
+     "label": "Standing Mid"
+    },
+    {
+     "name": "StandingHigh",
+     "value": 1,
+     "label": "Standing High"
+    },
+    {
+     "name": "StandingLow",
+     "value": 2,
+     "label": "Standing Low"
+    },
+    {
+     "name": "StandingLeft",
+     "value": 3,
+     "label": "Standing Left"
+    },
+    {
+     "name": "StandingRight",
+     "value": 4,
+     "label": "Standing Right"
+    },
+    {
+     "name": "Launcher",
+     "value": 5,
+     "label": "Launcher"
+    },
+    {
+     "name": "KnockBack",
+     "value": 6,
+     "label": "Knock Back"
+    },
+    {
+     "name": "KnockDownHigh",
+     "value": 7,
+     "label": "Knock Down High"
+    },
+    {
+     "name": "KnockDownMid",
+     "value": 8,
+     "label": "Knock Down Mid"
+    },
+    {
+     "name": "Sweep",
+     "value": 9,
+     "label": "Sweep"
+    },
+    {
+     "name": "Crumple",
+     "value": 10,
+     "label": "Crumple"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "HitReactionClip": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/HitReactionClip.cs (HitReactionClip)",
+   "values": [
+    {
+     "name": "Light",
+     "value": 0,
+     "label": "Light"
+    },
+    {
+     "name": "Medium",
+     "value": 1,
+     "label": "Medium"
+    },
+    {
+     "name": "Heavy",
+     "value": 2,
+     "label": "Heavy"
+    },
+    {
+     "name": "Custom1",
+     "value": 3
+    },
+    {
+     "name": "Custom2",
+     "value": 4
+    },
+    {
+     "name": "Custom3",
+     "value": 5
+    },
+    {
+     "name": "Custom4",
+     "value": 6
+    },
+    {
+     "name": "Custom5",
+     "value": 7
+    },
+    {
+     "name": "Custom6",
+     "value": 8
+    },
+    {
+     "name": "Custom7",
+     "value": 9
+    },
+    {
+     "name": "Custom8",
+     "value": 10
+    },
+    {
+     "name": "Custom9",
+     "value": 11
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "HitBoxType": {
+   "source_ref": "Scripts/Core/Definitions/Character/Enums/HitBoxType.cs (HitBoxType)",
+   "values": [
+    {
+     "name": "high",
+     "value": 0,
+     "label": "High"
+    },
+    {
+     "name": "low",
+     "value": 1,
+     "label": "Low"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "HitEffectSpawnPoint": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/HitEffectSpawnPoint.cs (HitEffectSpawnPoint)",
+   "values": [
+    {
+     "name": "StrikingHurtBox",
+     "value": 0,
+     "label": "Striking Hurt Box"
+    },
+    {
+     "name": "StrokeHitBox",
+     "value": 1,
+     "label": "Stroke Hit Box"
+    },
+    {
+     "name": "InBetween",
+     "value": 2,
+     "label": "In Between"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "AirRecoveryType": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/AirRecoveryType.cs (AirRecoveryType)",
+   "values": [
+    {
+     "name": "AllowMoves",
+     "value": 0,
+     "label": "Allow Moves"
+    },
+    {
+     "name": "CantMove",
+     "value": 1,
+     "label": "Cant Move"
+    },
+    {
+     "name": "DontRecover",
+     "value": 2,
+     "label": "Dont Recover"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "Sizes": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/Sizes.cs (Sizes)",
+   "values": [
+    {
+     "name": "None",
+     "value": 0,
+     "label": "None"
+    },
+    {
+     "name": "VerySmall",
+     "value": 1,
+     "label": "Very Small"
+    },
+    {
+     "name": "Small",
+     "value": 2,
+     "label": "Small"
+    },
+    {
+     "name": "Medium",
+     "value": 3,
+     "label": "Medium"
+    },
+    {
+     "name": "High",
+     "value": 4,
+     "label": "High"
+    },
+    {
+     "name": "VeryHigh",
+     "value": 5,
+     "label": "Very High"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "BlockStateCondition": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/BlockStateCondition.cs (BlockStateCondition)",
+   "values": [
+    {
+     "name": "Mid",
+     "value": 0,
+     "label": "Mid"
+    },
+    {
+     "name": "Low",
+     "value": 1,
+     "label": "Low"
+    },
+    {
+     "name": "High",
+     "value": 2,
+     "label": "High"
+    },
+    {
+     "name": "Unblockable",
+     "value": 3,
+     "label": "Unblockable"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "AirJuggleDeteriorationType": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/AirJuggleDeteriorationType.cs (AirJuggleDeteriorationType)",
+   "values": [
+    {
+     "name": "ComboHits",
+     "value": 0,
+     "label": "Combo Hits"
+    },
+    {
+     "name": "AirHits",
+     "value": 1,
+     "label": "Air Hits"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "ComboDisplayMode": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/ComboDisplayMode.cs (ComboDisplayMode)",
+   "values": [
+    {
+     "name": "ShowDuringComboExecution",
+     "value": 0,
+     "label": "Show During Combo Execution"
+    },
+    {
+     "name": "ShowAfterComboExecution",
+     "value": 1,
+     "label": "Show After Combo Execution"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "PrefabStorageType": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/PrefabStorageType.cs (PrefabStorageType)",
+   "values": [
+    {
+     "name": "PrefabReference",
+     "value": 0,
+     "label": "Prefab Reference"
+    },
+    {
+     "name": "ResourcesFolder",
+     "value": 1,
+     "label": "Resources Folder"
+    },
+    {
+     "name": "SceneFile",
+     "value": 2,
+     "label": "Scene File"
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "BlockType": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/BlockType.cs (BlockType)",
+   "values": [
+    {
+     "name": "None",
+     "value": 0,
+     "label": "None"
+    },
+    {
+     "name": "HoldBack",
+     "value": 1,
+     "label": "Hold Back"
+    },
+    {
+     "name": "AutoBlock",
+     "value": 2,
+     "label": "Auto Block"
+    },
+    {
+     "name": "HoldButton1",
+     "value": 3
+    },
+    {
+     "name": "HoldButton2",
+     "value": 4
+    },
+    {
+     "name": "HoldButton3",
+     "value": 5
+    },
+    {
+     "name": "HoldButton4",
+     "value": 6
+    },
+    {
+     "name": "HoldButton5",
+     "value": 7
+    },
+    {
+     "name": "HoldButton6",
+     "value": 8
+    },
+    {
+     "name": "HoldButton7",
+     "value": 9
+    },
+    {
+     "name": "HoldButton8",
+     "value": 10
+    },
+    {
+     "name": "HoldButton9",
+     "value": 11
+    },
+    {
+     "name": "HoldButton10",
+     "value": 12
+    },
+    {
+     "name": "HoldButton11",
+     "value": 13
+    },
+    {
+     "name": "HoldButton12",
+     "value": 14
+    }
+   ],
+   "notes": "No explicit '=' values; ordinals follow declaration order."
+  },
+  "GameplayType": {
+   "source_ref": "Scripts/Core/Definitions/Global/Enums/GameplayType.cs (GameplayType)",
+   "values": [
+    {
+     "name": "_2DFighter",
+     "value": 0
+    },
+    {
+     "name": "_3DFighter",
+     "value": 1
+    },
+    {
+     "name": "_3DArena",
+     "value": 2
+    }
+   ],
+   "notes": "Full source build; under UFE_LITE/UFE_BASIC defines only _2DFighter (0) exists."
+  },
+  "MeterStates": {
+   "source_ref": "Scripts/Core/Definitions/Character/Enums/MeterStates.cs (MeterStates)",
+   "values": [
+    {
+     "name": "Normal",
+     "value": 0,
+     "label": "Normal"
+    },
+    {
+     "name": "Infinite",
+     "value": 1,
+     "label": "Infinite"
+    },
+    {
+     "name": "Refill",
+     "value": 2,
+     "label": "Refill"
+    },
+    {
+     "name": "Drain",
+     "value": 3,
+     "label": "Drain"
+    },
+    {
+     "name": "Fill",
+     "value": 4,
+     "label": "Fill"
+    }
+   ]
+  },
+  "DeltaValueType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/DeltaValueType.cs (DeltaValueType)",
+   "values": [
+    {
+     "name": "Percentage",
+     "value": 0,
+     "label": "Percentage"
+    },
+    {
+     "name": "Points",
+     "value": 1,
+     "label": "Points"
+    }
+   ]
+  },
+  "TargetMeter": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/TargetMeter.cs (TargetMeter)",
+   "values": [
+    {
+     "name": "Life",
+     "value": 0,
+     "label": "Life"
+    },
+    {
+     "name": "Gauge",
+     "value": 1,
+     "label": "Gauge"
+    }
+   ]
+  },
+  "LifeAdjustmentType": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/LifeAdjustmentType.cs (LifeAdjustmentType)",
+   "values": [
+    {
+     "name": "Heal",
+     "value": 0,
+     "label": "Heal"
+    },
+    {
+     "name": "Damage",
+     "value": 1,
+     "label": "Damage"
+    }
+   ]
+  },
+  "MeterFlowDirection": {
+   "source_ref": "Scripts/Core/Definitions/Move/Enums/MeterFlowDirection.cs (MeterFlowDirection)",
+   "values": [
+    {
+     "name": "None",
+     "value": 0,
+     "label": "None"
+    },
+    {
+     "name": "Drain",
+     "value": 1,
+     "label": "Drain"
+    },
+    {
+     "name": "Fill",
+     "value": 2,
+     "label": "Fill"
+    }
+   ]
+  }
+ },
+ "clarifications": [
+  {
+   "field": "allowBlockCancel",
+   "label": "Allow Block Cancel",
+   "doc_id": "move.links.group.linked-moves",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code this is a guard cancel: while an open link window on the current move has it set (and its Link Conditions are met), the character may cancel its own move into a block. No Linked Moves destination is needed. It does not decide whether a linked move fires after the attack is blocked.",
+   "manual_text_summary": "The manual lists Allow Block Cancel under Linked Moves and says it keeps the link valid from block situations where block-cancel checks pass. That reads as if it affects whether the linked move can fire after the attack is blocked.",
+   "code_behavior": "It does not affect linked-move validity or execution. That is controlled by Link Conditions and the On Block hit-confirm flag (ControlsScript.cs (ReadMove)). allowBlockCancel only matters in MoveSetScript.CheckBlockCancelable, which returns true when any active frame link, or any of the current move's frameLinks, is both cancelable (its window is open and its Link Conditions are met) and has allowBlockCancel set (MoveSetScript.cs (CheckBlockCancelable)). The character's own blocking uses that result: (1) every frame while a move plays, ReadMove clears potentialBlock unless the move is block-cancelable, so the defender cannot guard out of its own move (ControlsScript.cs (ReadMove)); (2) in CheckBlocking with a forced pose during a move, a block-cancelable move sets staggered, otherwise potentialBlock is cleared (ControlsScript.cs (CheckBlocking)); (3) when the next hit arrives while staggered and potentialBlock, the current move is killed and the hit is resolved as a block (ControlsScript.cs (GetHit)). In short, it is a guard cancel: the move can be interrupted by blocking during an open, condition-satisfied link window. A link becomes cancelable from its frame window and Link Conditions alone (ControlsScript.cs (ReadMove)), so no destination move is required for the guard cancel.",
+   "source_refs": [
+    "Scripts/Core/Definitions/Move/FrameLink.cs (allowBlockCancel)",
+    "Scripts/Core/Physics/MoveSetScript.cs (CheckBlockCancelable)",
+    "Scripts/Core/Physics/ControlsScript.cs (ReadMove)",
+    "Scripts/Core/Physics/ControlsScript.cs (CheckBlocking)",
+    "Scripts/Core/Physics/ControlsScript.cs (GetHit)",
+    "Editor/Move/MenuOptions/MoveLinkOptionsUI.cs (Edit)"
+   ]
+  },
+  {
+   "field": "nextMoveStartupFrame",
+   "label": "Startup Frame",
+   "doc_id": "move.links.group.linked-moves",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code Startup Frame is applied only when Execution Buffer Type is OnlyMoveLinks, and its default of 1 makes a linked move skip its first frame unless set to 0.",
+   "manual_text_summary": "Startup Frame overrides where the next or linked move starts in its own startup timeline. The manual states no precondition.",
+   "code_behavior": "The value is copied to the stored move's overrideStartupFrame only in ResolveMove's OnlyMoveLinks branch (ControlsScript.cs (ResolveMove)), and that is the only place it is assigned. With Execution Buffer Type set to AnyMove or NoBuffer, linked moves start from frame 0 (overrideStartupFrame stays at its default) and this field is ignored. When applied, it sets the new move's currentTick and the animation's normalized start time (ControlsScript.cs (SetMove)). The serialized default is 1, so with OnlyMoveLinks a linked move skips its first frame unless this is set to 0.",
+   "source_refs": [
+    "Scripts/Core/Definitions/Move/FrameLink.cs (nextMoveStartupFrame)",
+    "Scripts/Core/Physics/ControlsScript.cs (ResolveMove)",
+    "Scripts/Core/Physics/ControlsScript.cs (SetMove)",
+    "Editor/Move/MenuOptions/MoveLinkOptionsUI.cs (Edit)"
+   ]
+  },
+  {
+   "field": "hitStunOnHit",
+   "label": "Hit Stun on Hit",
+   "doc_id": "move.active.group.hit.group.hit-stun-options",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "2.7.3 has no Custom Stun Values toggle; Hit Stun on Hit/Block are always shown unless Hit Stun Type is FrameAdvantage, which swaps in undocumented Frame Advantage on Hit/Block values.",
+   "manual_text_summary": "The manual lists a 'Custom Stun Values' option that enables manual stun values, followed by Hit Stun on Hit and Hit Stun on Block.",
+   "code_behavior": "Hit has no 'Custom Stun Values' toggle or serialized field in 2.7.3; there is no customStunValues. Hit Stun on Hit and Hit Stun on Block are always drawn unless Hit Stun Type is FrameAdvantage. In that case they are replaced by frameAdvantageOnHit and frameAdvantageOnBlock sliders, which the manual does not document. Hit Stun on Hit is greyed out when the reaction is KnockDownMid, KnockDownHigh or Sweep and Use Predefined Values is on. With Hit Stun Type = Frames, both values are rounded up to whole numbers.",
+   "source_refs": [
+    "Scripts/Core/Definitions/Move/Hit.cs (hitStunType)",
+    "Editor/Utils/UFEEditorUtilities.cs (HitOptions)"
+   ]
+  },
+  {
+   "field": "hitReactionClip",
+   "label": "Reaction Clip",
+   "doc_id": "move.active.group.hit",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code Reaction Clip also chooses which global Preset Hit Effects entry (Light, Medium, Heavy, Custom 1-9) the hit uses, unless Override Hit Effects (Hit) is on; a Crumple hit reaction uses the crumple preset.",
+   "manual_text_summary": "The manual describes Reaction Clip only as choosing the animation clip used for supported reaction types, and does not say how a hit picks its preset hit effects.",
+   "code_behavior": "When a hit lands and overrideHitEffects is false, the hit's effects (freeze, hit stop, particles, sound, shake) are taken from UFE.config.hitOptions according to hitReactionClip: Light -> weakHit, Medium -> mediumHit, Heavy -> heavyHit, Custom1..Custom9 -> customHit1..customHit9; a hitReactionType of Crumple selects crumpleHit instead (ControlsScript.cs (GetHit)). With overrideHitEffects true, the hit's own hitEffects are used.",
+   "source_refs": [
+    "Scripts/Core/Physics/ControlsScript.cs (GetHit)",
+    "Scripts/Core/Definitions/Move/Hit.cs (hitReactionClip)"
+   ]
+  },
+  {
+   "field": "overrideHitEffects",
+   "label": "Override Hit Effects (Hit)",
+   "doc_id": "move.active.group.hit.group.override-events-on-hit",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code the per-hit override holds the same settings as Global > Preset Hit Effects > Effect Options (Freezing Time, Auto Hit Stop, Hit Stop, shakes, particles, sound) and replaces the preset for this hit only.",
+   "manual_text_summary": "The manual names the toggle but does not list what the override contains.",
+   "code_behavior": "Hit.hitEffects is a HitTypeOptions, the same type as each global preset in UFE.config.hitOptions, so the editor shows the Effect Options fields for it. When overrideHitEffects is true the hit uses hit.hitEffects instead of the preset chosen by Reaction Clip (Hit.cs (overrideHitEffects), ControlsScript.cs (GetHit)).",
+   "source_refs": [
+    "Scripts/Core/Definitions/Move/Hit.cs (overrideHitEffects)",
+    "Scripts/Core/Physics/ControlsScript.cs (GetHit)"
+   ]
+  },
+  {
+   "field": "previousMoves",
+   "label": "Required Moves",
+   "doc_id": "move.links.group.required-moves",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code a move with Required Moves cannot start on its own: it can only start while one of the listed moves is the current move, and that move must also have an open link to it.",
+   "manual_text_summary": "The manual says the listed prerequisite moves must already be involved before this move can be reached in a chain, but does not say whether the move can still be used on its own.",
+   "code_behavior": "ValidateMoveExecution rejects a move whose previousMoves list is non-empty when there is no current move, or when the current move is not in that list (MoveSetScript.cs (ValidateMoveExecution)). As for any move started during another move, the current move must also have an active frame link that lists it (MoveSetScript.cs (ValidateMoveExecution)).",
+   "source_refs": [
+    "Scripts/Core/Physics/MoveSetScript.cs (ValidateMoveExecution)"
+   ]
+  },
+  {
+   "field": "allowMoveCancel",
+   "label": "Allow Move Canceling",
+   "doc_id": "global.match.block",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code Allow Move Canceling lets moves start while the character is holding block, without the move listing Blocking in its Possible Character States; block stun and hit stun still prevent them. It does not let a move be cancelled into block (that is Allow Block Cancel on a move link).",
+   "manual_text_summary": "The manual says the option allows move cancels from valid block states.",
+   "code_behavior": "In ValidatePlayerConditions, when blockOptions.allowMoveCancel is true the 'blocking' check is skipped: a move whose state condition does not require blocking is still allowed while the character is blocking, but is rejected while block-stunned or stunned unless its condition allows those states. When false, such a move is also rejected while the character is blocking (MoveSetScript.cs (ValidateMoveStances)).",
+   "source_refs": [
+    "Scripts/Core/Physics/MoveSetScript.cs (ValidateMoveStances)",
+    "Scripts/Core/Definitions/Global/BlockOptions.cs (allowMoveCancel)"
+   ]
+  },
+  {
+   "field": "meterState",
+   "label": "Gauge Default Status",
+   "doc_id": "character.gauge",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code each gauge also has inherited automatic settings that the manual page does not list: Gauge Default Status (Normal, Infinite, Refill, Drain, Fill), a <State> Delay (seconds), a Fill/Drain Per Second rate, and Gauge Min Value (%) / Gauge Max Value (%).",
+   "manual_text_summary": "The Gauge Options page lists Gauge Id, Description, Initial Value, Max Value, Reset every round, Only if active GOT and Visible only.",
+   "code_behavior": "UFEEditorUtilities.MeterSettings draws meterState, actionDelay, flowSpeed and the min/max percentage sliders under the gauge's other fields. Every frame, ControlsScript.UpdateMeterInfo runs for life and for each gauge. If the state is not Normal and no active status inhibits updates, it adds to a timer. Once the timer reaches actionDelay, the state takes effect. Refill jumps to maxValue and restarts the timer. Fill and Drain add or remove flowSpeed points per second on every later frame. Infinite holds the meter at maxValue (its delay is forced to 0 in the editor). Any UpdateGauge, damage or heal call resets the timer through ResetActionDelay, so the delay counts from the last change. That reset also zeroes the delay timers of active over-time statuses. The value is clamped every frame to maxValue*minPercentage/100 .. maxValue*maxPercentage/100.",
+   "source_refs": [
+    "Editor/Utils/UFEEditorUtilities.cs (MeterSettings)",
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateMeterInfo)",
+    "Scripts/Core/Definitions/Character/MeterInfo.cs (ResetActionDelay)",
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateGauge)"
+   ],
+   "anchor": "Gauge Options"
+  },
+  {
+   "field": "resetEveryRound",
+   "label": "Reset every round",
+   "doc_id": "character.gauge",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code the gauge reset runs from MatchManager.EndRound, at the end of each round including the last, not at the start of a round. It sets the gauge back to Initial Value, clamped to its min/max percentage.",
+   "manual_text_summary": "Resets the gauge to its initial value at the start of each round.",
+   "code_behavior": "EndRound calls ControlsScript.ResetAllGaugeStatus for both players. For each gauge with resetEveryRound set (and the Only if active GOT check passing), currentValue = clamp(initialValue, min%, max%). Separately, every gauge's active over-time statuses are cleared and its delay timer is zeroed, whether or not Reset every round is set. StartNewRound/ResetData reset only life (when the round options say so), not gauges.",
+   "source_refs": [
+    "Scripts/Core/Manager/MatchManager.cs (EndRound)",
+    "Scripts/Core/Physics/ControlsScript.cs (ResetAllGaugeStatus)",
+    "Scripts/Core/Physics/ControlsScript.cs (ResetMeterStatus)",
+    "Scripts/Core/Manager/MatchManager.cs (StartNewRound)"
+   ]
+  },
+  {
+   "field": "resetOnlyIfActiveGOT",
+   "label": "Only if active GOT",
+   "doc_id": "character.gauge",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code GOT means Gauge Over Time. With this option on, the round-end value reset happens only if the gauge has at least one active over-time status when the round ends.",
+   "manual_text_summary": "Applies the reset rule only while the related gauge override type is active.",
+   "code_behavior": "The predicate is resetEveryRound && (!resetOnlyIfActiveGOT || meterStatuses.Length > 0). Statuses come from meter adjustments whose Gauge Over Time (GOT) direction is Fill or Drain, and stay active until their duration finishes or they are cancelled or cleared. The gauge's Default Status (Fill/Drain) does not count. The toggle is disabled in the editor unless Reset every round is on.",
+   "source_refs": [
+    "Scripts/Core/Physics/ControlsScript.cs (ResetAllGaugeStatus)",
+    "Scripts/Core/Definitions/Character/GaugeInfo.cs (resetOnlyIfActiveGOT)",
+    "Editor/Utils/UFEEditorUtilities.cs (GaugeAdjustment)"
+   ]
+  },
+  {
+   "field": "deltaValueType",
+   "label": "Delta Value Type",
+   "doc_id": "move.active.group.meter-adjustments",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code Delta Value Type = Percentage is applied only to life Damage adjustments, as a percentage of the character's lifePoints. Gauge adjustments and life Heal adjustments always use the value as points.",
+   "manual_text_summary": "Chooses how the adjustment value is interpreted (points or percentage).",
+   "code_behavior": "In ControlsScript.UpdateMeters, the gauge branch calls target.UpdateGauge(deltaAdjustment, targetGauge) with no conversion. UpdateGauge applies gauge gain/loss modifiers, clamps, resets the delay and fires the gauge-change event. The life Heal branch calls HealMe(deltaAdjustment) with no conversion. The life Damage branch multiplies by the damage and damage-taken multipliers, then converts to lifePoints * value / 100 if the type is Percentage, then applies combo scaling.",
+   "source_refs": [
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateMeters)",
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateGauge)",
+    "Scripts/Core/Physics/ControlsScript.cs (HealMe)"
+   ]
+  },
+  {
+   "field": "deltaValueType",
+   "label": "Delta Value Type",
+   "doc_id": "move.meters",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code move-level meter adjustments go through the same UpdateMeters path, so Percentage affects only life Damage. Gauge and Heal entries are always points.",
+   "manual_text_summary": "Chooses whether the value is measured in points or percentage.",
+   "code_behavior": "Move meter settings call UpdateMeters with a single adjustment at the casting frame. The same conversion rules as hit adjustments apply.",
+   "source_refs": [
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateMeters)"
+   ]
+  },
+  {
+   "field": "deltaValueType",
+   "label": "Delta Value Type",
+   "doc_id": "move.conditions.group.meter-requirements",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code a Percentage meter requirement is checked as a fraction: Value Required / 100 against gauge value / gauge Max Value, or life / character lifePoints.",
+   "manual_text_summary": "Choose how the required value is measured, such as points instead of a normalized scale.",
+   "code_behavior": "CheckMeterRequirements uses Delta Value Type only for LifePoints and GaugePoints. ComboHits, ComboDamage and StunTime read the opponent's raw values and ignore it. With Points, the raw life or gauge value is compared with Value Required.",
+   "source_refs": [
+    "Scripts/Core/Physics/MoveSetScript.cs (CheckMeterRequirements)",
+    "Editor/Utils/UFEEditorUtilities.cs (PlayerConditionsGroup)"
+   ]
+  },
+  {
+   "field": "meterAdjustmentsOnParry",
+   "label": "Delta Adjustment",
+   "doc_id": "move.active.group.meter-adjustments",
+   "status": "unofficial_clarification",
+   "ufe_version": "2.7.3",
+   "summary": "In the 2.7.3 code, a static reading of GetHitParry shows On Parry adjustments applied to gauges twice: once by a direct loop that ignores Target Meter, and again by UpdateMeters. This is not runtime-verified.",
+   "manual_text_summary": "Meter Adjustments are listed as the reusable change applied by On Hit, On Block, On Parry or On Armored Hit; no special parry behavior is described.",
+   "code_behavior": "GetHitParry first loops over meterAdjustmentsOnParry and, for every entry regardless of targetMeter, calls UpdateGauge(deltaAdjustment, targetGauge). It uses the attacker's gauge for Self and the parrying character's gauge otherwise. Later it calls UpdateMeters(meterAdjustmentsOnParry, attacker, 1), which applies each entry again by its Target Meter. Result: a gauge entry changes that gauge twice (each pass goes through UpdateGauge's modifiers, clamp and KO/inhibit guards). A life entry changes life once but also adds its positive value to its stored targetGauge (default Gauge1) if that gauge exists. The first loop also ignores Delta Value Type and statuses.",
+   "source_refs": [
+    "Scripts/Core/Physics/ControlsScript.cs (GetHitParry)",
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateMeters)",
+    "Scripts/Core/Physics/ControlsScript.cs (UpdateGauge)"
+   ]
+  }
+ ],
+ "enum_label_note": "Enum value labels are Unity's default Inspector display names (ObjectNames.NicifyVariableName), given only for letter-only names; UFE 2.7.3 draws these enums with EditorGUILayout.EnumPopup and no custom InspectorName attributes."
+}

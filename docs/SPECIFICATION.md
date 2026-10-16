@@ -16,9 +16,9 @@ The distributable contains original connector code, tests, client packaging, and
 
 | Tool | Inputs and bounds | Effect and result |
 | --- | --- | --- |
-| `ufe_search_docs` | `query`: 1–500 characters; `limit`: 1–20, default 5; `max_chars`: 100–30,000, default 12,000. | Searches the local keyword index. Returns passages, exact source URLs, document IDs, line ranges, truncation indicators, snapshot, and freshness. The character budget bounds passage text, excluding JSON metadata. |
-| `ufe_get_doc` | `doc_id`: 1–256 characters; `start_line`: at least 1, default 1; `max_lines`: 1–200, default 100. | Returns a cached page segment, source metadata, warnings, and `next_start_line`. Page content is capped at 50,000 characters, with actionable handling of an oversized individual line. Includes snapshot and freshness. |
-| `ufe_list_topics` | Optional category up to 256 characters; `offset`: at least 0, default 0; `limit`: 1–100, default 50. | Returns indexed titles and IDs, total count, and `next_offset`, with snapshot and freshness. |
+| `ufe_search_docs` | `query`: 1–500 characters; `limit`: 1–20, default 5; `max_chars`: 100–30,000, default 12,000; `verbose`: boolean, default false. | Searches the local keyword index ([ranking](#search-ranking)). Returns passages, exact source URLs, document IDs, line ranges, truncation indicators, snapshot, and freshness, plus `field_matches`, `clarifications`, and `videos` when applicable ([supplement](#field-reference-supplement)). The character budget bounds passage text, excluding JSON metadata. |
+| `ufe_get_doc` | `doc_id`: 1–256 characters; `start_line`: at least 1, default 1; `max_lines`: 1–200, default 100; `verbose`: boolean, default false. | Returns a cached page segment, source metadata, warnings, and `next_start_line`. Page content is capped at 50,000 characters, with actionable handling of an oversized individual line. Includes snapshot and freshness, and the page's full clarification notes when any exist. |
+| `ufe_list_topics` | Optional category up to 256 characters; `offset`: at least 0, default 0; `limit`: 1–100, default 50; `verbose`: boolean, default false. | Returns indexed titles and IDs, total count, and `next_offset`, with snapshot and freshness. |
 | `ufe_docs_status` | No inputs. | Reports availability, coverage, source metadata, refresh activity, freshness warnings, update summaries, and guidance. |
 | `ufe_refresh_docs` | `refresh_pages`: boolean, default false. | Requests an immediate background synchronization. Returns `accepted`, `reason`, and current status. Does not wait for the download to finish. Offline and closed runtimes reject the request with an actionable tool error. |
 
@@ -102,13 +102,53 @@ Full raw refresh is explicitly selected with `refresh_pages=true` or `sync --ref
 10. **Automatic refresh disabled:** `serve --no-auto-refresh` suppresses automatic downloads, including bootstrap, while allowing an explicit online refresh.
 11. **Process lifetime:** refresh operates only while the MCP server process runs. A stdio client normally owns that process; stopping it stops refresh. An HTTP server runs independently of its clients and may continue refreshing after they disconnect. A host that stops the process also stops the scheduler. The next server start reuses a valid persistent cache and evaluates its source time and retry state; losing the cache requires an initial download.
 
+A spot check on 2026-10-15 compared 10 pages between the published catalog and their raw Markdown. The catalog had been generated on 2026-07-31. All 9 catalog pages matched line for line, differing only in line endings. The 10th is added by the site's navigator and is already fetched raw in catalog mode. Raw mode therefore adds no content today. Repeat the check before investing in incremental raw refresh.
+
 CLI `search`, `get`, `topics`, and `status` perform local reads without starting the scheduler. Their `automatic_refresh` policy field describes that CLI process. CLI `sync` performs foreground synchronization through the same coordinator used by MCP.
+
+## Search ranking
+
+Search is lexical and local; no model or embedding service is used. SQLite FTS5 BM25, with title and heading boosts, selects up to 400 candidate passages. Query words of five or more characters, and the stem `link`, match as prefixes (`cancel` finds `cancelling`). Single letters and a few words common to nearly every question (`ufe`, `find`, `setting`, `settings`, `manual`) are ignored.
+
+Candidates are reranked by:
+
+- **Coverage:** how much of the question a passage covers, with each query word weighted by its rarity in the index.
+- **Section kind:** Options sections are preferred (×1.25); video embed sections are down-weighted (×0.4).
+- **Named page:** passages from a page whose title the question names are boosted. Coverage for them is measured across the whole page, so the page's Options section is preferred.
+- **Named setting:** passages that define a multi-word setting label quoted in the question ("Execution Buffer Type") are boosted.
+- **Concept expansion:** a small curated table maps fighting-game vocabulary to the manual's words. A concept boosts at most two passages of its page family. A page whose title contains another distinctive word of the question ("cancel a **throw**") is boosted too (×1.5, against the concept's ×2), and a quoted setting label of three or more words turns the concept boost off.
+  - Cancel, chain, follow-up, or "combo … into" questions also search `link` and prefer the Move Links page family. The literal word "link" adds no boost, because keyword matching already finds those pages.
+  - "Only after another move" and "prerequisite" questions prefer Required Moves.
+  - Questions about gauge or meter regeneration, refill, recharge, or drain prefer Gauge Options. Hit stop and hit freeze search `freezing`; `hitstun` and `blockstun` are split into words. Expansions add terms and never remove the user's own words.
+- **Field names:** pages mapped from serialized field names in the query.
+
+Passages consisting only of headings are never returned; at index build time a heading with no body of its own is kept with the following section. Related Pages link lists are returned only when nothing else matches. After the first result, a passage that the character budget clips to less than 120 characters of body text is dropped, and the response is marked truncated. Each document contributes at most two passages. Its second passage competes at three-quarters of its score, or at half when a concept fired, so a concept question spreads across its page family. Retrieved text is never rewritten.
+
+The repository's deterministic retrieval suite (`scripts/eval_retrieval.py`, `evals/retrieval/cases.json`) checks these behaviors against a local index.
+
+## Field reference supplement
+
+`src/ufe_docs_mcp/data/field_reference.json` maps serialized UFE field names (as seen in `.asset` files and engine code) to their Inspector labels and the manual page that documents them. It lists stored enum values in declaration order (with Unity's default Inspector display text for letter-only names) and carries a few clarification notes where the engine code is narrower than, or differs from, the manual's wording. It records the UFE version it was read from and a `source_ref` for each entry: a file relative to `Assets/UFE/Engine/` plus the class member involved. Member names are used instead of line numbers because they are stable across installs and patch releases. It contains names, labels, ordinals, and summaries only, never engine code.
+
+This supplement is maintained by the project and is never merged into official passages:
+
+- `field_matches` is a top-level search field, returned with `field_reference_notice`, for code-shaped query tokens: a leading underscore, internal capitals or underscores, or a lowercase spelling of a multiword field. A plain word does not trigger it, even when a field has that name behind a leading underscore (`gravity` versus `_gravity`).
+- Search passages carry a one-sentence `clarifications` summary when the passage's section (page title, heading, and every passage of that section) contains a noted label, or the note's `anchor` text for a setting the manual omits entirely, unless that field's full note is already in `field_matches`. Each note appears at most once per response. `ufe_get_doc` returns full notes for the page.
+- Every note has `status: unofficial_clarification`, a `ufe_version`, and `source_refs`.
+
+Entries must be verified against the named engine version before they are changed. A new UFE release requires re-checking the file rather than assuming the mappings still hold.
+
+## Video tutorials
+
+Some pages embed YouTube tutorials. Search passages from such a page include `videos` entries with the YouTube ID, the title from the page's own embed markup, and a watch URL. Video titles, chapters, and transcripts are not fetched or indexed. YouTube's Terms of Service restrict automated access to the service, and indexed transcripts would republish third-party content beyond what the manual itself publishes. The video remains a pointer for the user to watch.
 
 ## Snapshot and freshness responses
 
 Every successful search, page retrieval, and topic listing includes a compact `snapshot` record read through the same SQLite connection that produced the result. If another process replaces the index during retrieval, the response still identifies the snapshot that actually supplied its passages.
 
-Snapshot fields include `id`, `indexed_at`, `fetched_at`, `content_mode`, `catalog_generated_at`, `content_hash`, and `index_revision`. `content_hash` identifies the indexed document bodies and IDs. `index_revision` also fingerprints titles, URLs, categories, source-version values, and warning flags, so metadata-only changes are detectable.
+Search, retrieval, and topic responses are compact by default: `snapshot` contains `id`, `fetched_at`, and `content_mode`; `freshness` contains `state`, `check_overdue`, `last_error`, and only the warnings that are not fixed scope notices; per-document `content_hash` and null `source_version` are omitted. The fixed catalog-lag and raw-scope notices remain in the server instructions, `ufe_docs_status`, and `verbose=true` responses, which return the complete records described below. The snapshot `id` is the same in both forms, so compact and full responses can be matched.
+
+Full snapshot fields include `id`, `indexed_at`, `fetched_at`, `content_mode`, `catalog_generated_at`, `content_hash`, and `index_revision`. `content_hash` identifies the indexed document bodies and IDs. `index_revision` also fingerprints titles, URLs, categories, source-version values, and warning flags, so metadata-only changes are detectable.
 
 Freshness is separate from availability:
 

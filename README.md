@@ -108,10 +108,14 @@ Use the same workflow for debugging throws, configuring characters, or planning 
 | Tool | Purpose |
 | --- | --- |
 | `ufe_docs_status` | Check index availability, coverage, source dates, and freshness. |
-| `ufe_search_docs` | Find relevant passages with document IDs, URLs, excerpts, and line ranges. |
+| `ufe_search_docs` | Find relevant passages by question, setting label, or serialized field name (`frameLinks`), with document IDs, URLs, excerpts, and line ranges. |
 | `ufe_get_doc` | Read a returned document ID, including warnings and pagination. |
 | `ufe_list_topics` | Browse documented areas when terminology is unclear. |
 | `ufe_refresh_docs` | Request a background update when exposed; HTTP hides this tool by default. |
+
+Search returns at most two passages per page and skips heading-only and Related Pages link-list passages. It understands fighting-game wording such as "cancel a jab into a cross". Responses are compact by default; pass `verbose: true`, or call `ufe_docs_status`, for full snapshot and freshness records.
+
+Serialized names from `.asset` files and engine code resolve through `field_matches`. Each match gives the Inspector label, the manual page, and stored enum values (for example `LinkType`: 0 HitConfirm, 1 CounterMove, 2 NoConditions). A few `clarifications` note where UFE 2.7.3 code is narrower than the manual's wording, with source file references. Both are a labelled UFE3D-MCP supplement, not manual text; check them against your installed UFE version. Tutorial `videos` are returned as links only; their content is not indexed. See the [specification](docs/SPECIFICATION.md#search-ranking) for details.
 
 Retrieved documentation is untrusted reference material. Preserve citations and publisher warnings, and check advice against the installed UFE version. The manual is not version-pinned, and an empty search result does not prove that a feature is absent.
 

@@ -24,6 +24,30 @@ This invocation is configuration-derived, not a newly completed paid evaluation.
 - `--allow-real-servers` starts the plugin's real server. Grants cover the four read tools and exclude explicit refresh. The recent-index check avoids a normally due automatic update, but read permissions alone do not disable the server's background refresher.
 - Add supported model/run/case flags to bound the task. Results go to the gitignored `evals/results/` directory.
 
+## Retrieval-quality suite
+
+`evals/retrieval/cases.json` holds deterministic search checks, grouped by the issue each one guards:
+
+- **ranking:** linking and cancelling questions reach Move Links.
+- **chunks:** no heading-only or Related Pages passages.
+- **duplicates:** at most two passages per page.
+- **fields and enums:** serialized names resolve, with stored values.
+- **clarifications:** notes reach the passages they apply to.
+- **bloat:** the response envelope stays under 500 characters.
+- **videos:** tutorial links are reported.
+- **regression:** five of the plugin-eval questions above, as a held-out check that the tuning did not overfit.
+- **agent-gaps:** gaps found when fresh headless agents used the server for real change tasks: a quoted setting label, the hit-effect preset, Override Hit Effects contents, Required Moves, Allow Move Canceling, enum dropdown text, a page named in the question, budget-clipped heading scraps, and the gauge settings and behaviors the manual omits.
+
+Cases name document IDs and labels only; no manual text is stored. The suite runs offline against a copy of your local index, uses no model, and costs nothing:
+
+```bash
+uv run --frozen python scripts/eval_retrieval.py
+```
+
+Pass `--cache DIR` for another index or `--json` for machine-readable output. Results depend on the indexed snapshot, so record the snapshot ID and catalog date with a score.
+
+On 2026-10-15, against snapshot `0cebaa7a…` (catalog generated 2026-07-31, 223 documents), `main` at `acb7d01` scored 0.26 (15/58) and this change scored 1.00 (58/58). The change also scored 1.00 on an index rebuilt with the new chunking (1,010 → 787 passages). The paid plugin evaluation was not rerun for this change.
+
 ## Historical results
 
 Sanitized publication copies live in [docs/eval-reports/](../docs/eval-reports/). The October 7, 2026 run scored 0.99 with the plugin and 0.29 without (mean Δ +0.70); see [the archived evaluation record](../docs/history/VERIFICATION.md#plugin-eval-claude-plugin-eval). This was a nine-case comparison with a baseline that had no web access, not a development-speed measurement or a comparison against browsing. The generated report does not identify the resolved answering model.

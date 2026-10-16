@@ -150,7 +150,9 @@ class IndexTests(unittest.TestCase):
         build_index([doc], self.path, {})
         passage = search_docs(self.path, "needle_in_code")["results"][0]
         self.assertEqual(passage["heading"], "Guide / Real section")
-        self.assertEqual(passage["content"], "\n".join(content.splitlines()[1:]))
+        # The bare page title has no body of its own, so it stays with the
+        # first section instead of becoming a heading-only passage.
+        self.assertEqual(passage["content"], "\n".join(content.splitlines()))
 
     def test_invalid_rebuild_preserves_previous_file_byte_for_byte(self):
         before = self.path.read_bytes()

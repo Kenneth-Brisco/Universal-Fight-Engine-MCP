@@ -238,8 +238,21 @@ class MCPProtocolTests(unittest.IsolatedAsyncioTestCase):
                 self.assertIsInstance(search["freshness"], dict)
                 self.assertEqual(search["freshness"]["state"], "offline")
                 self.assertTrue(search["freshness"]["check_overdue"])
-                self.assertEqual(search["snapshot"]["content_hash"], status["content_hash"])
+                # Compact by default: snapshot identity without hashes, no
+                # per-passage content hash, and no routine scope notices.
+                self.assertEqual(search["snapshot"]["id"], status["snapshot"]["id"])
                 self.assertEqual(search["snapshot"]["fetched_at"], "2000-01-01T00:00:00+00:00")
+                self.assertEqual(set(search["snapshot"]), {"id", "fetched_at", "content_mode"})
+                self.assertNotIn("content_hash", found)
+                self.assertNotIn("last_update", search["freshness"])
+
+                verbose = self._payload(await session.call_tool(
+                    "ufe_search_docs", {"query": "sparrow uppercut", "verbose": True},
+                ))
+                self.assertEqual(verbose["snapshot"], status["snapshot"])
+                self.assertEqual(verbose["snapshot"]["content_hash"], status["content_hash"])
+                self.assertIn("content_hash", verbose["results"][0])
+                self.assertEqual(verbose["freshness"]["warnings"], status["freshness"]["warnings"])
 
                 document = self._payload(
                     await session.call_tool("ufe_get_doc", {"doc_id": found["doc_id"]})
@@ -377,7 +390,7 @@ class MCPProtocolTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(found["doc_id"], MOVE_ID)
                 self.assertEqual(found["url"], MOVE_URL)
                 self.assertIn("aurora lantern", found["content"])
-                self.assertEqual(search["snapshot"], after["snapshot"])
+                self.assertEqual(search["snapshot"]["id"], after["snapshot"]["id"])
                 self.assertEqual(search["freshness"]["state"], "current_to_raw_pages")
 
                 document = self._payload(await session.call_tool(
@@ -386,7 +399,7 @@ class MCPProtocolTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(document["content"], REFRESHED_MOVE_BODY.rstrip("\n"))
                 self.assertEqual(document["source_version"], "synthetic-fixture-v2")
                 self.assertEqual(document["url"], MOVE_URL)
-                self.assertEqual(document["snapshot"], after["snapshot"])
+                self.assertEqual(document["snapshot"]["id"], after["snapshot"]["id"])
                 self.assertEqual(document["freshness"]["state"], "current_to_raw_pages")
                 self.assertFalse(document["freshness"]["check_overdue"])
 

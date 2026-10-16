@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -18,6 +19,8 @@ import sqlite3
 import tempfile
 from typing import Iterator
 from urllib.parse import urlsplit
+
+from . import reference
 
 
 SCHEMA_VERSION = 1
@@ -41,7 +44,50 @@ _STOPWORDS = frozenset(
     "had has have how i if in into is it its me my of on or our please should "
     "show tell than that the their them there these they this those to use "
     "using was we were what when where which who why will with would you your".split()
+    # Words that appear on nearly every page of this manual or in nearly every
+    # question about it, and so only dilute ranking.
+    + "ufe find setting settings manual".split()
 )
+
+
+_PREFIX_MIN_CHARS = 5
+# Stems shorter than the minimum that are still safe and useful as prefixes.
+_PREFIX_STEMS = frozenset(("link",))
+_CANDIDATES = 400
+_MAX_PER_DOC = 2
+# A budget-clipped passage with less body text than this is dropped.
+_MIN_CLIPPED_BODY = 120
+# Section headings used throughout the UFE manual. Options sections hold the
+# settings themselves; Related Pages sections are link lists for navigation.
+_SECTION_KINDS = {
+    "options": "options", "overview": "overview",
+    "related pages": "related", "video tutorial": "video",
+}
+_KIND_WEIGHTS = {"options": 1.25, "overview": 1.0, "body": 1.0, "video": 0.4}
+# Curated query concepts for fighting-game vocabulary the manual words
+# differently. Each adds terms; it never removes the user's own words.
+_LINK_WORDS = r"cancel\w*|chain\w*|follow[- ]?ups?"
+_CONCEPTS = (
+    ("move_links", re.compile(
+        r"\b(?:" + _LINK_WORDS + r")|\bcombo\w*\b.*\binto\b|\binto\b.*\bcombo\w*\b"
+    ), ("link",), "move.links", re.compile(r"cancel\w*|chain\w*|follow\w*|ups?|combo\w*")),
+    ("required_moves", re.compile(
+        r"\bprerequisite\w*|\brequire\w*\b.*\bmoves?\b|\bafter\b.*\b(?:another|previous|specific|other|preceding)\b.*\bmoves?\b"
+        r"|\bonly\b.*\bafter\b.*\bmoves?\b"
+    ), ("required", "prerequisite"), "move.links.group.required-moves",
+        re.compile(r"prerequisite\w*|require\w*|only|after|another|previous|specific|other|preceding|moves?")),
+    ("gauge_flow", re.compile(
+        r"\b(?:regen\w*|refill\w*|recharg\w*|recover\w*|passive\w*|drain\w*|auto\w*[- ]?fill\w*)\b.*\b(?:gauge|meter|stamina|energy)\b"
+        r"|\b(?:gauge|meter|stamina|energy)\b.*\b(?:regen\w*|refill\w*|recharg\w*|recover\w*|drain\w*|fill\w*)\b"
+    ), ("gauge",), "character.gauge",
+        re.compile(r"regen\w*|refill\w*|recharg\w*|recover\w*|passive\w*|drain\w*|fill\w*|auto\w*|gauge\w*|meter\w*|stamina|energy")),
+    ("hit_stop", re.compile(r"\bhit[- ]?stop\b|\bhit[- ]?freeze\b|\bfreez\w*"), ("freezing",), None, None),
+    ("hit_stun", re.compile(r"\bhitstun\b"), ("hit", "stun"), None, None),
+    ("block_stun", re.compile(r"\bblockstun\b"), ("block", "stun"), None, None),
+)
+_BOLD_LABEL = re.compile(r"\*\*\[?([^*\]\n]{3,80})\]?(?:\([^)\n]*\))?\*\*")
+_VIDEO_EMBED = re.compile(r'<iframe\b[^>]*\bsrc="https://www\.youtube(?:-nocookie)?\.com/embed/([A-Za-z0-9_-]{6,20})"[^>]*>', re.IGNORECASE)
+_VIDEO_TITLE = re.compile(r'\btitle="([^"<>]{1,200})"')
 
 
 class RequestValidationError(ValueError):
@@ -149,20 +195,27 @@ def _headings(lines: list[str]) -> dict[int, str]:
 
 
 def _chunks(content: str) -> Iterator[tuple[str, int, int, str]]:
+    """Split at headings. A heading with no body of its own (such as a page
+    title directly followed by its first section) stays with the next section,
+    so no passage consists only of headings."""
     lines = content.splitlines()
     headings = _headings(lines)
     heading = ""
     start = 0
     pending: list[str] = []
     size = 0
+    has_body = False
     for number, line in enumerate(lines):
-        if pending and (number in headings or size + len(line) + 1 > CHUNK_CHARS):
+        oversized = size + len(line) + 1 > CHUNK_CHARS
+        if pending and ((number in headings and has_body) or oversized):
             passage = "\n".join(pending)
             if passage.strip():
                 yield heading, start + 1, number, passage
-            pending, size = [], 0
+            pending, size, has_body = [], 0, False
         if number in headings:
             heading = headings[number]
+        elif line.strip() and not _SETEXT_HEADING.match(line):
+            has_body = True
         if not pending:
             start = number
         pending.append(line)
@@ -356,7 +409,8 @@ def _query_terms(query: str) -> list[str]:
     terms: list[str] = []
     for match in _WORDS.finditer(query):
         word = match.group().casefold()
-        if word not in _STOPWORDS and word not in terms:
+        # Single letters are possessives ("UFE's") or initials, never topics.
+        if len(word) > 1 and word not in _STOPWORDS and word not in terms:
             terms.append(word)
         if len(terms) >= MAX_QUERY_TERMS:
             break
@@ -380,8 +434,57 @@ def _passage_within_budget(content: str, start_line: int, budget: int) -> tuple[
     return content[:budget], start_line, True, True
 
 
+def _chunk_kind(heading: str, content: str) -> str:
+    """Classify a passage by its own section heading and body."""
+    if all(not line.strip() or _MARKDOWN_HEADING.match(line) for line in content.splitlines()):
+        return "heading_only"
+    section = heading.rsplit(" / ", 1)[-1].strip().casefold()
+    return _SECTION_KINDS.get(section, "body")
+
+
+def _concepts(query: str) -> list[tuple[tuple[str, ...], str | None, re.Pattern | None]]:
+    """Return (extra terms, home page ID prefix, trigger-word pattern) for each matching concept."""
+    folded = query.casefold()
+    return [(extra, home, trigger) for _name, pattern, extra, home, trigger in _CONCEPTS if pattern.search(folded)]
+
+
+def _fts_literal(term: str) -> str:
+    quoted = '"' + term.replace('"', '""') + '"'
+    # Prefix matching lets "link" find links/linked/linkable and "cancel" find
+    # cancelling. Short words stay exact so they do not match unrelated terms.
+    return quoted + "*" if len(term) >= _PREFIX_MIN_CHARS or term in _PREFIX_STEMS else quoted
+
+
+def _term_pattern(term: str) -> re.Pattern:
+    suffix = r"\w*" if len(term) >= _PREFIX_MIN_CHARS or term in _PREFIX_STEMS else r"\b"
+    return re.compile(r"\b" + re.escape(term) + suffix, re.IGNORECASE)
+
+
+def _videos(content: str) -> list[dict]:
+    """Video embeds are links only; titles come from the page's own markup."""
+    videos: list[dict] = []
+    for match in _VIDEO_EMBED.finditer(content):
+        video_id = match.group(1)
+        if any(video["youtube_id"] == video_id for video in videos):
+            continue
+        title = _VIDEO_TITLE.search(match.group(0))
+        videos.append({
+            "youtube_id": video_id,
+            "title": title.group(1) if title else None,
+            "url": "https://www.youtube.com/watch?v=" + video_id,
+        })
+    return videos[:5]
+
+
 def search_docs(path: Path, query: str, limit: int = 5, max_chars: int = 12_000) -> dict:
-    """Search safe, quoted lexical terms with BM25 title/heading boosts.
+    """Search safe, quoted lexical terms, then rerank for useful passages.
+
+    BM25 (with title/heading boosts) supplies candidates. Reranking prefers
+    passages that cover more of the question and Options sections, drops
+    heading-only and Related Pages link lists while other passages match, and
+    limits each document to two passages so one page cannot fill every slot.
+    Serialized UFE field names (for example ``frameLinks``) resolve through the
+    supplementary field reference, reported separately in ``field_matches``.
 
     ``max_chars`` bounds the sum of passage text lengths, not JSON metadata.
     Source URLs are copied exactly; this function never invents anchors.
@@ -389,33 +492,163 @@ def search_docs(path: Path, query: str, limit: int = 5, max_chars: int = 12_000)
     limit = _integer(limit, "limit", 1, MAX_SEARCH_RESULTS)
     max_chars = _integer(max_chars, "max_chars", 100, MAX_SEARCH_CHARS)
     terms = _query_terms(query)
+    field_matches = reference.match_fields(query)
     results: list[dict] = []
     truncated = False
     with closing(_read_connection(path)) as connection:
         snapshot = _snapshot(connection)
         if not terms:
             return {"query": query, "terms": [], "results": [], "truncated": False, "snapshot": snapshot}
+        # Each group is one requirement of the question: a query word together
+        # with any curated synonyms, or a field's Inspector label words.
+        groups: list[tuple[str, ...]] = []
+        field_words = {word for match in field_matches for word in match["query_words"]}
+        for term in terms:
+            if term not in field_words:
+                groups.append((term,))
+        concept_homes: list[tuple[str, re.Pattern]] = []
+        for extra, home, trigger in _concepts(query):
+            groups.append(extra)
+            if home:
+                concept_homes.append((home, trigger))
+        target_docs: dict[str, list[str]] = {}
+        for match in field_matches:
+            label_text = match["label"]
+            if match.get("label_in_manual") is False and match.get("doc_id"):
+                # The manual never shows this label; search by its page instead.
+                page = connection.execute("SELECT title FROM documents WHERE doc_id=?", (match["doc_id"],)).fetchone()
+                label_text = page["title"] if page else label_text
+            label_terms = tuple(_query_terms(label_text))
+            if label_terms:
+                groups.append(label_terms)
+            if match.get("doc_id"):
+                target_docs.setdefault(match["doc_id"], []).append(match["label"])
+        search_terms: list[str] = []
+        for group in groups:
+            for term in group:
+                if term not in search_terms:
+                    search_terms.append(term)
+        if not search_terms:
+            return {"query": query, "terms": terms, "results": [], "truncated": False,
+                    "snapshot": snapshot, **_field_payload(field_matches)}
         # Only extracted word tokens become quoted FTS literals. The user's
         # operators, quotes, parentheses, column syntax and SQL are never run.
-        expression = " OR ".join('"' + term.replace('"', '""') + '"' for term in terms)
+        expression = " OR ".join(_fts_literal(term) for term in search_terms[:MAX_QUERY_TERMS * 2])
         rows = connection.execute(
             """SELECT d.doc_id, d.title, d.url, d.category, d.source_version,
                       d.warnings, d.content_hash, c.heading, c.start_line,
-                      c.end_line, c.content, bm25(chunks_fts, 5.0, 3.0, 1.0) AS rank
+                      c.end_line, c.content, c.chunk_id, bm25(chunks_fts, 5.0, 3.0, 1.0) AS rank
                FROM chunks_fts
                JOIN chunks c ON c.chunk_id = chunks_fts.rowid
                JOIN documents d ON d.doc_id = c.doc_id
                WHERE chunks_fts MATCH ?
                ORDER BY rank, c.chunk_id LIMIT ?""",
-            (expression, limit + 1),
+            (expression, _CANDIDATES),
         ).fetchall()
+        patterns = [[_term_pattern(term) for term in group] for group in groups]
+        folded_query = " ".join(query.casefold().split())
+        # Weight each requirement by its rarest term, so a specific word
+        # ("plinking") counts for more than generic ones ("setting", "find").
+        total = connection.execute("SELECT count(*) FROM chunks").fetchone()[0] or 1
+        frequency: dict[str, int] = {}
+        for term in dict.fromkeys(search_terms + terms):
+            frequency[term] = connection.execute(
+                "SELECT count(*) FROM chunks_fts WHERE chunks_fts MATCH ?", (_fts_literal(term),)
+            ).fetchone()[0]
+        weights = [max(math.log(1 + total / (1 + frequency.get(term, 0))) for term in group) for group in groups]
+        weight_sum = sum(weights) or 1.0
+        homes = [home for home, _trigger in concept_homes]
+        triggers = [trigger for _home, trigger in concept_homes]
+        # Distinctive topic words: query words (other than a concept's own
+        # trigger words) that appear in at most three page titles. A page
+        # titled with one ("Throw Tutorial" for "cancel a throw") is boosted
+        # as much as a concept's home pages, so the question's own topic is
+        # not displaced by the concept.
+        titles = [row[0] for row in connection.execute("SELECT title FROM documents")]
+        topic_terms = []
+        for term in terms:
+            if any(trigger.fullmatch(term) for trigger in triggers):
+                continue
+            pattern = _term_pattern(term)
+            if 0 < sum(1 for title in titles if pattern.search(title)) <= 3:
+                topic_terms.append(pattern)
+        # A question quoting an exact setting label is about that setting.
+        # Three words or more ("Allow Move Canceling"), so a two-word phrase
+        # such as "special move" does not switch the concept off.
+        if any(len(label.split()) >= 3 and label.casefold() in " ".join(query.casefold().split())
+               for row in rows for label in _BOLD_LABEL.findall(row["content"])):
+            homes = []
+        scored: list[tuple[float, int, sqlite3.Row]] = []
+        boosted: list[tuple[float, int, sqlite3.Row]] = []
+        fallback: list[tuple[float, int, sqlite3.Row]] = []
+        best_rank: dict[str, float] = {}
+        for row in rows:
+            best_rank[row["doc_id"]] = min(best_rank.get(row["doc_id"], 0.0), row["rank"])
+        page_text: dict[str, str] = {}
+        for row in rows:
+            kind = _chunk_kind(row["heading"], row["content"])
+            if kind == "heading_only":
+                continue  # The section's own passage carries this heading.
+            # The question names this page ("gauge options", "hit stun
+            # options"): judge relevance for the page as a whole, so its
+            # Options section is preferred over an Overview that merely
+            # repeats more of the question's words.
+            title_terms = _query_terms(row["title"])
+            named = bool(title_terms) and all(
+                any(_term_pattern(term).fullmatch(word) or word == term for term in terms) for word in title_terms)
+            if named:
+                if row["doc_id"] not in page_text:
+                    page = connection.execute("SELECT title, content FROM documents WHERE doc_id=?", (row["doc_id"],)).fetchone()
+                    page_text[row["doc_id"]] = page["title"] + " " + page["content"]
+                text, base = page_text[row["doc_id"]], -best_rank[row["doc_id"]]
+            else:
+                text, base = " ".join((row["title"], row["heading"], row["content"])), -row["rank"]
+            covered = sum(weight for weight, group in zip(weights, patterns) if any(p.search(text) for p in group))
+            score = base * (0.5 + covered / weight_sum) * _KIND_WEIGHTS.get(kind, 1.0)
+            # A named page, or a concept whose home is this page family
+            # ("cancel into" -> Move Links).
+            if named:
+                score *= 1.6
+            concept_boosted = any(row["doc_id"] == home or row["doc_id"].startswith(home + ".") for home in homes)
+            if concept_boosted:
+                score *= 2.0
+            elif homes and any(pattern.search(row["title"]) for pattern in topic_terms):
+                score *= 1.5
+            # The question quotes a setting this passage defines ("Execution
+            # Buffer Type"); multiword labels only, so "Move" alone never counts.
+            if any(label.casefold() in folded_query for label in _BOLD_LABEL.findall(row["content"])
+                   if " " in label.strip()):
+                score *= 1.8
+            labels = target_docs.get(row["doc_id"])
+            if labels:
+                score *= 3.0
+                if any("**" + label.casefold() in row["content"].casefold() for label in labels):
+                    score *= 1.5
+            entry = (score, row["chunk_id"], row)
+            if concept_boosted and kind != "related":
+                boosted.append(entry)
+            else:
+                (fallback if kind == "related" else scored).append(entry)
+        # A concept points at a page family; it claims at most two boosted
+        # passages, and the rest of that family competes unboosted.
+        boosted.sort(key=lambda entry: (-entry[0], entry[1]))
+        scored += boosted[:2] + [(score / 2.0, chunk_id, row) for score, chunk_id, row in boosted[2:]]
+        ranked = _diverse(scored or fallback, limit + 1)
+        videos_by_doc: dict[str, list[dict]] = {}
+        matched_fields = frozenset(match["field"] for match in field_matches)
+        attached: set[tuple[str, str, str]] = set()  # each note once per response
         remaining = max_chars
-        for row in rows[:limit]:
+        for row in ranked[:limit]:
             if remaining <= 0:
                 truncated = True
                 break
             passage, end_line, clipped, partial_line = _passage_within_budget(row["content"], row["start_line"], remaining)
-            results.append({
+            if clipped and results and _body_chars(passage) < _MIN_CLIPPED_BODY:
+                # The budget is spent: after the first result, a heading or a
+                # scrap of a section is not evidence. Stop and report truncation.
+                truncated = True
+                break
+            result = {
                 **_document_fields(row),
                 "heading": row["heading"],
                 "start_line": row["start_line"],
@@ -423,11 +656,62 @@ def search_docs(path: Path, query: str, limit: int = 5, max_chars: int = 12_000)
                 "content": passage,
                 "truncated": clipped,
                 "partial_line": partial_line,
-            })
+            }
+            if row["doc_id"] not in videos_by_doc:
+                document = connection.execute("SELECT content FROM documents WHERE doc_id=?", (row["doc_id"],)).fetchone()
+                videos_by_doc[row["doc_id"]] = _videos(document["content"])
+            if videos_by_doc[row["doc_id"]]:
+                result["videos"] = videos_by_doc[row["doc_id"]]
+            # A long section can span passages; notes apply to the whole section.
+            section = "\n".join([row["title"], row["heading"]] + [part["content"] for part in connection.execute(
+                "SELECT content FROM chunks WHERE doc_id=? AND heading=? ORDER BY chunk_id",
+                (row["doc_id"], row["heading"]),
+            )])
+            notes = [note for note in reference.clarifications_for(row["doc_id"], section, brief=True, exclude=matched_fields)
+                     if (row["doc_id"], note["field"], note["label"]) not in attached]
+            attached.update((row["doc_id"], note["field"], note["label"]) for note in notes)
+            if notes:
+                result["clarifications"] = notes
+            results.append(result)
             remaining -= len(passage)
             truncated = truncated or clipped
-        truncated = truncated or len(rows) > limit
-    return {"query": query, "terms": terms, "results": results, "truncated": truncated, "snapshot": snapshot}
+        truncated = truncated or len(ranked) > limit
+    return {"query": query, "terms": terms, "results": results, "truncated": truncated,
+            "snapshot": snapshot, **_field_payload(field_matches)}
+
+
+def _body_chars(passage: str) -> int:
+    return sum(len(line.strip()) for line in passage.splitlines()
+               if line.strip() and not _MARKDOWN_HEADING.match(line))
+
+
+def _diverse(entries: list[tuple[float, int, sqlite3.Row]], count: int) -> list[sqlite3.Row]:
+    """Greedy selection that halves a document's score for each passage it
+    already contributed and allows at most two passages per document."""
+    pending = sorted(entries, key=lambda entry: (-entry[0], entry[1]))
+    used: dict[str, int] = {}
+    selected: list[sqlite3.Row] = []
+    while pending and len(selected) < count:
+        best = max(
+            (index for index, entry in enumerate(pending) if used.get(entry[2]["doc_id"], 0) < _MAX_PER_DOC),
+            key=lambda index: (pending[index][0] * 0.5 ** used.get(pending[index][2]["doc_id"], 0), -pending[index][1]),
+            default=None,
+        )
+        if best is None:
+            break
+        row = pending.pop(best)[2]
+        used[row["doc_id"]] = used.get(row["doc_id"], 0) + 1
+        selected.append(row)
+    return selected
+
+
+def _field_payload(field_matches: list[dict]) -> dict:
+    if not field_matches:
+        return {}
+    return {
+        "field_matches": [{key: value for key, value in match.items() if key != "query_words"} for match in field_matches],
+        "field_reference_notice": reference.NOTICE,
+    }
 
 
 def get_doc(path: Path, doc_id: str, start_line: int = 1, max_lines: int = 100) -> dict:

@@ -64,6 +64,31 @@ def _hours(value: float) -> float:
     return float(value)
 
 
+CATALOG_LAG_WARNING = "The published catalog may lag raw-page edits. Use ufe_refresh_docs(refresh_pages=true) for a full raw-page refresh."
+RAW_SCOPE_WARNING = "Raw pages were fetched during the recorded sync; edits after that sync are not included."
+COMPACT_SNAPSHOT_FIELDS = ("id", "fetched_at", "content_mode")
+# Fixed scope notices that are true of every response in a mode. They stay in
+# ufe_docs_status, verbose responses and the server instructions.
+ROUTINE_WARNINGS = frozenset((CATALOG_LAG_WARNING, RAW_SCOPE_WARNING))
+
+
+def _compact_freshness(freshness: dict) -> dict:
+    compact = {
+        "state": freshness["state"],
+        "check_overdue": freshness["check_overdue"],
+        "last_error": freshness["last_error"],
+    }
+    warnings = [warning for warning in freshness["warnings"] if warning not in ROUTINE_WARNINGS]
+    if warnings:
+        compact["warnings"] = warnings
+    return compact
+
+
+def _compact_document(item: dict) -> dict:
+    return {key: value for key, value in item.items()
+            if key != "content_hash" and not (key == "source_version" and value is None)}
+
+
 def _cache_status(cache_dir: Path) -> dict:
     path = Path(cache_dir) / "docs.sqlite3"
     try:
@@ -399,9 +424,9 @@ class DocumentationRuntime:
         if not self.auto_refresh and not self.offline:
             warnings.append("Automatic updates are disabled for this process; use ufe_refresh_docs or the sync command.")
         if mode != "raw_pages":
-            warnings.append("The published catalog may lag raw-page edits. Use ufe_refresh_docs(refresh_pages=true) for a full raw-page refresh.")
+            warnings.append(CATALOG_LAG_WARNING)
         else:
-            warnings.append("Raw pages were fetched during the recorded sync; edits after that sync are not included.")
+            warnings.append(RAW_SCOPE_WARNING)
         update = state.get("last_update")
         if isinstance(update, dict) and update.get("index_revision") != snapshot.get("index_revision") and available:
             warnings.append("A different local documentation revision is available; repeat this query to read the current index.")
@@ -424,8 +449,25 @@ class DocumentationRuntime:
             "warnings": warnings,
         }
 
-    def decorate(self, result: dict) -> dict:
-        return {**result, "freshness": self.freshness(result.get("snapshot"))}
+    def decorate(self, result: dict, *, verbose: bool = False) -> dict:
+        """Attach freshness. Compact by default: the full snapshot record,
+        per-document content hashes and routine scope notices are available
+        with verbose=True and always in ufe_docs_status."""
+        freshness = self.freshness(result.get("snapshot"))
+        if verbose:
+            return {**result, "freshness": freshness}
+        snapshot = result.get("snapshot") or {}
+        compact = {
+            **result,
+            "snapshot": {key: snapshot.get(key) for key in COMPACT_SNAPSHOT_FIELDS},
+            "freshness": _compact_freshness(freshness),
+        }
+        for key in ("results", "topics"):
+            if key in compact:
+                compact[key] = [_compact_document(item) for item in compact[key]]
+        if "content_hash" in compact:
+            compact = _compact_document(compact)
+        return compact
 
     def status(self) -> dict:
         result = _cache_status(self.cache_dir)
